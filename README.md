@@ -77,8 +77,8 @@ The basic specifiers (the letters `u`, `i`, `s` etc. in the codes above) here.  
 |  `f`           |  Float                            |  `0.7`, `-99.5`                                           |
 |  `g`           |  IEEE Float                       |  `0.7`, `-99.5`, `INFINITY`, `-INFINITY`, `NAN`, `NAN_E`  |
 |  `u`           |  User name/id (bots and players)  |  `Y_Less`, `0`                                            |
-|  `q`           |  Bot name/id                      |  `ShopBot, `27`                                           |
-|  `r`           |  Player name/id                   |  `Y_Less, `42`                                            |
+|  `q`           |  Bot name/id                      |  `ShopBot`, `27`                                          |
+|  `r`           |  Player name/id                   |  `Y_Less`, `42`                                           |
 |  `m`           |  Colour                           |  `{FF00AA}`, `0xFFFFFFFF`, `444`                          |
 
 ### Strings
