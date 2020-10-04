@@ -1399,7 +1399,7 @@ static cell AMX_NATIVE_CALL
 }
 
 // native sscanf(const data[], const format[], (Float,_}:...);
-PAWN_NATIVE_EXPORT cell
+PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 	sscanf(AMX * amx, char * string, char * format, cell * params, int paramCount, char * file, int line)
 {
 	if (g_iTrueMax == 0)
@@ -1415,10 +1415,10 @@ PAWN_NATIVE_EXPORT cell
 		pl = gCallLine;
 	cell *
 		pp = gCallResolve;
-	gFormat = 0;
+	gFormat = format;
 	gCallFile = file;
 	gCallLine = line;
-	cell ret = Sscanf(amx, string, format, params, paramCount);
+	cell ret = Sscanf(amx, string, gFormat, params, paramCount);
 	// Restore and free the error data, if it wasn't constant.
 	gCallResolve = pp;
 	gCallLine = pl;
