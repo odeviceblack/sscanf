@@ -1400,7 +1400,7 @@ static cell AMX_NATIVE_CALL
 
 // native sscanf(const data[], const format[], (Float,_}:...);
 PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
-	sscanf(AMX * amx, char * string, char * format, cell * params, int paramCount, char * file, int line)
+	PawnSScanf(AMX * amx, char * string, char * format, cell * params, int paramCount, char * file, int line)
 {
 	if (g_iTrueMax == 0)
 	{
