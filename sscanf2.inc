@@ -84,6 +84,28 @@ static stock
 	bool:SSCANF_gInit = false,
 	SSCANF_g_sPlayers[MAX_PLAYERS char];
 
+// Pre-hook data.
+#if !defined CHAIN_ORDER
+	#define CHAIN_ORDER() 0
+#endif
+
+#define CHAIN_HOOK(%0) forward @CO_%0();public @CO_%0(){return CHAIN_ORDER()+1;}
+#define CHAIN_NEXT(%0) @CO_%0
+
+#define CHAIN_FORWARD:%0_%2(%1)=%3; \
+	forward %0_%2(%1); \
+	public %0_%2(%1) <_ALS : _ALS_x0, _ALS : _ALS_x1> { return (%3); } \
+	public %0_%2(%1) <> { return (%3); }
+
+#define CHAIN_PUBLIC:%0(%1) %0(%1) <_ALS : _ALS_go>
+
+CHAIN_HOOK(SSCANF)
+#undef CHAIN_ORDER
+#define CHAIN_ORDER CHAIN_NEXT(SSCANF)
+
+static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
+static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
+
 #if defined _inc_a_npc
 	forward SSCANF_PlayerCheck();
 
@@ -102,9 +124,7 @@ static stock
 			SSCANF_PlayerCheck();
 			SetTimer("SSCANF_PlayerCheck", 1, 1);
 		#endif
-		#if defined SSCANF_OnNPCModeInit
-			SSCANF_OnNPCModeInit();
-		#endif
+		SSCANF_OnNPCModeInit();
 		return 1;
 	}
 
@@ -113,10 +133,8 @@ static stock
 	#else
 		#define _ALS_OnNPCModeInit
 	#endif
-	#define OnNPCModeInit SSCANF_OnNPCModeInit
-	#if defined SSCANF_OnNPCModeInit
-		forward SSCANF_OnNPCModeInit();
-	#endif
+	#define OnNPCModeInit(%0) CHAIN_PUBLIC:SSCANF_OnNPCModeInit(%0)
+	CHAIN_FORWARD:SSCANF_OnNPCModeInit() = 1;
 
 	/*
 	  SSCANF_PlayerCheck
@@ -173,6 +191,34 @@ static stock
 	}
 
 	/*
+	  OnScriptInit
+
+	  Called for earlier initialisation by YSI.
+	*/
+
+	#define SSCANF_BRACKETS ()
+	forward OnScriptInit SSCANF_BRACKETS;
+	#undef SSCANF_BRACKETS
+
+	public OnScriptInit()
+	{
+		if (!SSCANF_gInit)
+		{
+			SSCANF_RunInit();
+		}
+		SSCANF_OnScriptInit();
+		return 1;
+	}
+
+	#if defined _ALS_OnScriptInit
+		#undef OnScriptInit
+	#else
+		#define _ALS_OnScriptInit
+	#endif
+	#define OnScriptInit(%0) CHAIN_PUBLIC:SSCANF_OnScriptInit(%0)
+	CHAIN_FORWARD:SSCANF_OnScriptInit() = 1;
+
+	/*
 	  OnFilterScriptInit
 
 	  Called when the script starts if it is a filterscript, sets up the system,
@@ -186,9 +232,7 @@ static stock
 		{
 			SSCANF_RunInit();
 		}
-		#if defined SSCANF_OnFilterScriptInit
-			SSCANF_OnFilterScriptInit();
-		#endif
+		SSCANF_OnFilterScriptInit();
 		return 1;
 	}
 
@@ -197,10 +241,8 @@ static stock
 	#else
 		#define _ALS_OnFilterScriptInit
 	#endif
-	#define OnFilterScriptInit SSCANF_OnFilterScriptInit
-	#if defined SSCANF_OnFilterScriptInit
-		forward SSCANF_OnFilterScriptInit();
-	#endif
+	#define OnFilterScriptInit(%0) CHAIN_PUBLIC:SSCANF_OnFilterScriptInit(%0)
+	CHAIN_FORWARD:SSCANF_OnFilterScriptInit() = 1;
 
 	/*
 	  OnGameModeInit
@@ -216,9 +258,7 @@ static stock
 		{
 			SSCANF_RunInit();
 		}
-		#if defined SSCANF_OnGameModeInit
-			SSCANF_OnGameModeInit();
-		#endif
+		SSCANF_OnGameModeInit();
 		return 1;
 	}
 
@@ -227,10 +267,8 @@ static stock
 	#else
 		#define _ALS_OnGameModeInit
 	#endif
-	#define OnGameModeInit SSCANF_OnGameModeInit
-	#if defined SSCANF_OnGameModeInit
-		forward SSCANF_OnGameModeInit();
-	#endif
+	#define OnGameModeInit(%0) CHAIN_PUBLIC:SSCANF_OnGameModeInit(%0)
+	CHAIN_FORWARD:SSCANF_OnGameModeInit() = 1;
 
 	/*
 	  OnCachedInit
@@ -242,9 +280,7 @@ static stock
 	public OnCachedInit()
 	{
 		SSCANF_RunInit();
-		#if defined SSCANF_OnCachedInit
-			SSCANF_OnCachedInit();
-		#endif
+		SSCANF_OnCachedInit();
 		return 1;
 	}
 
@@ -253,10 +289,8 @@ static stock
 	#else
 		#define _ALS_OnCachedInit
 	#endif
-	#define OnCachedInit SSCANF_OnCachedInit
-	#if defined SSCANF_OnCachedInit
-		forward SSCANF_OnCachedInit();
-	#endif
+	#define OnCachedInit(%0) CHAIN_PUBLIC:SSCANF_OnCachedInit(%0)
+	CHAIN_FORWARD:SSCANF_OnCachedInit() = 1;
 
 	/*
 	  OnPlayerConnect
@@ -273,9 +307,7 @@ static stock
 			name[MAX_PLAYER_NAME + 1];
 		GetPlayerName(playerid, name, sizeof(name));
 		SSCANF_Join(playerid, name, IsPlayerNPC(playerid));
-		#if defined SSCANF_OnPlayerConnect
-			SSCANF_OnPlayerConnect(playerid);
-		#endif
+		SSCANF_OnPlayerConnect(playerid);
 		return 1;
 	}
 
@@ -284,10 +316,8 @@ static stock
 	#else
 		#define _ALS_OnPlayerConnect
 	#endif
-	#define OnPlayerConnect SSCANF_OnPlayerConnect
-	#if defined SSCANF_OnPlayerConnect
-		forward SSCANF_OnPlayerConnect(playerid);
-	#endif
+	#define OnPlayerConnect(%0) CHAIN_PUBLIC:SSCANF_OnPlayerConnect(%0)
+	CHAIN_FORWARD:SSCANF_OnPlayerConnect(playerid) = 1;
 
 	/*
 	  OnPlayerDisconnect
@@ -297,9 +327,7 @@ static stock
 
 	public OnPlayerDisconnect(playerid, reason)
 	{
-		#if defined SSCANF_OnPlayerDisconnect
-			SSCANF_OnPlayerDisconnect(playerid, reason);
-		#endif
+		SSCANF_OnPlayerDisconnect(playerid, reason);
 		SSCANF_Leave(playerid);
 		return 1;
 	}
@@ -309,10 +337,8 @@ static stock
 	#else
 		#define _ALS_OnPlayerDisconnect
 	#endif
-	#define OnPlayerDisconnect SSCANF_OnPlayerDisconnect
-	#if defined SSCANF_OnPlayerDisconnect
-		forward SSCANF_OnPlayerDisconnect(playerid, reason);
-	#endif
+	#define OnPlayerDisconnect(%0) CHAIN_PUBLIC:SSCANF_OnPlayerDisconnect(%0)
+	CHAIN_FORWARD:SSCANF_OnPlayerDisconnect(playerid, reason) = 1;
 #endif
 
 #define SSCANF_Init
