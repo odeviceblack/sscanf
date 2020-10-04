@@ -84,3 +84,22 @@ extern int
 extern cell
 	* gCallResolve;
 
+#if defined __cplusplus
+	#define PAWN_NATIVE_EXTERN extern "C"
+#else
+	#define PAWN_NATIVE_EXTERN extern
+#endif
+
+#if defined _WIN32 || defined __CYGWIN__
+	#define PAWN_NATIVE_DLLEXPORT __declspec(dllexport)
+	#define PAWN_NATIVE_DLLIMPORT __declspec(dllimport)
+	#define PAWN_NATIVE_API __cdecl
+#elif defined __linux__ || defined __APPLE__
+	#define PAWN_NATIVE_DLLEXPORT __attribute__((visibility("default")))
+	#define PAWN_NATIVE_DLLIMPORT 
+	#define PAWN_NATIVE_API __attribute__((cdecl))
+#endif
+
+#define PAWN_NATIVE_EXPORT PAWN_NATIVE_EXTERN PAWN_NATIVE_DLLEXPORT
+#define PAWN_NATIVE_IMPORT PAWN_NATIVE_EXTERN PAWN_NATIVE_DLLIMPORT
+

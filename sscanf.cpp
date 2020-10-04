@@ -235,27 +235,11 @@ bool SscanfErrLine()
 	return gCallLine > 0;
 }
 
-static cell AMX_NATIVE_CALL
-	Sscanf(AMX * amx, cell * params, const int paramCount)
+static cell
+	Sscanf(AMX * amx, char * string, char * format, cell * params, const int paramCount)
 {
 	struct args_s
-		args{ amx, params, 3, 3 };
-	//else if (paramCount == (2 + 1))
-	//{
-		// Only have an input and a specifier - better hope the whole specifier
-		// is quiet (i.e. enclosed in '{...}').
-	//}
-	// Set up function wide values.
-	// Get and check the main data.
-	// Pointer to the current format specifier.
-	// Doesn't use `SscanfError`, because we don't have the format specifier yet.
-	SAFE_STR_PARAM(amx, params[2], gFormat);
-	// Pointer to the current input data.
-	char *
-		string;
-	STR_PARAM(amx, params[1], string);
-	char *
-		format = gFormat;
+		args{ amx, params, 0, 0 };
 	// Check for CallRemoteFunction style null strings and correct.
 	if (string[0] == '\1' && string[1] == '\0')
 	{
@@ -1319,7 +1303,16 @@ static cell AMX_NATIVE_CALL
 	gCallLine = -1;
 	gCallResolve = 0;
 	logprintf("sscanf warning: include/plugin mismatch, please recompile your script for the latest features.");
-	cell ret = Sscanf(amx, params, paramCount);
+	// Set up function wide values.
+	// Get and check the main data.
+	// Pointer to the current format specifier.
+	// Doesn't use `SscanfError`, because we don't have the format specifier yet.
+	SAFE_STR_PARAM(amx, params[2], gFormat);
+	// Pointer to the current input data.
+	char *
+		string;
+	STR_PARAM(amx, params[1], string);
+	cell ret = Sscanf(amx, string, gFormat, params + 3, paramCount - 3);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
@@ -1387,12 +1380,46 @@ static cell AMX_NATIVE_CALL
 	gCallFile = 0;
 	gCallLine = params[2];
 	amx_GetAddr(amx, params[1], &gCallResolve);
-	cell ret = Sscanf(amx, params + 2, paramCount - 2);
+	SAFE_STR_PARAM(amx, params[4], gFormat);
+	// Pointer to the current input data.
+	char *
+		string;
+	STR_PARAM(amx, params[3], string);
+	cell ret = Sscanf(amx, string, gFormat, params + 5, paramCount - 5);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
 		free(gCallFile);
 	}
+	gCallResolve = pp;
+	gCallLine = pl;
+	gCallFile = pf;
+	gFormat = px;
+	return ret;
+}
+
+// native sscanf(const data[], const format[], (Float,_}:...);
+PAWN_NATIVE_EXPORT cell
+	sscanf(AMX * amx, char * string, char * format, cell * params, int paramCount, char * file, int line)
+{
+	if (g_iTrueMax == 0)
+	{
+		logprintf("sscanf error: System not initialised.");
+		return SSCANF_FAIL_RETURN;
+	}
+	// Bacup up the file/line data for nested calls.
+	char
+		* px = gFormat,
+		* pf = gCallFile;
+	int
+		pl = gCallLine;
+	cell *
+		pp = gCallResolve;
+	gFormat = 0;
+	gCallFile = file;
+	gCallLine = line;
+	cell ret = Sscanf(amx, string, format, params, paramCount);
+	// Restore and free the error data, if it wasn't constant.
 	gCallResolve = pp;
 	gCallLine = pl;
 	gCallFile = pf;
@@ -1436,7 +1463,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("\n");
 	logprintf(" ===============================\n");
 	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  2.10.2        \n");
+	logprintf("        Version:  2.10.3        \n");
 	logprintf("   (c) 2020 Alex \"Y_Less\" Cole  \n");
 	logprintf(" ===============================\n");
 
