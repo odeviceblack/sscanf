@@ -1,4 +1,4 @@
-# sscanf 2.10.0
+# sscanf 2.10.2
 
 ## NPC modes
 
