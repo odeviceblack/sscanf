@@ -60,3 +60,4 @@ SSCANF: clean
 	$(GPP) $(SSCANF) ./SDK/*.cpp
 	$(GPP) $(SSCANF) *.cpp
 	$(GPP) -m32 -O2 -fshort-wchar -shared -o $(SSCANF_OUTFILE) *.o
+
