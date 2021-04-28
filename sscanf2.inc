@@ -73,9 +73,11 @@ native SSCANF_IsConnected(playerid);
 
 // Get a global SSCANF setting/option.
 native SSCANF_GetOption(const name[]) = SSCANF_Option;
+native SSCANF_GetOption__(const name[]) = SSCANF_Option;
 
 // Set a global SSCANF setting/option.
 native SSCANF_SetOption(const name[], value) = SSCANF_Option;
+native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
 
 // Backwards-compatibility with `SSCANF_Option`.  Usage:
 //
@@ -84,20 +86,23 @@ native SSCANF_SetOption(const name[], value) = SSCANF_Option;
 //
 // This can't just use a default parameter because a user may want to set the
 // option to whatever that parameter is.
-#define SSCANF_Option SSCANF_GetOption
-#define SSCANF_GetOption(%0,%1) SSCANF_SetOption(%0,%1)
-
+#define SSCANF_Option SSCANF_GetOption__
+#define SSCANF_GetOption__(%0,%1) SSCANF_SetOption__(%0,%1)
 #define _ALS_SSCANF_Option
-#define _ALS_SSCANF_GetOption
+#define _ALS_SSCANF_GetOption__
 
 // Get the sscanf plugin version.
 native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version;
-native SSCANF_VersionBCD() = SSCANF_Version;
+native SSCANF_VersionString__(version[], size = sizeof (version)) = SSCANF_Version;
 
-#define SSCANF_Version SSCANF_VersionString
-#define SSCANF_VersionString() SSCANF_VersionBCD()
+native SSCANF_VersionBCD() = SSCANF_Version;
+native SSCANF_VersionBCD__() = SSCANF_Version;
+
+// The `SSCANF_Version` function is overloaded to take 0 or 2 parameters (or 1 plus a default).
+#define SSCANF_Version SSCANF_VersionString__
+#define SSCANF_VersionString__() SSCANF_VersionBCD__()
 #define _ALS_SSCANF_Version
-#define _ALS_SSCANF_VersionString
+#define _ALS_SSCANF_VersionString__
 
 #if defined __PawnBuild
 	#define sscanf( SSCANF__(__file,__line,
