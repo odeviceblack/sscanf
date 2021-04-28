@@ -1,13 +1,12 @@
 /*
- *  sscanf 2.10.0
- *  Created by Y_Less, updated by Emmet_.
+ *  sscanf 2.10.3
  *
  *  Version: MPL 1.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
  *  1.1 (the "License"); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
- *  [url]http://www.mozilla.org/MPL/[/url]
+ *  http://www.mozilla.org/MPL/
  *
  *  Software distributed under the License is distributed on an "AS IS" basis,
  *  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
@@ -21,6 +20,15 @@
  *  the Initial Developer. All Rights Reserved.
  *
  *  Contributor(s):
+ *
+ *      Cheaterman
+ *      Emmet_
+ *      karimcambridge
+ *      leHeix
+ *      maddinat0r
+ *      Soutclaws
+ *      Y_Less
+ *      ziggi
  *
  *  Special Thanks to:
  *
@@ -39,6 +47,17 @@
 	#error Please include <a_npc> or <a_samp> first.
 #endif
 
+#if !defined __PawnBuild && !defined SSCANF_NO_NICE_FEATURES
+	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.
+#endif
+
+#define SSCANF_VERSION_MAJOR 2
+#define SSCANF_VERSION_MINOR 10
+#define SSCANF_VERSION_BUILD 3
+
+#define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
+#define SSCANF_VERSION_BCD ((SSCANF_VERSION_MAJOR << 16) | (SSCANF_VERSION_MINOR << 8) | (SSCANF_VERSION_BUILD << 0))
+
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
 #if defined sscanf
@@ -53,10 +72,10 @@ native SSCANF_Leave(playerid);
 native SSCANF_IsConnected(playerid);
 
 // Get a global SSCANF setting/option.
-native SSCANF_GetOption(const name[]);
+native SSCANF_GetOption(const name[]) = SSCANF_Option;
 
 // Set a global SSCANF setting/option.
-native SSCANF_SetOption(const name[], value);
+native SSCANF_SetOption(const name[], value) = SSCANF_Option;
 
 // Backwards-compatibility with `SSCANF_Option`.  Usage:
 //
@@ -71,9 +90,14 @@ native SSCANF_SetOption(const name[], value);
 #define _ALS_SSCANF_Option
 #define _ALS_SSCANF_GetOption
 
-#if !defined __PawnBuild && !defined SSCANF_NO_NICE_FEATURES
-	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.
-#endif
+// Get the sscanf plugin version.
+native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version;
+native SSCANF_VersionBCD() = SSCANF_Version;
+
+#define SSCANF_Version SSCANF_VersionString
+#define SSCANF_VersionString() SSCANF_VersionBCD()
+#define _ALS_SSCANF_Version
+#define _ALS_SSCANF_VersionString
 
 #if defined __PawnBuild
 	#define sscanf( SSCANF__(__file,__line,

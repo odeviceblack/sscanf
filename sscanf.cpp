@@ -39,6 +39,14 @@
 
 #include "SDK/plugincommon.h"
 
+#define STRINGISE(n) #n
+
+#define SSCANF_VERSION_MAJOR 2
+#define SSCANF_VERSION_MINOR 10
+#define SSCANF_VERSION_BUILD 3
+
+#define SSCANF_VERSION STRINGISE(SSCANF_VERSION_MAJOR) "." STRINGISE(SSCANF_VERSION_MINOR) "." STRINGISE(SSCANF_VERSION_BUILD)
+
 //----------------------------------------------------------
 
 logprintf_t
@@ -1466,7 +1474,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("\n");
 	logprintf(" ===============================\n");
 	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  2.10.3        \n");
+	logprintf("        Version:  " SSCANF_VERSION "        \n");
 	logprintf("   (c) 2020 Alex \"Y_Less\" Cole  \n");
 	logprintf(" ===============================\n");
 
@@ -1603,6 +1611,29 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
+	n_SSCANF_Version(AMX * amx, cell * params)
+{
+	if (params[0] == 2 * sizeof(cell))
+	{
+		// Return the version as a string.
+		cell length = params[2];
+		if (length > 0)
+		{
+			cell * cptr;
+			amx_GetAddr(amx, params[1], &cptr);
+			amx_SetString(cptr, SSCANF_VERSION, 1, 0, length);
+		}
+	}
+	else if (params[0] != 0 * sizeof(cell))
+	{
+		SscanfError("SSCANF_Version has incorrect parameters.");
+		return 0;
+	}
+	// Return the version in BCD.
+	return (SSCANF_VERSION_MAJOR << 16) | (SSCANF_VERSION_MINOR << 8) | (SSCANF_VERSION_BUILD << 0);
+}
+
+static cell AMX_NATIVE_CALL
 	n_SSCANF_SetPlayerName(AMX * amx, cell * params)
 {
 	// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin
@@ -1638,6 +1669,7 @@ AMX_NATIVE_INFO
 			{"SSCANF_Option", n_SSCANF_SetOption},
 			{"SSCANF_SetOption", n_SSCANF_SetOption},
 			{"SSCANF_GetOption", n_SSCANF_GetOption},
+			{"SSCANF_Version", n_SSCANF_Version},
 			{0,        0}
 		};
 
