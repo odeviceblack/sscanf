@@ -924,7 +924,7 @@ For quick reference, here is a list of ALL the specifiers and their use:
 |  `%`                                     |  Deprecated optional specifier prefix  |
 |  `?`                                     |  Local options specifier               |
 
-## Main API
+## Full API
 
 ### `sscanf(const data[], const format[], {Float, _}:...);`
 
@@ -967,11 +967,13 @@ Get the SSCANF plugin version as a string explicitly (no overloaded `SSCANF_Vers
 
 Get the SSCANF plugin version as BCD explicitly (no overloaded `SSCANF_Version` call).
 
-### `SSCANF_Option(const name[]);`
+### `SSCANF_VERSION_STRING`
 
-Get an option.
+The SSCANF include version as a string.
 
-Set an option by passing a value, or get the value of the option by omitting the `value` parameter.
+### `SSCANF_VERSION_BCD`
+
+The SSCANF include version as BCD.
 
 ## `extract`
 

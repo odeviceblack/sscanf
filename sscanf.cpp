@@ -1609,11 +1609,6 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_GetOption(AMX * amx, cell * params)
-{
-}
-
-static cell AMX_NATIVE_CALL
 	n_SSCANF_Version(AMX * amx, cell * params)
 {
 	if (params[0] == 2 * sizeof(cell))
