@@ -1633,7 +1633,13 @@ static cell AMX_NATIVE_CALL
 		return 0;
 	}
 	// Return the version in BCD.
-	return (SSCANF_VERSION_MAJOR << 16) | (SSCANF_VERSION_MINOR << 8) | (SSCANF_VERSION_BUILD << 0);
+	return
+		((SSCANF_VERSION_MAJOR / 10) << 20) |
+		((SSCANF_VERSION_MAJOR % 10) << 16) |
+		((SSCANF_VERSION_MINOR / 10) << 12) |
+		((SSCANF_VERSION_MINOR % 10) << 8) |
+		((SSCANF_VERSION_BUILD / 10) << 4) |
+		((SSCANF_VERSION_BUILD % 10) << 0);
 }
 
 static cell AMX_NATIVE_CALL

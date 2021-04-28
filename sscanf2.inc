@@ -51,12 +51,25 @@
 	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.
 #endif
 
-#define SSCANF_VERSION_MAJOR 2
+#define SSCANF_VERSION_MAJOR  2
 #define SSCANF_VERSION_MINOR 10
-#define SSCANF_VERSION_BUILD 3
+#define SSCANF_VERSION_BUILD  3
 
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
-#define SSCANF_VERSION_BCD ((SSCANF_VERSION_MAJOR << 16) | (SSCANF_VERSION_MINOR << 8) | (SSCANF_VERSION_BUILD << 0))
+
+// Example:
+//
+//         2.10.3
+//     => 02 10 03
+//     => 0x021003
+//
+stock const SSCANF_VERSION_BCD =
+	((SSCANF_VERSION_MAJOR / 10) << 20) |
+	((SSCANF_VERSION_MAJOR % 10) << 16) |
+	((SSCANF_VERSION_MINOR / 10) << 12) |
+	((SSCANF_VERSION_MINOR % 10) <<  8) |
+	((SSCANF_VERSION_BUILD / 10) <<  4) |
+	((SSCANF_VERSION_BUILD % 10) <<  0) ;
 
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
