@@ -1431,3 +1431,8 @@ You edited something in the sscanf2 include - undo it or redownload it.
 
 * Fix bug in parameter counts.
 
+## Thanks to
+- maddinat0r, for hosting the repo for a very long time.
+- Emmet_, for his efforts in maintaining it for almost a year.
+- everyone who did and will help in improving sscanf.
+
