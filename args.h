@@ -1,4 +1,6 @@
 /*
+ *  sscanf 2.10.3
+ *
  *  Version: MPL 1.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
@@ -14,14 +16,23 @@
  *  The Original Code is the sscanf 2.0 SA:MP plugin.
  *
  *  The Initial Developer of the Original Code is Alex "Y_Less" Cole.
- *  Portions created by the Initial Developer are Copyright (c) 2020
+ *  Portions created by the Initial Developer are Copyright (C) 2020
  *  the Initial Developer. All Rights Reserved.
  *
  *  Contributor(s):
  *
+ *      Cheaterman
+ *      Emmet_
+ *      karimcambridge
+ *      leHeix
+ *      maddinat0r
+ *      Soutclaws
+ *      Y_Less
+ *      ziggi
+ *
  *  Special Thanks to:
  *
- *  SA:MP Team past, present and future
+ *      SA:MP Team past, present and future
  */
 
 #pragma once
