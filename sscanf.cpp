@@ -32,7 +32,9 @@
  *
  *  Special Thanks to:
  *
- *      SA:MP Team past, present and future
+ *      SA:MP Team past, present and future.
+ *      maddinat0r, for hosting the repo for a very long time.
+ *      Emmet_, for his efforts in maintaining it for almost a year.
  */
 
 #include <malloc.h>
