@@ -1,4 +1,4 @@
-# sscanf 2.10.2
+# sscanf 2.10.3
 
 ## NPC modes
 
@@ -775,8 +775,6 @@ You can also read the current value of an option by ommitting the second paramet
 new quiet = SSCANF_Option(SSCANF_QUIET);
 ```
 
-Note that `SSCANF_Option` is a wrapper around both `SSCANF_GetOption` and `SSCANF_SetOption`.
-
 The options are:
 
 ### OLD_DEFAULT_NAME:
@@ -925,6 +923,55 @@ For quick reference, here is a list of ALL the specifiers and their use:
 |  `}`                                     |  Close quiet section                   |
 |  `%`                                     |  Deprecated optional specifier prefix  |
 |  `?`                                     |  Local options specifier               |
+
+## Main API
+
+### `sscanf(const data[], const format[], {Float, _}:...);`
+
+The main sscanf function.
+
+### `unformat(const data[], const format[], {Float, _}:...);`
+
+An alternate name for the main `sscanf` function, since the sscanf format specifiers do not conform
+to the C API of the same name.
+
+### `SSCANF_Option(const name[], value);`
+
+Set an option.
+
+### `SSCANF_Option(const name[]);`
+
+Get an option.
+
+### `SSCANF_SetOption(const name[], value);`
+
+Set an option explicitly (no overloaded `SSCANF_Option` call).
+
+### `SSCANF_GetOption(const name[], value);`
+
+Get an option explicitly (no overloaded `SSCANF_Option` call).
+
+### `SSCANF_Version(version[], size = sizeof (version));`
+
+Get the SSCANF plugin version as a string (e.g. `"2.10.3"`).  Compare to the macro `SSCANF_VERSION_STRING`.
+
+### `SSCANF_Version();`
+
+Get the SSCANF plugin version as binary coded decimal (BCD) number (e.g. `0x2A3`).  Compare to the macro `SSCANF_VERSION_BCD`.
+
+### `SSCANF_VersionString(version[], size = sizeof (version));`
+
+Get the SSCANF plugin version as a string explicitly (no overloaded `SSCANF_Version` call).
+
+### `SSCANF_VersionBCD();`
+
+Get the SSCANF plugin version as BCD explicitly (no overloaded `SSCANF_Version` call).
+
+### `SSCANF_Option(const name[]);`
+
+Get an option.
+
+Set an option by passing a value, or get the value of the option by omitting the `value` parameter.
 
 ## `extract`
 
@@ -1439,8 +1486,11 @@ You edited something in the sscanf2 include - undo it or redownload it.
 
 * Fix bug in parameter counts.
 
-## Thanks to
-- maddinat0r, for hosting the repo for a very long time.
-- Emmet_, for his efforts in maintaining it for almost a year.
-- everyone who did and will help in improving sscanf.
+### sscanf 2.10.3 - 28/04/2021
+
+* Use prehooks in include.
+* Export `PawnSScanf` function from dll to other plugins.
+* `SSCANF_SetOption()` and `SSCANF_GetOption()` for more control of options.
+* `SSCANF_VERSION` and `SSCANF_Version()` to compare include and plugin versions.
+* Hide more internal functions.
 
