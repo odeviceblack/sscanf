@@ -344,6 +344,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 #define SSCANF_Init
 #define SSCANF_Join
 #define SSCANF_Leave
+#define SSCANF_IsConnected
 
 #if defined __PawnBuild
 	#define extract%0->%1; EXTRN%1;UNFORMAT__(__file,__line,_:EXTRV:EXTRX:%0,""#,%1,,);
