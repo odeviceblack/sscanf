@@ -769,6 +769,14 @@ SSCANF_Option(MATCH_NAME_PARTIAL, 0);
 sscanf(params, "?<SSCANF_QUIET=1>?<MATCH_NAME_PARTIAL=0>s[10]i", str, num);
 ```
 
+You can also read the current value of an option by ommitting the second parameter:
+
+```pawn
+new quiet = SSCANF_Option(SSCANF_QUIET);
+```
+
+Note that `SSCANF_Option` is a wrapper around both `SSCANF_GetOption` and `SSCANF_SetOption`.
+
 The options are:
 
 ### OLD_DEFAULT_NAME:

@@ -187,7 +187,10 @@ bool
 	DoK(AMX * amx, char ** defaults, char ** input, cell * cptr, bool optional, bool all);
 
 void
-	DoOptions(char *, cell);
+	SetOptions(char *, cell);
+
+cell
+	GetOptions(char *);
 
 char
 	* gFormat = 0,
@@ -941,7 +944,7 @@ static cell
 					{
 						char *
 							t = GetMultiType(&format);
-						if (t) DoOptions(t, -1);
+						if (t) SetOptions(t, -1);
 						else return SSCANF_FAIL_RETURN;
 						continue;
 					}
@@ -1571,18 +1574,32 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Option(AMX * amx, cell * params)
+	n_SSCANF_SetOption(AMX * amx, cell * params)
 {
 	if (params[0] != 2 * sizeof (cell))
 	{
-		SscanfError("SSCANF_Option has incorrect parameters.");
+		SscanfError("SSCANF_SetOption has incorrect parameters.");
 		return 0;
 	}
 	char *
 		string;
 	STR_PARAM(amx, params[1], string);
-	DoOptions(string, params[2]);
+	SetOptions(string, params[2]);
 	return 1;
+}
+
+static cell AMX_NATIVE_CALL
+	n_SSCANF_GetOption(AMX * amx, cell * params)
+{
+	if (params[0] != 1 * sizeof (cell))
+	{
+		SscanfError("SSCANF_GetOption has incorrect parameters.");
+		return 0;
+	}
+	char *
+		string;
+	STR_PARAM(amx, params[1], string);
+	return GetOptions(string);
 }
 
 static cell AMX_NATIVE_CALL
@@ -1618,7 +1635,9 @@ AMX_NATIVE_INFO
 			{"SSCANF_Join", n_SSCANF_Join},
 			{"SSCANF_Leave", n_SSCANF_Leave},
 			{"SSCANF_IsConnected", n_SSCANF_IsConnected},
-			{"SSCANF_Option", n_SSCANF_Option},
+			{"SSCANF_Option", n_SSCANF_SetOption},
+			{"SSCANF_SetOption", n_SSCANF_SetOption},
+			{"SSCANF_GetOption", n_SSCANF_GetOption},
 			{0,        0}
 		};
 
@@ -1676,3 +1695,4 @@ PLUGIN_EXPORT int PLUGIN_CALL
 {
 	return AMX_ERR_NONE;
 }
+

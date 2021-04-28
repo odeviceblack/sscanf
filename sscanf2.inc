@@ -45,14 +45,31 @@
 	#error sscanf (possibly the PAWN version) already defined.
 #endif
 
-native SSCANF__(const file[], const line, const data[], const format[], {Float,_}:...);
-native UNFORMAT__(const file[], const line, const data[], const format[], {Float,_}:...) = SSCANF__;
+native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
+native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
 native SSCANF_Init(players, invalid, len);
 native SSCANF_Join(playerid, const name[], npc);
 native SSCANF_Leave(playerid);
 native SSCANF_IsConnected(playerid);
 
-native SSCANF_Option(const name[], value);
+// Get a global SSCANF setting/option.
+native SSCANF_GetOption(const name[]);
+
+// Set a global SSCANF setting/option.
+native SSCANF_SetOption(const name[], value);
+
+// Backwards-compatibility with `SSCANF_Option`.  Usage:
+//
+//     SSCANF_Option(SSCANF_QUIET, 1);
+//     new quiet = SSCANF_Option(SSCANF_QUIET);
+//
+// This can't just use a default parameter because a user may want to set the
+// option to whatever that parameter is.
+#define SSCANF_Option SSCANF_GetOption
+#define SSCANF_GetOption(%0,%1) SSCANF_SetOption(%0,%1)
+
+#define _ALS_SSCANF_Option
+#define _ALS_SSCANF_GetOption
 
 #if !defined __PawnBuild && !defined SSCANF_NO_NICE_FEATURES
 	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.

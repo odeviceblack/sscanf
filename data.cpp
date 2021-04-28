@@ -91,7 +91,7 @@ void
 }
 
 void
-	DoOptions(char * name, cell value)
+	SetOptions(char * name, cell value)
 {
 	// Not the most flexible code I've ever written...
 	if (!strincmp(name, "OLD_DEFAULT_NAME", 16))
@@ -230,6 +230,49 @@ void
 	{
 		SscanfError("Unknown option name.");
 	}
+}
+
+cell
+	GetOptions(char * name)
+{
+	// Not the most flexible code I've ever written...
+	if (!strincmp(name, "OLD_DEFAULT_NAME", 16))
+	{
+		return (gOptions >> 0) & 1;
+	}
+	else if (!strincmp(name, "MATCH_NAME_PARTIAL", 18))
+	{
+		return (gOptions >> 1) & 1;
+	}
+	else if (!strincmp(name, "CELLMIN_ON_MATCHES", 18))
+	{
+		return (gOptions >> 2) & 1;
+	}
+	else if (!strincmp(name, "SSCANF_QUIET", 12))
+	{
+		return (gOptions >> 3) & 1;
+	}
+	else if (!strincmp(name, "SSCANF_ALPHA", 12))
+	{
+		return (gAlpha & 0xFF);
+	}
+	else if (!strincmp(name, "SSCANF_COLOUR_FORMS", 19))
+	{
+		return gForms;
+	}
+	else if (!strincmp(name, "SSCANF_ARGB", 11))
+	{
+		return (gAlpha >> 8) & 1;
+	}
+	else if (!strincmp(name, "OLD_DEFAULT_KUSTOM", 18) || !strincmp(name, "OLD_DEFAULT_CUSTOM", 18))
+	{
+		return (gOptions >> 4) & 1;
+	}
+	else
+	{
+		SscanfError("Unknown option name.");
+	}
+	return -1;
 }
 
 char
