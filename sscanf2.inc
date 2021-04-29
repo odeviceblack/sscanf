@@ -178,6 +178,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
 	public OnNPCModeInit()
 	{
+		state _ALS : _ALS_go;
 		SSCANF_Init(MAX_PLAYERS, INVALID_PLAYER_ID, MAX_PLAYER_NAME);
 		#if !defined SSCANF_NO_PLAYERS
 			// Initialise the system.
@@ -233,6 +234,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 #else
 	static stock SSCANF_RunInit()
 	{
+		state _ALS : _ALS_go;
 		new
 			name[MAX_PLAYER_NAME + 1];
 
