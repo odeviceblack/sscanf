@@ -26,7 +26,7 @@
 #      karimcambridge
 #      leHeix
 #      maddinat0r
-#      Soutclaws
+#      Southclaws
 #      Y_Less
 #      ziggi
 #
