@@ -2,6 +2,24 @@
 
 ## Introduction
 
+This is the `sscanf` plugin, which provides the `sscanf` function to extract basic structured data from strings.  This is slightly different to regular expressions, but both have their place.  A regular expression gives you total control over the exact structure of data down to the character level; however, extracting structured data like numbers using it is tricky.  Conversely this gives slightly higher-level "specifiers" which can easily extract data types, at the expense of fine-grained control.  To convert a string in to two numbers would look like:
+
+```pawn
+new num1, num2;
+sscanf("45 100", "ii", num1, num2);
+```
+
+`ii` is the specifier string, which here means "integer integer"; stating that the input string should be two whole numbers in a row (which is is - `"45 100"`).  `num1` and `num2` are the destination variables to store the found numbers in (after conversion from strings).  You can check if the conversion failed by looking for a non-naught return value:
+
+```pawn
+new num1, num2;
+if (sscanf("hello 100", "ii", num1, num2))
+{
+	printf("The input was not two numbers.");
+}
+```
+
+This will fail because `"hello"` is not a whole number (or indeed any type of number at all).  For more information on using the function refer to the tutorials or the reference documentation below:
 
 ## Contents
 
