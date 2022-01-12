@@ -109,8 +109,9 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 11.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
 * 12 [Future Plans](#future-plans)
     * 12.1 [Reserved Specifiers](#reserved-specifiers)
-    * 12.1 [Alternates](#alternates)
-    * 12.1 [Enums And Arrays](#enums-and-arrays)
+    * 12.2 [Alternates](#alternates)
+    * 12.3 [Enums And Arrays](#enums-and-arrays)
+    * 12.4 [Compilation](#compilation)
 * 13 [License](#license)
     * 13.1 [Version: MPL 1.1](#version-mpl-11)
     * 13.2 [Contributor(s):](#contributors)
@@ -1644,6 +1645,25 @@ Note that the branches must be mutually exclusive in some way.  If they overlap 
 ### Enums And Arrays
 
 More of these: nested arrays in enums, 2d/3d arrays, strings in enums and arrays, etc.
+
+### Compilation
+
+Basically pre-defining specifier strings for use later:
+
+```pawn
+new Specifier:spec = SSCANF_Compile("is[32]");
+
+SSCANF_Run(input, spec, int, string);
+```
+
+You could define the base `sscanf` as:
+
+```pawn
+sscanf(const input, const specifier, ...)
+{
+	return SSCANF_Run(input, SSCANF_Compile(specifier), ___(2));
+}
+```
 
 ## License
 
