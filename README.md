@@ -1639,7 +1639,7 @@ else
 }
 ```
 
-Note that the branches must be mutually exclusive in some way.  If they overlap you may never get a later one.
+Note that the branches must be mutually exclusive in some way.  If they overlap you may never get a later one.  Also variables from branches not taken may be clobbered in any way, so don't rely on their values at all.
 
 ### Enums And Arrays
 
