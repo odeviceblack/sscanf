@@ -54,7 +54,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 7.6 [SSCANF_ALPHA:](#sscanf_alpha)
     * 7.7 [SSCANF_COLOUR_FORMS:](#sscanf_colour_forms)
     * 7.8 [SSCANF_ARGB:](#sscanf_argb)
-* 8 [All specifiers](#all-specifiers)
+* 8 [All Specifiers](#all-specifiers)
 * 9 [Full API](#full-api)
     * 9.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
     * 9.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
@@ -107,18 +107,22 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 11.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
     * 11.36 [sscanf error: SSCANF_SetPlayerName has incorrect parameters.](#sscanf-error-sscanf_setplayername-has-incorrect-parameters)
     * 11.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-* 12 [License](#license)
-    * 12.1 [Version: MPL 1.1](#version-mpl-11)
-    * 12.2 [Contributor(s):](#contributors)
-    * 12.3 [Special Thanks to:](#special-thanks-to)
-* 13 [Changelog](#changelog)
-    * 13.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
-    * 13.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
-    * 13.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
-    * 13.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
-    * 13.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
-    * 13.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
-    * 13.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
+* 12 [Future Plans](#future-plans)
+    * 12.1 [Reserved Specifiers](#reserved-specifiers)
+    * 12.1 [Alternates](#alternates)
+    * 12.1 [Enums And Arrays](#enums-and-arrays)
+* 13 [License](#license)
+    * 13.1 [Version: MPL 1.1](#version-mpl-11)
+    * 13.2 [Contributor(s):](#contributors)
+    * 13.3 [Special Thanks to:](#special-thanks-to)
+* 14 [Changelog](#changelog)
+    * 14.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
+    * 14.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
+    * 14.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
+    * 14.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
+    * 14.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
+    * 14.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
+    * 14.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
 
 ## NPC modes
 
@@ -1575,6 +1579,71 @@ A `k` specifier has been used, but the corresponding function could not be found
 ### sscanf error: SSCANF_IsConnected has incorrect parameters.
 
 You edited something in the sscanf2 include - undo it or redownload it.
+
+## Future Plans
+
+### Reserved Specifiers
+
+The currently used specifiers are:
+
+```
+abcdefghiklmnopqrsuxz
+```
+
+This leaves only the following specifiers:
+
+```
+jtvwy
+```
+
+* `t` is for time - some sort of date/time processing that returns a unix timestamp.
+* `y` is for "YID" - the YSI user ID.  Don't use YSI?  Tough.
+* `v` I figure is for something to do with varargs, similar to `a` but for extra parameters.
+* `j` no idea yet.
+* `w` is the most important one to reserve - it is for extended specifiers.  Since there are so few left it is important to establish future compatibility.  Thus `w` is a prefix that indicates that the following specifier has an alternate meaning.  So `i` is "integer" but `wi` is something else entirely (don't know what yet).  This scheme does recurse endlessly so `wwi` and `wwwwwi` are also different.  In this way we will never run out and can start adding support for more obscure items like iterators and jagged arrays (the original idea for `j`).
+
+### Alternates
+
+Alternates are a feature added in sscanf 3 but not yet back-ported.  The symbol is `|` and if one fails to match another one is tried.  The selected branch is returned in the very first destination parameter, the remaining specifiers are all in order:
+
+```pawn
+if (sscanf(input, "'clothes'i|'weapon'ii", alternate, clothes, weapon, ammo) == 0)
+{
+	switch (alternate)
+	{
+	case 0:
+	{
+		// Clothes.
+		printf("Clothes = %d", clothes);
+	}
+	case 1:
+	{
+		// Weapohn.
+		printf("Weapon = %d, %d", weapon, ammo);
+	}
+	}
+}
+```
+
+Variables can be reused and won't be clobbered:
+
+```pawn
+sscanf(input, "?<SSCANF_COLOUR_FORMS=2>m|x", alternate, colour, colour);
+if (alternate == 0)
+{
+	printf("You entered colour #%06x", colour);
+}
+else
+{
+	printf("You entered colour %06x", colour);
+}
+```
+
+Note that the branches must be mutually exclusive in some way.  If they overlap you may never get a later one.
+
+### Enums And Arrays
+
+More of these: nested arrays in enums, 2d/3d arrays, strings in enums and arrays, etc.
 
 ## License
 
