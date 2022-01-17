@@ -64,13 +64,15 @@
 //     => 02 10 03
 //     => 0x021003
 //
-stock const SSCANF_VERSION_BCD =
+const SSCANF_VERSION =
 	((SSCANF_VERSION_MAJOR / 10) << 20) |
 	((SSCANF_VERSION_MAJOR % 10) << 16) |
 	((SSCANF_VERSION_MINOR / 10) << 12) |
 	((SSCANF_VERSION_MINOR % 10) <<  8) |
 	((SSCANF_VERSION_BUILD / 10) <<  4) |
 	((SSCANF_VERSION_BUILD % 10) <<  0) ;
+
+stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
