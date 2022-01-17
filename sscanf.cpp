@@ -304,7 +304,7 @@ static cell
 			// considered OK as that is likely a user's fault.
 			if (args.Pos < paramCount)
 			{
-				SscanfWarning("Format specifier does not match parameter count.");
+				SscanfWarning("Format specifier does not match parameter count 1.");
 			}
 			if (!doSave)
 			{
@@ -999,7 +999,7 @@ static cell
 		// Loop through if there's still parameters remaining.
 		if (!*format)
 		{
-			SscanfWarning("Format specifier does not match parameter count.");
+			SscanfWarning("Format specifier does not match parameter count 2.");
 			if (!doSave)
 			{
 				// Started a quiet section but never explicitly ended it.
@@ -1219,44 +1219,130 @@ static cell
 	{
 		do
 		{
-			if (!IsWhitespace(*format))
+			if (*format == '\'')
 			{
-				// Only print this warning if the remaining characters are not
-				// spaces - spaces are allowed, and sometimes required, on the
-				// ends of formats (e.g. to stop the final 's' specifier
-				// collecting all remaining characters and only get one word).
-				// We could check that the remaining specifier is a valid one,
-				// but this is only a guide - they shouldn't even have other
-				// characters IN the specifier so it doesn't matter - it will
-				// point to a bug, which is the important thing.
-				if (doSave)
+				// Allow trailing string literals.
+				++format;
+				char
+					* str = format,
+					* write = format;
+				bool
+					escape = false;
+				while (!IsEnd(*str) && (escape || *str != '\''))
 				{
-					if (*format == '}')
+					if (*str == '\\')
 					{
-						SscanfWarning("Not in a quiet section.");
-					}
-					else if (*format != '{')
-					{
-						// Fix the bad display bug.
-						SscanfWarning("Format specifier does not match parameter count.");
-					}
-					// Only display it once.
-					break;
-				}
-				else
-				{
-					if (*format == '}')
-					{
-						doSave = true;
+						if (escape)
+						{
+							// "\\" - Go back a step to write this
+							// character over the last character (which
+							// just happens to be the same character).
+							--write;
+						}
+						escape = !escape;
 					}
 					else
 					{
-						SscanfWarning("Format specifier does not match parameter count.");
-						break;
+						if (*str == '\'')
+						{
+							// Overwrite the escape character with the
+							// quote character.  Must have been
+							// preceeded by a slash or it wouldn't have
+							// got to here in the loop.
+							--write;
+						}
+						escape = false;
 					}
+					// Copy the string over itself to get rid of excess
+					// escape characters.
+					// Not sure if it's faster in the average case to
+					// always do the copy or check if it's needed.
+					// This write is always safe as it makes the string
+					// shorter, so we'll never run out of space.  It
+					// will also not overwrite the original string.
+					*write++ = *str++;
+				}
+				if (*str == '\'')
+				{
+					// Correct end.  Make a shorter string to search
+					// for.
+					*write = '\0';
+					// Find the current section of format in string.
+					char *
+						find = strstr(string, format);
+					if (!find)
+					{
+						// Didn't find the string
+						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+						return SSCANF_FAIL_RETURN;
+					}
+					// Found the string.  Update the current string
+					// position to the length of the search term
+					// further along from the start of the term.  Use
+					// "write" here as we want the escaped string
+					// length.
+					string = find + (write - format);
+					// Move to after the end of the search string.  Use
+					// "str" here as we want the unescaped string
+					// length.
+					format = str + 1;
+				}
+				else
+				{
+					SscanfWarning("Unclosed string literal.");
+					char *
+						find = strstr(string, format);
+					if (!find)
+					{
+						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+						return SSCANF_FAIL_RETURN;
+					}
+					string = find + (write - format);
+					format = str;
 				}
 			}
-			++format;
+			else
+			{
+				if (!IsWhitespace(*format))
+				{
+					// Only print this warning if the remaining characters are
+					// not spaces - spaces are allowed, and sometimes required,
+					// on the ends of formats (e.g. to stop the final 's'
+					// specifier collecting all remaining characters and only
+					// get one word).  We could check that the remaining
+					// specifier is a valid one, but this is only a guide - they
+					// shouldn't even have other characters IN the specifier so
+					// it doesn't matter - it will point to a bug, which is the
+					// important thing.
+					if (doSave)
+					{
+						if (*format == '}')
+						{
+							SscanfWarning("Not in a quiet section.");
+						}
+						else if (*format != '{')
+						{
+							// Fix the bad display bug.
+							SscanfWarning("Format specifier does not match parameter count 3: %c.", *format);
+						}
+						// Only display it once.
+						break;
+					}
+					else
+					{
+						if (*format == '}')
+						{
+							doSave = true;
+						}
+						else
+						{
+							SscanfWarning("Format specifier does not match parameter count 4.");
+							break;
+						}
+					}
+				}
+				++format;
+			}
 		}
 		while (*format);
 	}
