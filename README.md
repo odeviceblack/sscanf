@@ -1099,7 +1099,11 @@ The SSCANF include version as a string.
 
 ### `SSCANF_VERSION_BCD`
 
-The SSCANF include version as BCD.
+The SSCANF include version as BCD, as a `stock const` variable.
+
+### `SSCANF_VERSION`
+
+The SSCANF include version as BCD, as a `const` to work at compile-time.
 
 ## `extract`
 
@@ -1748,4 +1752,5 @@ the Initial Developer. All Rights Reserved.
 ### sscanf 2.10.4 - 17/01/2022
 
 * Fix trailing string literals, to allow `"x'!'"` for example.
+* Added `SSCANF_VERSION` for compile-time checks.
 
