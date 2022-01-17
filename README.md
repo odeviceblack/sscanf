@@ -1,4 +1,4 @@
-# sscanf 2.10.3
+# sscanf 2.10.4
 
 ## Introduction
 
@@ -124,6 +124,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
     * 14.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
     * 14.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
+    * 14.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
 
 ## NPC modes
 
@@ -1743,4 +1744,8 @@ the Initial Developer. All Rights Reserved.
 * `SSCANF_VERSION` and `SSCANF_Version()` to compare include and plugin versions.
 * Hide more internal functions.
 * Fix the license.
+
+### sscanf 2.10.4 - 17/01/2022
+
+* Fix trailing string literals, to allow `"x'!'"` for example.
 
