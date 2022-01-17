@@ -50,7 +50,8 @@
 
 #include "SDK/plugincommon.h"
 
-#define STRINGISE(n) #n
+#define DEFER_STRINGISE(n) #n
+#define STRINGISE(n) DEFER_STRINGISE(n)
 
 #define SSCANF_VERSION_MAJOR 2
 #define SSCANF_VERSION_MINOR 10
