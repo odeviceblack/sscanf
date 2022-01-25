@@ -1723,7 +1723,7 @@ AMX_NATIVE_INFO
 		};
 
 // From "amx.c", part of the PAWN language runtime:
-// http://code.google.com/p/pawnscript/source/browse/trunk/amx/amx.c
+// http://code.google.com/p/pawnscript/source/browse/trunk/amx.c
 
 #define USENAMETABLE(hdr) \
 	((hdr)->defsize==sizeof(AMX_FUNCSTUBNT))
@@ -1854,10 +1854,10 @@ PLUGIN_EXPORT void PLUGIN_CALL
 	logprintf(" ===============================\n");
 }
 
-#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+#if defined(LINUX) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__OpenBSD__)
 	#define PLUGIN_WINAPI
 	#define PLUGIN_FAR
-#else
+#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 	#define PLUGIN_WINAPI WINAPI
 	#define PLUGIN_FAR FAR
 #endif

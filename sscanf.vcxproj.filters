@@ -6,19 +6,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SDK\amx\amx.h">
+    <ClInclude Include="SDK\amx.h">
       <Filter>amx</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\amx\getch.h">
-      <Filter>amx</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\plugin.h">
+    <ClInclude Include="SDK\getch.h">
       <Filter>amx</Filter>
     </ClInclude>
     <ClInclude Include="SDK\plugincommon.h">
       <Filter>amx</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\amx\sclinux.h">
+    <ClInclude Include="SDK\sclinux.h">
       <Filter>amx</Filter>
     </ClInclude>
     <ClInclude Include="array.h" />
@@ -30,10 +27,10 @@
     <ClInclude Include="args.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SDK\amxplugin.cpp">
+    <ClCompile Include="SDK\amx.c">
       <Filter>amx</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\amx\getch.c">
+    <ClCompile Include="SDK\getch.c">
       <Filter>amx</Filter>
     </ClCompile>
     <ClCompile Include="array.cpp" />

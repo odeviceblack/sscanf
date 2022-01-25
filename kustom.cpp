@@ -37,7 +37,7 @@
  *      Emmet_, for his efforts in maintaining it for almost a year.
  */
 
-#include "SDK/amx/amx.h"
+#include "SDK/amx.h"
 
 #include "sscanf.h"
 #include "utils.h"

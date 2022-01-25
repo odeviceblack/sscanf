@@ -113,7 +113,6 @@
     <ClInclude Include="args.h" />
     <ClInclude Include="SDK\amx\amx.h" />
     <ClInclude Include="SDK\amx\getch.h" />
-    <ClInclude Include="SDK\plugin.h" />
     <ClInclude Include="SDK\plugincommon.h" />
     <ClInclude Include="SDK\amx\sclinux.h" />
     <ClInclude Include="array.h" />

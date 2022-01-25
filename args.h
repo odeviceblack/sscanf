@@ -39,7 +39,7 @@
 
 #pragma once
 
-#include "SDK/amx/amx.h"
+#include "SDK/amx.h"
 
 struct args_s
 {
