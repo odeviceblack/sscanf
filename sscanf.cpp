@@ -1544,57 +1544,6 @@ void
 }
 //#endif
 
-//----------------------------------------------------------
-// The Support() function indicates what possibilities this
-// plugin has. The SUPPORTS_VERSION flag is required to check
-// for compatibility with the server. 
-
-PLUGIN_EXPORT unsigned int PLUGIN_CALL
-	Supports() 
-{
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
-}
-
-//----------------------------------------------------------
-// The Load() function gets passed on exported functions from
-// the SA-MP Server, like the AMX Functions and logprintf().
-// Should return true if loading the plugin has succeeded.
-
-PLUGIN_EXPORT bool PLUGIN_CALL
-	Load(void ** ppData)
-{
-	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-	real_logprintf = logprintf;
-	//GetServer = (GetServer_t)ppData[0xE1];
-	
-	//logprintf("0x%08X\n", (int)logprintf);
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  " SSCANF_VERSION "        \n");
-	logprintf("   (c) 2020 Alex \"Y_Less\" Cole  \n");
-	logprintf(" ===============================\n");
-
-	#if SSCANF_QUIET
-		logprintf = qlog;
-	#endif
-	return true;
-}
-
-//----------------------------------------------------------
-// The Unload() function is called when the server shuts down,
-// meaning this plugin gets shut down with it.
-
-PLUGIN_EXPORT void PLUGIN_CALL
-	Unload()
-{
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("     sscanf plugin unloaded.    \n");
-	logprintf(" ===============================\n");
-}
-
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Init(AMX * amx, cell * params)
 {
@@ -1790,8 +1739,23 @@ AMX_NATIVE_INFO
 		(char *)((unsigned char*)(hdr) + (unsigned)((AMX_FUNCSTUBNT*)(entry))->nameofs) : \
 		((AMX_FUNCSTUB*)(entry))->name)
 
-PLUGIN_EXPORT int PLUGIN_CALL
-	AmxLoad(AMX * amx) 
+//----------------------------------------------------------
+// The Support() function indicates what possibilities this
+// plugin has. The SUPPORTS_VERSION flag is required to check
+// for compatibility with the server. 
+
+PLUGIN_EXPORT unsigned int PLUGIN_CALL
+	Supports() 
+{
+	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
+}
+
+//----------------------------------------------------------
+// The Load() function gets passed on exported functions from
+// the SA-MP Server, like the AMX Functions and logprintf().
+// Should return true if loading the plugin has succeeded.
+
+int Init(AMX * amx) 
 {
 	int
 		num,
@@ -1822,9 +1786,155 @@ PLUGIN_EXPORT int PLUGIN_CALL
 // When a gamemode is over or a filterscript gets unloaded, this
 // function gets called. No special actions needed in here.
 
+int Cleanup(AMX * amx) 
+{
+	return AMX_ERR_NONE;
+}
+
+// Standard gamemode/filterscript functions.
+PLUGIN_EXPORT int PLUGIN_CALL
+	AmxLoad(AMX * amx) 
+{
+	return Init(amx);
+}
+
 PLUGIN_EXPORT int PLUGIN_CALL
 	AmxUnload(AMX * amx) 
 {
-	return AMX_ERR_NONE;
+	return Cleanup(amx);
+}
+
+//----------------------------------------------------------
+// The Support() function indicates what possibilities this
+// plugin has. The SUPPORTS_VERSION flag is required to check
+// for compatibility with the server. 
+
+PLUGIN_EXPORT unsigned int PLUGIN_CALL
+	Supports() 
+{
+	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
+}
+
+//----------------------------------------------------------
+// The Load() function gets passed on exported functions from
+// the SA-MP Server, like the AMX Functions and logprintf().
+// Should return true if loading the plugin has succeeded.
+
+PLUGIN_EXPORT bool PLUGIN_CALL
+	Load(void ** ppData)
+{
+	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
+	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	real_logprintf = logprintf;
+	//GetServer = (GetServer_t)ppData[0xE1];
+	
+	logprintf("\n");
+	logprintf(" ===============================\n");
+	logprintf("      sscanf plugin loaded.     \n");
+	logprintf("        Version:  " SSCANF_VERSION "        \n");
+	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
+	logprintf(" ===============================\n");
+
+	#if SSCANF_QUIET
+		logprintf = qlog;
+	#endif
+	return true;
+}
+
+//----------------------------------------------------------
+// The Unload() function is called when the server shuts down,
+// meaning this plugin gets shut down with it.
+
+PLUGIN_EXPORT void PLUGIN_CALL
+	Unload()
+{
+	logprintf("\n");
+	logprintf(" ===============================\n");
+	logprintf("     sscanf plugin unloaded.    \n");
+	logprintf(" ===============================\n");
+}
+
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+	#define PLUGIN_WINAPI
+	#define PLUGIN_FAR
+#else
+	#define PLUGIN_WINAPI WINAPI
+	#define PLUGIN_FAR FAR
+#endif
+
+int NpcInit(AMX * amx)
+{
+	logprintf = qlog;
+	real_logprintf = qlog;
+	
+	logprintf("\n");
+	logprintf(" ===============================\n");
+	logprintf("      sscanf plugin loaded.     \n");
+	logprintf("        Version:  " SSCANF_VERSION " (NPC)  \n");
+	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
+	logprintf(" ===============================\n");
+
+	return Init(amx);
+}
+
+int NpcCleanup(AMX * amx)
+{
+	int ret = Cleanup(amx);
+
+	logprintf("\n");
+	logprintf(" ===============================\n");
+	logprintf("     sscanf plugin unloaded.    \n");
+	logprintf(" ===============================\n");
+
+	return ret;
+}
+
+// 
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanfInit(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcInit(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanf2Init(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcInit(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanfInit(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcInit(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanf2Init(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcInit(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanfCleanup(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcCleanup(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanf2Cleanup(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcCleanup(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanfCleanup(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcCleanup(amx);
+}
+
+PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanf2Cleanup(AMX PLUGIN_FAR * amx)
+{
+	// NPC plugin init functions.  Relies on the plugin name.
+	return NpcCleanup(amx);
 }
 
