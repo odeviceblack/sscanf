@@ -68,6 +68,56 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
+// These are the pointers to all the functions currently used by sscanf.  If
+// more are added, this table will need to be updated.
+static void *
+	NPC_AMX_FUNCTIONS[] = {
+		NULL,                       // PLUGIN_AMX_EXPORT_Align16
+		NULL,                       // PLUGIN_AMX_EXPORT_Align32
+		NULL,                       // PLUGIN_AMX_EXPORT_Align64
+		NULL,                       // PLUGIN_AMX_EXPORT_Allot
+		NULL,                       // PLUGIN_AMX_EXPORT_Callback
+		NULL,                       // PLUGIN_AMX_EXPORT_Cleanup
+		NULL,                       // PLUGIN_AMX_EXPORT_Clone
+		(void *)&npcamx_Exec,       // PLUGIN_AMX_EXPORT_Exec
+		NULL,                       // PLUGIN_AMX_EXPORT_FindNative
+		(void *)&npcamx_FindPublic, // PLUGIN_AMX_EXPORT_FindPublic
+		NULL,                       // PLUGIN_AMX_EXPORT_FindPubVar
+		NULL,                       // PLUGIN_AMX_EXPORT_FindTagId
+		NULL,                       // PLUGIN_AMX_EXPORT_Flags
+		(void *)&npcamx_GetAddr,    // PLUGIN_AMX_EXPORT_GetAddr
+		NULL,                       // PLUGIN_AMX_EXPORT_GetNative
+		NULL,                       // PLUGIN_AMX_EXPORT_GetPublic
+		NULL,                       // PLUGIN_AMX_EXPORT_GetPubVar
+		(void *)&npcamx_GetString,  // PLUGIN_AMX_EXPORT_GetString
+		NULL,                       // PLUGIN_AMX_EXPORT_GetTag
+		NULL,                       // PLUGIN_AMX_EXPORT_GetUserData
+		NULL,                       // PLUGIN_AMX_EXPORT_Init
+		NULL,                       // PLUGIN_AMX_EXPORT_InitJIT
+		NULL,                       // PLUGIN_AMX_EXPORT_MemInfo
+		NULL,                       // PLUGIN_AMX_EXPORT_NameLength
+		NULL,                       // PLUGIN_AMX_EXPORT_NativeInfo
+		NULL,                       // PLUGIN_AMX_EXPORT_NumNatives
+		NULL,                       // PLUGIN_AMX_EXPORT_NumPublics
+		NULL,                       // PLUGIN_AMX_EXPORT_NumPubVars
+		NULL,                       // PLUGIN_AMX_EXPORT_NumTags
+		NULL,                       // PLUGIN_AMX_EXPORT_Push
+		NULL,                       // PLUGIN_AMX_EXPORT_PushArray
+		(void *)&npcamx_PushString, // PLUGIN_AMX_EXPORT_PushString
+		NULL,                       // PLUGIN_AMX_EXPORT_RaiseError
+		(void *)&npcamx_Register,   // PLUGIN_AMX_EXPORT_Register
+		(void *)&npcamx_Release,    // PLUGIN_AMX_EXPORT_Release
+		NULL,                       // PLUGIN_AMX_EXPORT_SetCallback
+		NULL,                       // PLUGIN_AMX_EXPORT_SetDebugHook
+		(void *)&npcamx_SetString,  // PLUGIN_AMX_EXPORT_SetString
+		NULL,                       // PLUGIN_AMX_EXPORT_SetUserData
+		(void *)&npcamx_StrLen,     // PLUGIN_AMX_EXPORT_StrLen
+		NULL,                       // PLUGIN_AMX_EXPORT_UTF8Check
+		NULL,                       // PLUGIN_AMX_EXPORT_UTF8Get
+		NULL,                       // PLUGIN_AMX_EXPORT_UTF8Len
+		NULL,                       // PLUGIN_AMX_EXPORT_UTF8Put
+};
+
 extern void *
 	pAMXFunctions;
 
@@ -1838,6 +1888,7 @@ PLUGIN_EXPORT void PLUGIN_CALL
 
 int NpcInit(AMX * amx)
 {
+	pAMXFunctions = NPC_AMX_FUNCTIONS;
 	logprintf = qlog;
 	real_logprintf = qlog;
 	
