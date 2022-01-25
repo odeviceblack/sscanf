@@ -26,6 +26,9 @@
     <ClInclude Include="SDK\getch.h">
       <Filter>amx</Filter>
     </ClInclude>
+    <ClInclude Include="SDK\amx.h">
+      <Filter>amx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="array.cpp" />
