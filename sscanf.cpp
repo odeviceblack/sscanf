@@ -1767,7 +1767,7 @@ AMX_NATIVE_INFO
 		};
 
 // From "amx.c", part of the PAWN language runtime:
-// http://code.google.com/p/pawnscript/source/browse/trunk/amx.c
+// http://code.google.com/p/pawnscript/source/browse/trunk/amx/amx.c
 
 #define USENAMETABLE(hdr) \
 	((hdr)->defsize==sizeof(AMX_FUNCSTUBNT))

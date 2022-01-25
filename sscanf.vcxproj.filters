@@ -15,11 +15,7 @@
     <ClInclude Include="specifiers.h" />
     <ClInclude Include="sscanf.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="SDK\amx\amx.h" />
-    <ClInclude Include="SDK\amx\sclinux.h" />
-    <ClInclude Include="args.h">
-      <Filter>amx</Filter>
-    </ClInclude>
+    <ClInclude Include="args.h" />
     <ClInclude Include="SDK\osdefs.h">
       <Filter>amx</Filter>
     </ClInclude>
