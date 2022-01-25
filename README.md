@@ -125,14 +125,11 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
     * 14.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
     * 14.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
+    * 14.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
 
 ## NPC modes
 
-To use sscanf in an NPC mode, download this file:
-
-http://dl.dropbox.com/u/21683085/npcdll.rar
-
-And extract it to your root server directory (so `amxsscanf.dll` is in the same directory as `samp-npc.exe`). Then use as normal. The only tiny difference is that `u`, `r`, and `q` don't know if a user is a bot or not, so just assume they are all players - use accordingly.
+To use sscanf in an NPC mode save the plugin as `amxsscanf.dll` or `amxsscanf.so` in the same directory as `samp-npc(.exe)` (i.e. the server root).  This allows NPC modes to automatically find and load the library.  The only tiny differences between this sscanf and the normal sscanf are that there are no prints; and `u`, `r`, and `q` don't know if a user is a bot or not thus just assume they are all players.
 
 ## Downloads
 
@@ -1753,4 +1750,8 @@ the Initial Developer. All Rights Reserved.
 
 * Fix trailing string literals, to allow `"x'!'"` for example.
 * Added `SSCANF_VERSION` for compile-time checks.
+
+### sscanf 2.11.1 - 25/01/2022
+
+* Re-added NPC mode support.
 
