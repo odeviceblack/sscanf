@@ -250,7 +250,7 @@ bool SscanfErrLine()
 }
 
 static cell
-	Sscanf(AMX * amx, char * string, char * format, cell * params, const int paramCount)
+	Sscanf(AMX * amx, char * string, char * format, cell const * params, const int paramCount)
 {
 	struct args_s
 		args{ amx, params, 0, 0 };
@@ -1349,7 +1349,7 @@ static cell
 }
 
 static cell AMX_NATIVE_CALL
-	n_old_sscanf(AMX * amx, cell * params)
+	n_old_sscanf(AMX * amx, cell const * params)
 {
 	if (g_iTrueMax == 0)
 	{
@@ -1427,7 +1427,7 @@ static cell AMX_NATIVE_CALL
 
 // native sscanf(const data[], const format[], (Float,_}:...);
 static cell AMX_NATIVE_CALL
-	n_sscanf(AMX * amx, cell * params)
+	n_sscanf(AMX * amx, cell const * params)
 {
 	if (g_iTrueMax == 0)
 	{
@@ -1500,7 +1500,7 @@ static cell AMX_NATIVE_CALL
 
 // native sscanf(const data[], const format[], (Float,_}:...);
 PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
-	PawnSScanf(AMX * amx, char * string, char * format, cell * params, int paramCount, char * file, int line)
+	PawnSScanf(AMX * amx, char * string, char * format, cell const * params, int paramCount, char * file, int line)
 {
 	if (g_iTrueMax == 0)
 	{
@@ -1536,7 +1536,7 @@ void
 //#endif
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Init(AMX * amx, cell * params)
+	n_SSCANF_Init(AMX * amx, cell const * params)
 {
 	if (params[0] != 3 * sizeof (cell))
 	{
@@ -1577,7 +1577,7 @@ static void
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_IsConnected(AMX * amx, cell * params)
+	n_SSCANF_IsConnected(AMX * amx, cell const * params)
 {
 	cell playerid;
 
@@ -1591,7 +1591,7 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Join(AMX * amx, cell * params)
+	n_SSCANF_Join(AMX * amx, cell const * params)
 {
 	if (params[0] != 3 * sizeof (cell))
 	{
@@ -1607,7 +1607,7 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Leave(AMX * amx, cell * params)
+	n_SSCANF_Leave(AMX * amx, cell const * params)
 {
 	if (params[0] != 1 * sizeof (cell))
 	{
@@ -1620,7 +1620,7 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Option(AMX * amx, cell * params)
+	n_SSCANF_Option(AMX * amx, cell const * params)
 {
 	if (params[0] == 1 * sizeof (cell))
 	{
@@ -1647,7 +1647,7 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_Version(AMX * amx, cell * params)
+	n_SSCANF_Version(AMX * amx, cell const * params)
 {
 	if (params[0] == 2 * sizeof(cell))
 	{
@@ -1676,7 +1676,7 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
-	n_SSCANF_SetPlayerName(AMX * amx, cell * params)
+	n_SSCANF_SetPlayerName(AMX * amx, cell const * params)
 {
 	// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin
 	// level.  This allows us to intercept name changes.
@@ -1796,17 +1796,6 @@ PLUGIN_EXPORT int PLUGIN_CALL
 }
 
 //----------------------------------------------------------
-// The Support() function indicates what possibilities this
-// plugin has. The SUPPORTS_VERSION flag is required to check
-// for compatibility with the server. 
-
-PLUGIN_EXPORT unsigned int PLUGIN_CALL
-	Supports() 
-{
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
-}
-
-//----------------------------------------------------------
 // The Load() function gets passed on exported functions from
 // the SA-MP Server, like the AMX Functions and logprintf().
 // Should return true if loading the plugin has succeeded.
@@ -1843,14 +1832,6 @@ PLUGIN_EXPORT void PLUGIN_CALL
 	logprintf(" ===============================\n");
 }
 
-#if defined(LINUX) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__OpenBSD__)
-	#define PLUGIN_WINAPI
-	#define PLUGIN_FAR
-#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-	#define PLUGIN_WINAPI WINAPI
-	#define PLUGIN_FAR FAR
-#endif
-
 int NpcInit(AMX * amx)
 {
 	logprintf = qlog;
@@ -1878,50 +1859,49 @@ int NpcCleanup(AMX * amx)
 	return ret;
 }
 
-// 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanfInit(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_sscanfInit(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcInit(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanf2Init(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_sscanf2Init(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcInit(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanfInit(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_amxsscanfInit(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcInit(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanf2Init(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_amxsscanf2Init(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcInit(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanfCleanup(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_sscanfCleanup(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcCleanup(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_sscanf2Cleanup(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_sscanf2Cleanup(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcCleanup(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanfCleanup(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_amxsscanfCleanup(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcCleanup(amx);
 }
 
-PLUGIN_EXPORT int PLUGIN_WINAPI amx_amxsscanf2Cleanup(AMX PLUGIN_FAR * amx)
+PLUGIN_EXPORT int PLUGIN_CALL amx_amxsscanf2Cleanup(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcCleanup(amx);

@@ -53,7 +53,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;_DEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;_DEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;PAWN_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -81,7 +81,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;NDEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;NDEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;PAWN_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
@@ -112,7 +112,8 @@
   <ItemGroup>
     <ClInclude Include="args.h" />
     <ClInclude Include="SDK\amx\amx.h" />
-    <ClInclude Include="SDK\amx\getch.h" />
+    <ClInclude Include="SDK\getch.h" />
+    <ClInclude Include="SDK\osdefs.h" />
     <ClInclude Include="SDK\plugincommon.h" />
     <ClInclude Include="SDK\amx\sclinux.h" />
     <ClInclude Include="array.h" />
@@ -124,8 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="kustom.cpp" />
-    <ClCompile Include="SDK\amxplugin.cpp" />
-    <ClCompile Include="SDK\amx\getch.c" />
+    <ClCompile Include="SDK\amx.c" />
     <ClCompile Include="array.cpp" />
     <ClCompile Include="data.cpp" />
     <ClCompile Include="enum.cpp" />

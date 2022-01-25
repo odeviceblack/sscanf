@@ -44,7 +44,7 @@
 struct args_s
 {
 	AMX * Amx;
-	cell * Params;
+	cell const * Params;
 	int Pos;
 	int Marker;
 
