@@ -1,6 +1,6 @@
 /*  Pawn Abstract Machine (for the Pawn language)
  *
- *  Copyright (c) ITB CompuPhase, 1997-2005
+ *  Copyright (c) ITB CompuPhase, 1997-2006
  *
  *  This software is provided "as-is", without any express or implied warranty.
  *  In no event will the authors be held liable for any damages arising from
@@ -18,8 +18,14 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id: amx.h,v 1.5 2006/03/26 16:56:15 spookie Exp $
+ *  Version: $Id: amx.h 3648 2006-10-12 11:24:50Z thiadmer $
  */
+
+#ifndef AMX_H_INCLUDED
+#define AMX_H_INCLUDED
+
+#include <stdlib.h>   /* for size_t */
+#include <limits.h>
 
 #if defined FREEBSD && !defined __FreeBSD__
   #define __FreeBSD__
@@ -28,13 +34,10 @@
   #include <sclinux.h>
 #endif
 
-#ifndef AMX_H_INCLUDED
-#define AMX_H_INCLUDED
-
 #if defined HAVE_STDINT_H
   #include <stdint.h>
 #else
-  #if defined __LCC__ || defined __DMC__ || defined LINUX
+  #if defined __LCC__ || defined __DMC__ || defined LINUX || (defined __WATCOMC__ && __WATCOMC__ >= 1200)
     #if defined HAVE_INTTYPES_H
       #include <inttypes.h>
     #else
@@ -88,8 +91,14 @@
   #endif
 #endif
 
-#if !defined arraysize
-  #define arraysize(array)  (sizeof(array) / sizeof((array)[0]))
+#if !defined assert_static
+  /* see "Compile-Time Assertions" by Ralf Holly,
+   * C/C++ Users Journal, November 2004
+   */
+  #define assert_static(e) \
+    do { \
+      enum { assert_static__ = 1/(e) }; \
+    } while (0)
 #endif
 
 #ifdef  __cplusplus
@@ -125,20 +134,30 @@ extern  "C" {
   #define AMXEXPORT
 #endif
 
-/* File format version                          Required AMX version
- *   0 (original version)                       0
- *   1 (opcodes JUMP.pri, SWITCH and CASETBL)   1
- *   2 (compressed files)                       2
- *   3 (public variables)                       2
- *   4 (opcodes SWAP.pri/alt and PUSHADDR)      4
- *   5 (tagnames table)                         4
- *   6 (reformatted header)                     6
- *   7 (name table, opcodes SYMTAG & SYSREQ.D)  7
- *   8 (opcode STMT, renewed debug interface)   8
+/* File format version (in CUR_FILE_VERSION)
+ *   0 (original version)
+ *   1 (opcodes JUMP.pri, SWITCH and CASETBL)
+ *   2 (compressed files)
+ *   3 (public variables)
+ *   4 (opcodes SWAP.pri/alt and PUSHADDR)
+ *   5 (tagnames table)
+ *   6 (reformatted header)
+ *   7 (name table, opcodes SYMTAG & SYSREQ.D)
+ *   8 (opcode STMT, renewed debug interface)
+ *   9 (macro opcodes)
+ * MIN_FILE_VERSION is the lowest file version number that the current AMX
+ * implementation supports. If the AMX file header gets new fields, this number
+ * often needs to be incremented. MAX_AMX_VERSION is the lowest AMX version that
+ * is needed to support the current file version. When there are new opcodes,
+ * this number needs to be incremented.
+ * The file version supported by the JIT may run behind MIN_AMX_VERSION. So
+ * there is an extra constant for it: MAX_FILE_VER_JIT.
  */
-#define CUR_FILE_VERSION  8     /* current file version; also the current AMX version */
+#define CUR_FILE_VERSION  9     /* current file version; also the current AMX version */
 #define MIN_FILE_VERSION  6     /* lowest supported file format version for the current AMX version */
-#define MIN_AMX_VERSION   8     /* minimum AMX version needed to support the current file format */
+#define MIN_AMX_VERSION   9     /* minimum AMX version needed to support the current file format */
+#define MAX_FILE_VER_JIT  8     /* file version supported by the JIT */
+#define MIN_AMX_VER_JIT   8     /* AMX version supported by the JIT */
 
 #if !defined PAWN_CELL_SIZE
   #define PAWN_CELL_SIZE 32     /* by default, use 32-bit cells */
@@ -156,14 +175,15 @@ extern  "C" {
   #error Unsupported cell size (PAWN_CELL_SIZE)
 #endif
 
-#define UNPACKEDMAX   ((1L << (sizeof(cell)-1)*8) - 1)
+#define UNPACKEDMAX   (((cell)1 << (sizeof(cell)-1)*8) - 1)
 #define UNLIMITED     (~1u >> 1)
 
 struct tagAMX;
-typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
+typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, const cell *params);
 typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
-                                   cell *result, cell *params);
+                                   cell *result, const cell *params);
 typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
+typedef int (AMXAPI *AMX_IDLE)(struct tagAMX *amx, int AMXAPI Exec(struct tagAMX *, cell *, int));
 #if !defined _FAR
   #define _FAR
 #endif
@@ -202,23 +222,25 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 typedef struct tagAMX_NATIVE_INFO {
-  const char _FAR *name PACKED;
+  const char _FAR *name;
   AMX_NATIVE func       PACKED;
-} PACKED AMX_NATIVE_INFO;
+} AMX_NATIVE_INFO;
 
+#if !defined AMX_USERNUM
 #define AMX_USERNUM     4
+#endif
 #define sEXPMAX         19      /* maximum name length for file version <= 6 */
 #define sNAMEMAX        31      /* maximum name length of symbol name */
 
 typedef struct tagAMX_FUNCSTUB {
   ucell address         PACKED;
-  char name[sEXPMAX+1]  PACKED;
-} PACKED AMX_FUNCSTUB;
+  char name[sEXPMAX+1];
+} AMX_FUNCSTUB;
 
 typedef struct tagFUNCSTUBNT {
   ucell address         PACKED;
   uint32_t nameofs      PACKED;
-} PACKED AMX_FUNCSTUBNT;
+} AMX_FUNCSTUBNT;
 
 /* The AMX structure is the internal structure for many functions. Not all
  * fields are valid at all times; many fields are cached in local variables.
@@ -237,8 +259,10 @@ typedef struct tagAMX {
   cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
   int flags             PACKED; /* current status, see amx_Flags() */
   /* user data */
+  #if AMX_USERNUM > 0
   long usertags[AMX_USERNUM] PACKED;
   void _FAR *userdata[AMX_USERNUM] PACKED;
+  #endif
   /* native functions can raise an error */
   int error             PACKED;
   /* passing parameters requires a "count" field */
@@ -248,13 +272,14 @@ typedef struct tagAMX {
   cell alt              PACKED;
   cell reset_stk        PACKED;
   cell reset_hea        PACKED;
+  /* extra fields for increased performance */
   cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
   #if defined JIT
     /* support variables for the JIT */
     int reloc_size      PACKED; /* required temporary buffer for relocations */
     long code_size      PACKED; /* estimated memory footprint of the native code */
   #endif
-} PACKED AMX;
+} AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The
  * structure is used internaly.
@@ -262,8 +287,8 @@ typedef struct tagAMX {
 typedef struct tagAMX_HEADER {
   int32_t size          PACKED; /* size of the "file" */
   uint16_t magic        PACKED; /* signature */
-  char    file_version  PACKED; /* file format version */
-  char    amx_version   PACKED; /* required version of the AMX */
+  char    file_version;         /* file format version */
+  char    amx_version;          /* required version of the AMX */
   int16_t flags         PACKED;
   int16_t defsize       PACKED; /* size of a definition record */
   int32_t cod           PACKED; /* initial value of COD - code block */
@@ -277,7 +302,7 @@ typedef struct tagAMX_HEADER {
   int32_t pubvars       PACKED; /* the "public variables" table */
   int32_t tags          PACKED; /* the "public tagnames" table */
   int32_t nametable     PACKED; /* name table */
-} PACKED AMX_HEADER;
+} AMX_HEADER;
 
 #if PAWN_CELL_SIZE==16
   #define AMX_MAGIC     0xf1e2
@@ -321,15 +346,16 @@ enum {
 /*      AMX_FLAG_CHAR16   0x01     no longer used */
 #define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
 #define AMX_FLAG_COMPACT  0x04  /* compact encoding */
-#define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
-#define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
+#define AMX_FLAG_SLEEP    0x08  /* script uses the sleep instruction (possible re-entry or power-down mode) */
+#define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no BREAK opcodes */
+#define AMX_FLAG_SYSREQN 0x800  /* script new (optimized) version of SYSREQ opcode */
 #define AMX_FLAG_NTVREG 0x1000  /* all native functions are registered */
 #define AMX_FLAG_JITC   0x2000  /* abstract machine is JIT compiled */
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
-#define AMX_EXEC_MAIN   -1      /* start at program entry point */
-#define AMX_EXEC_CONT   -2      /* continue from last address */
+#define AMX_EXEC_MAIN   (-1)    /* start at program entry point */
+#define AMX_EXEC_CONT   (-2)    /* continue from last address */
 
 #define AMX_USERTAG(a,b,c,d)    ((a) | ((b)<<8) | ((long)(c)<<16) | ((long)(d)<<24))
 
@@ -357,7 +383,7 @@ enum {
       amx_GetAddr((amx), (param), &amx_cstr_);                              \
       amx_StrLen(amx_cstr_, &amx_length_);                                  \
       if (amx_length_ > 0 &&                                                \
-          ((result) = (char*)alloca((amx_length_ + 1) * sizeof(*(result)))) != NULL) \
+          ((result) = (void*)alloca((amx_length_ + 1) * sizeof(*(result)))) != NULL) \
         amx_GetString((char*)(result), amx_cstr_, sizeof(*(result))>1, amx_length_ + 1); \
       else (result) = NULL;                                                 \
     } while (0)
@@ -368,7 +394,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v);
   uint64_t * AMXAPI amx_Align64(uint64_t *v);
 #endif
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
-int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
+int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, const cell *params);
 int AMXAPI amx_Cleanup(AMX *amx);
 int AMXAPI amx_Clone(AMX *amxClone, AMX *amxSource, void *data);
 int AMXAPI amx_Exec(AMX *amx, cell *retval, int index);

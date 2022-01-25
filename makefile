@@ -58,8 +58,7 @@ clean:
 	-rm -f *~ *.o *.so
 
 SSCANF: clean
-	$(GPP) $(SSCANF) ./SDK/amx/*.c
-	$(GPP) $(SSCANF) ./SDK/*.cpp
+	$(GPP) $(SSCANF) ./SDK/*.c
 	$(GPP) $(SSCANF) *.cpp
 	$(GPP) -m32 -fPIC -shared -o $(SSCANF_OUTFILE) *.o
 
