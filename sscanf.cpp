@@ -68,15 +68,6 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
-//GetServer_t
-//	GetServer;
-
-extern void *
-	pAMXFunctions;
-
-//extern int
-//	g_iServerVersion;
-
 extern unsigned int
 	g_iTrueMax,
 	g_iInvalid,
@@ -1823,10 +1814,8 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 PLUGIN_EXPORT bool PLUGIN_CALL
 	Load(void ** ppData)
 {
-	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
 	real_logprintf = logprintf;
-	//GetServer = (GetServer_t)ppData[0xE1];
 	
 	logprintf("\n");
 	logprintf(" ===============================\n");
