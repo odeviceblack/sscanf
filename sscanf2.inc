@@ -42,10 +42,16 @@
 	#endinput
 #endif
 
-#if defined _inc_a_npc
-	#pragma library sscanf
-#elseif !defined _samp_included
+#if !defined _samp_included
 	#error Please include <a_npc> or <a_samp> first.
+#endif
+
+#if defined GetDistanceFromMeToPoint
+	// NPC script.
+	#define SSCANF_NPC (1)
+	#pragma library sscanf
+#else
+	#define SSCANF_NPC (0)
 #endif
 
 #if !defined __PawnBuild && !defined SSCANF_NO_NICE_FEATURES
@@ -53,8 +59,8 @@
 #endif
 
 #define SSCANF_VERSION_MAJOR  2
-#define SSCANF_VERSION_MINOR 10
-#define SSCANF_VERSION_BUILD  4
+#define SSCANF_VERSION_MINOR 11
+#define SSCANF_VERSION_BUILD  1
 
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
@@ -143,8 +149,7 @@ stock const
 	SSCANF_ARGB[] = "SSCANF_ARGB";
 
 static stock
-	bool:SSCANF_gInit = false,
-	SSCANF_g_sPlayers[MAX_PLAYERS char];
+	bool:SSCANF_gInit = false;
 
 // Pre-hook data.
 #if !defined CHAIN_ORDER
@@ -168,7 +173,7 @@ CHAIN_HOOK(SSCANF)
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
-#if defined _inc_a_npc
+#if SSCANF_NPC
 	forward SSCANF_PlayerCheck();
 
 	/*
@@ -178,6 +183,8 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  then calls the "real" OnNPCModeInit (using the new ALS 2 hook method).
 	*/
 
+	native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
+
 	public OnNPCModeInit()
 	{
 		state _ALS : _ALS_go;
@@ -185,7 +192,8 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 		#if !defined SSCANF_NO_PLAYERS
 			// Initialise the system.
 			SSCANF_PlayerCheck();
-			SetTimer("SSCANF_PlayerCheck", 1, 1);
+			// Will be run once per frame.
+			SSCANF_SetTimer("SSCANF_PlayerCheck", 0, true);
 		#endif
 		SSCANF_OnNPCModeInit();
 		return 1;
@@ -212,22 +220,20 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 			{
 				if (IsPlayerConnected(i))
 				{
-					if (!SSCANF_g_sPlayers{i})
+					if (!SSCANF_IsConnected(i))
 					{
 						new
 							name[MAX_PLAYER_NAME + 1];
-						GetPlayerName(i, name, sizeof(name));
+						GetPlayerName(i, name, sizeof (name));
 						// We have no way to know if they are an NPC or not!
 						SSCANF_Join(i, name, 0);
-						SSCANF_g_sPlayers{i} = 1;
 					}
 				}
 				else
 				{
-					if (SSCANF_g_sPlayers{i})
+					if (SSCANF_IsConnected(i))
 					{
 						SSCANF_Leave(i);
-						SSCANF_g_sPlayers{i} = 0;
 					}
 				}
 			}
@@ -248,7 +254,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 		{
 			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
 			{
-				GetPlayerName(i, name, sizeof(name));
+				GetPlayerName(i, name, sizeof (name));
 				SSCANF_Join(i, name, IsPlayerNPC(i));
 			}
 		}
