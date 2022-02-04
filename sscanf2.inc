@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.10.3
+ *  sscanf 2.11.2
  *
  *  Version: MPL 1.1
  *
@@ -60,7 +60,7 @@
 
 #define SSCANF_VERSION_MAJOR  2
 #define SSCANF_VERSION_MINOR 11
-#define SSCANF_VERSION_BUILD  1
+#define SSCANF_VERSION_BUILD  2
 
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
