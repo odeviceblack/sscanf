@@ -128,7 +128,7 @@
     <ClCompile Include="array.cpp" />
     <ClCompile Include="data.cpp" />
     <ClCompile Include="enum.cpp" />
-    <ClCompile Include="SDK\amxplugin.cpp" />
+    <ClCompile Include="SDK\amxplugin.c" />
     <ClCompile Include="specifiers.cpp" />
     <ClCompile Include="sscanf.cpp" />
     <ClCompile Include="utils.cpp" />
