@@ -1,7 +1,17 @@
 {
     "user": "Y-Less",
     "repo": "sscanf",
-    "contributors": ["Y_Less", "Emmet_", "maddinat0r"],
+    "contributors": [
+		"Cheaterman",
+		"DEntisT",
+		"Emmet_",
+		"karimcambridge",
+		"leHeix",
+		"maddinat0r",
+		"Southclaws",
+		"Y_Less",
+		"ziggi"
+	],
     "resources": [
         {
             "name": "^sscanf-(.+)-linux.tar.gz$",
