@@ -37,7 +37,7 @@
     <ClCompile Include="SDK\amx.c">
       <Filter>amx</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\amxplugin.cpp">
+    <ClCompile Include="SDK\amxplugin.c">
       <Filter>amx</Filter>
     </ClCompile>
   </ItemGroup>
