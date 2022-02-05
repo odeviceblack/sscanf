@@ -71,6 +71,10 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 9.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
     * 9.14 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
     * 9.15 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
+    * 9.15 [`SSCANF_VERSION`](#sscanf_version)
+    * 9.15 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
+    * 9.15 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
+    * 9.15 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
 * 10 [`extract`](#extract)
 * 11 [Errors/Warnings](#errorswarnings)
     * 11.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
@@ -1119,6 +1123,18 @@ The SSCANF include version as BCD, as a `stock const` variable.
 
 The SSCANF include version as BCD, as a `const` to work at compile-time.
 
+### `SSCANF_NO_K_VEHICLE`
+
+Exclude the default `k<vehicle>` kustom specifier from being compiled when this is defined before including the include file.
+
+### `SSCANF_NO_K_WEAPON`
+
+Exclude the default `k<weapon>` kustom specifier from being compiled when this is defined before including the include file.
+
+### `SSCANF_NO_NICE_FEATURES`
+
+Several sscanf features, such as file and line numbers in errors, only work on the new compiler.  If you want to use the old compiler you'll get an error because those nice features won't work.  If you want to compile anyway without those features you need to define this symbol before inclusion.
+
 ## `extract`
 
 I've written some (extendable) macros so you can do:
@@ -1784,4 +1800,6 @@ the Initial Developer. All Rights Reserved.
 * Added `SSCANF_Levenshtein` for better string candidate processing.
 * Added `SSCANF_GetClosestString` for better string candidate processing.
 * Added `SSCANF_GetClosestValue` for better string candidate processing.
+* Added `SSCANF_NO_K_VEHICLE` to disable the default `k<vehicle>` specifier code.
+* Added `SSCANF_NO_K_WEAPON` to disable the default `k<weapon>` specifier code.
 
