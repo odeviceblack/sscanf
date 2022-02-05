@@ -95,6 +95,8 @@ native SSCANF_Join(playerid, const name[], npc);
 native SSCANF_Leave(playerid);
 native SSCANF_IsConnected(playerid);
 
+native SSCANF_Levenshtein(const string1[], const string2[]);
+
 // Get a global SSCANF setting/option.
 native SSCANF_GetOption(const name[]) = SSCANF_Option;
 native SSCANF_GetOption__(const name[]) = SSCANF_Option;
@@ -486,8 +488,92 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 #define kustom_EXTRN:%0#%1,%2|||%3<%8>|||%4,%5) EXTRY:%0#%1k<%8>,%2,%3|||%4|||%5)
 //#define bin_EXTRW:%0#%1,%2|||%3[%7]|||%4,%5) EXTRY:%0#%1a<b>[*],%2,(%7),%3|||%4|||%5)
 
-SSCANF:weapon(string[])
+stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
+	new
+		closest = cellmin,
+		distance;
+	while (count--)
+	{
+		distance = SSCANF_Levenshtein(input, candidates[count]);
+		if (distance < threshold)
+		{
+			closest = count,
+			threshold = distance;
+		}
+	}
+	return closest;
+}
+
+stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
+{
+	assert(count == check);
+	new closest = SSCANF_GetClosestString(input, candidates, threshold, count);
+	if (closest == cellmin)
+	{
+		return fail;
+	}
+	return results[closest];
+}
+
+SSCANF:weapon(const string[])
+{
+	static const results[] = {
+		0, 0, 1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 24, 25,
+		26, 27, 28, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46
+	};
+
+	static const candidates[][] = {
+		"Fists",
+		"Unarmed",
+		"Knuckles",
+		"Knuckledusters",
+		"Brass Knuckles",
+		"Golf Club",
+		"Night Stick",
+		"Knife",
+		"Baseball Bat",
+		"Shovel",
+		"Pool cue",
+		"Katana",
+		"Chainsaw",
+		"Purple Dildo",
+		"White Dildo",
+		"Long White Dildo",
+		"White Dildo 2",
+		"Flowers",
+		"Cane",
+		"Grenades",
+		"Tear Gas",
+		"Molotovs",
+		"Pistol",
+		"Silenced Pistol",
+		"Desert Eagle",
+		"Shotgun",
+		"Sawn Off Shotgun",
+		"Combat Shotgun",
+		"Micro Uzi",
+		"Mac 10",
+		"MP5",
+		"AK47",
+		"M4",
+		"Tec9",
+		"Rifle",
+		"Sniper Rifle",
+		"RPG",
+		"Missile Launcher",
+		"Flame Thrower",
+		"Minigun",
+		"Sachel Charges",
+		"Detonator",
+		"Spray Paint",
+		"Fire Extinguisher",
+		"Camera",
+		"Nightvision Goggles",
+		"Thermal Goggles",
+		"Parachute"
+	};
+	
 	// This function is VERY basic, needs VASTLY improving to detect variations.
 	if ('0' <= string[0] <= '9')
 	{
@@ -498,56 +584,245 @@ SSCANF:weapon(string[])
 			return ret;
 		}
 	}
-	else if (!strcmp(string, "Unarmed", true)) return 0;
-	else if (!strcmp(string, "Brass Knuckles", true)) return 1;
-	else if (!strcmp(string, "Golf Club", true)) return 2;
-	else if (!strcmp(string, "Night Stick", true)) return 3;
-	else if (!strcmp(string, "Knife", true)) return 4;
-	else if (!strcmp(string, "Baseball Bat", true)) return 5;
-	else if (!strcmp(string, "Shovel", true)) return 6;
-	else if (!strcmp(string, "Pool cue", true)) return 7;
-	else if (!strcmp(string, "Katana", true)) return 8;
-	else if (!strcmp(string, "Chainsaw", true)) return 9;
-	else if (!strcmp(string, "Purple Dildo", true)) return 10;
-	else if (!strcmp(string, "White Dildo", true)) return 11;
-	else if (!strcmp(string, "Long White Dildo", true)) return 12;
-	else if (!strcmp(string, "White Dildo 2", true)) return 13;
-	else if (!strcmp(string, "Flowers", true)) return 14;
-	else if (!strcmp(string, "Cane", true)) return 15;
-	else if (!strcmp(string, "Grenades", true)) return 16;
-	else if (!strcmp(string, "Tear Gas", true)) return 17;
-	else if (!strcmp(string, "Molotovs", true)) return 18;
-	else if (!strcmp(string, "Pistol", true)) return 22;
-	else if (!strcmp(string, "Silenced Pistol", true)) return 23;
-	else if (!strcmp(string, "Desert Eagle", true)) return 24;
-	else if (!strcmp(string, "Shotgun", true)) return 25;
-	else if (!strcmp(string, "Sawn Off Shotgun", true)) return 26;
-	else if (!strcmp(string, "Combat Shotgun", true)) return 27;
-	else if (!strcmp(string, "Micro Uzi", true)) return 28;
-	else if (!strcmp(string, "Mac 10", true)) return 28;
-	else if (!strcmp(string, "MP5", true)) return 29;
-	else if (!strcmp(string, "AK47", true)) return 30;
-	else if (!strcmp(string, "M4", true)) return 31;
-	else if (!strcmp(string, "Tec9", true)) return 32;
-	else if (!strcmp(string, "Rifle", true)) return 33;
-	else if (!strcmp(string, "Sniper Rifle", true)) return 34;
-	else if (!strcmp(string, "RPG", true)) return 35;
-	else if (!strcmp(string, "Missile Launcher", true)) return 36;
-	else if (!strcmp(string, "Flame Thrower", true)) return 37;
-	else if (!strcmp(string, "Minigun", true)) return 38;
-	else if (!strcmp(string, "Sachel Charges", true)) return 39;
-	else if (!strcmp(string, "Detonator", true)) return 40;
-	else if (!strcmp(string, "Spray Paint", true)) return 41;
-	else if (!strcmp(string, "Fire Extinguisher", true)) return 42;
-	else if (!strcmp(string, "Camera", true)) return 43;
-	else if (!strcmp(string, "Nightvision Goggles", true)) return 44;
-	else if (!strcmp(string, "Thermal Goggles", true)) return 45;
-	else if (!strcmp(string, "Parachute", true)) return 46;
+	else
+	{
+		return SSCANF_GetClosestValue(string, candidates, results, -1);
+	}
 	return -1;
 }
 
-SSCANF:vehicle(string[])
+SSCANF:vehicle(const string[])
 {
+	static const results[] = {
+		400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417,
+		418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435,
+		436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453,
+		454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471,
+		472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489,
+		490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507,
+		508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525,
+		526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543,
+		544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561,
+		562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579,
+		580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597,
+		598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611
+	};
+
+	static const candidates[][] = {
+		"Landstalker",
+		"Bravura",
+		"Buffalo",
+		"Linerunner",
+		"Perenniel",
+		"Sentinel",
+		"Dumper",
+		"Firetruck",
+		"Trashmaster",
+		"Stretch",
+		"Manana",
+		"Infernus",
+		"Voodoo",
+		"Pony",
+		"Mule",
+		"Cheetah",
+		"Ambulance",
+		"Leviathan",
+		"Moonbeam",
+		"Esperanto",
+		"Taxi",
+		"Washington",
+		"Bobcat",
+		"Mr Whoopee",
+		"BF Injection",
+		"Hunter",
+		"Premier",
+		"Enforcer",
+		"Securicar",
+		"Banshee",
+		"Predator",
+		"Bus",
+		"Rhino",
+		"Barracks",
+		"Hotknife",
+		"Article Trailer",
+		"Previon",
+		"Coach",
+		"Cabbie",
+		"Stallion",
+		"Rumpo",
+		"RC Bandit",
+		"Romero",
+		"Packer",
+		"Monster",
+		"Admiral",
+		"Squallo",
+		"Seasparrow",
+		"Pizzaboy",
+		"Tram",
+		"Article Trailer 2",
+		"Turismo",
+		"Speeder",
+		"Reefer",
+		"Tropic",
+		"Flatbed",
+		"Yankee",
+		"Caddy",
+		"Solair",
+		"Berkley's RC Van",
+		"Skimmer",
+		"PCJ-600",
+		"Faggio",
+		"Freeway",
+		"RC Baron",
+		"RC Raider",
+		"Glendale",
+		"Oceanic",
+		"Sanchez",
+		"Sparrow",
+		"Patriot",
+		"Quad",
+		"Coastguard",
+		"Dinghy",
+		"Hermes",
+		"Sabre",
+		"Rustler",
+		"ZR-350",
+		"Walton",
+		"Regina",
+		"Comet",
+		"BMX",
+		"Burrito",
+		"Camper",
+		"Marquis",
+		"Baggage",
+		"Dozer",
+		"Maverick",
+		"SAN News Maverick",
+		"Rancher",
+		"FBI Rancher",
+		"Virgo",
+		"Greenwood",
+		"Jetmax",
+		"Hotring Racer",
+		"Sandking",
+		"Blista Compact",
+		"Police Maverick",
+		"Boxville",
+		"Benson",
+		"Mesa",
+		"RC Goblin",
+		"Hotring Racer",
+		"Hotring Racer",
+		"Bloodring Banger",
+		"Rancher",
+		"Super GT",
+		"Elegant",
+		"Journey",
+		"Bike",
+		"Mountain Bike",
+		"Beagle",
+		"Cropduster",
+		"Stuntplane",
+		"Tanker",
+		"Roadtrain",
+		"Nebula",
+		"Majestic",
+		"Buccaneer",
+		"Shamal",
+		"Hydra",
+		"FCR-900",
+		"NRG-500",
+		"HPV1000",
+		"Cement Truck",
+		"Towtruck",
+		"Fortune",
+		"Cadrona",
+		"FBI Truck",
+		"Willard",
+		"Forklift",
+		"Tractor",
+		"Combine Harvester",
+		"Feltzer",
+		"Remington",
+		"Slamvan",
+		"Blade",
+		"Freight (Train)",
+		"Brownstreak (Train)",
+		"Vortex",
+		"Vincent",
+		"Bullet",
+		"Clover",
+		"Sadler",
+		"Firetruck LA",
+		"Hustler",
+		"Intruder",
+		"Primo",
+		"Cargobob",
+		"Tampa",
+		"Sunrise",
+		"Merit",
+		"Utility Van",
+		"Nevada",
+		"Yosemite",
+		"Windsor",
+		"Monster \"A\"",
+		"Monster \"B\"",
+		"Uranus",
+		"Jester",
+		"Sultan",
+		"Stratum",
+		"Elegy",
+		"Raindance",
+		"RC Tiger",
+		"Flash",
+		"Tahoma",
+		"Savanna",
+		"Bandito",
+		"Freight Flat Trailer (Train)",
+		"Streak Trailer (Train)",
+		"Kart",
+		"Mower",
+		"Dune",
+		"Sweeper",
+		"Broadway",
+		"Tornado",
+		"AT400",
+		"DFT-30",
+		"Huntley",
+		"Stafford",
+		"BF-400",
+		"Newsvan",
+		"Tug",
+		"Petrol Trailer",
+		"Emperor",
+		"Wayfarer",
+		"Euros",
+		"Hotdog",
+		"Club",
+		"Freight Box Trailer (Train)",
+		"Article Trailer 3",
+		"Andromada",
+		"Dodo",
+		"RC Cam",
+		"Launch",
+		"Police Car (LSPD)",
+		"Police Car (SFPD)",
+		"Police Car (LVPD)",
+		"Police Ranger",
+		"Picador",
+		"S.W.A.T.",
+		"Alpha",
+		"Phoenix",
+		"Glendale Shit",
+		"Sadler Shit",
+		"Baggage Trailer \"A\"",
+		"Baggage Trailer \"B\"",
+		"Tug Stairs Trailer",
+		"Boxville",
+		"Farm Trailer",
+		"Utility Trailer"
+	};
+
 	// This function is VERY basic, needs VASTLY improving to detect variations.
 	if ('0' <= string[0] <= '9')
 	{
@@ -558,218 +833,10 @@ SSCANF:vehicle(string[])
 			return ret;
 		}
 	}
-	else if (!strcmp(string, "Landstalker", true)) return 400;
-	else if (!strcmp(string, "Bravura", true)) return 401;
-	else if (!strcmp(string, "Buffalo", true)) return 402;
-	else if (!strcmp(string, "Linerunner", true)) return 403;
-	else if (!strcmp(string, "Perenniel", true)) return 404;
-	else if (!strcmp(string, "Sentinel", true)) return 405;
-	else if (!strcmp(string, "Dumper", true)) return 406;
-	else if (!strcmp(string, "Firetruck", true)) return 407;
-	else if (!strcmp(string, "Trashmaster", true)) return 408;
-	else if (!strcmp(string, "Stretch", true)) return 409;
-	else if (!strcmp(string, "Manana", true)) return 410;
-	else if (!strcmp(string, "Infernus", true)) return 411;
-	else if (!strcmp(string, "Voodoo", true)) return 412;
-	else if (!strcmp(string, "Pony", true)) return 413;
-	else if (!strcmp(string, "Mule", true)) return 414;
-	else if (!strcmp(string, "Cheetah", true)) return 415;
-	else if (!strcmp(string, "Ambulance", true)) return 416;
-	else if (!strcmp(string, "Leviathan", true)) return 417;
-	else if (!strcmp(string, "Moonbeam", true)) return 418;
-	else if (!strcmp(string, "Esperanto", true)) return 419;
-	else if (!strcmp(string, "Taxi", true)) return 420;
-	else if (!strcmp(string, "Washington", true)) return 421;
-	else if (!strcmp(string, "Bobcat", true)) return 422;
-	else if (!strcmp(string, "Mr Whoopee", true)) return 423;
-	else if (!strcmp(string, "BF Injection", true)) return 424;
-	else if (!strcmp(string, "Hunter", true)) return 425;
-	else if (!strcmp(string, "Premier", true)) return 426;
-	else if (!strcmp(string, "Enforcer", true)) return 427;
-	else if (!strcmp(string, "Securicar", true)) return 428;
-	else if (!strcmp(string, "Banshee", true)) return 429;
-	else if (!strcmp(string, "Predator", true)) return 430;
-	else if (!strcmp(string, "Bus", true)) return 431;
-	else if (!strcmp(string, "Rhino", true)) return 432;
-	else if (!strcmp(string, "Barracks", true)) return 433;
-	else if (!strcmp(string, "Hotknife", true)) return 434;
-	else if (!strcmp(string, "Article Trailer", true)) return 435;
-	else if (!strcmp(string, "Previon", true)) return 436;
-	else if (!strcmp(string, "Coach", true)) return 437;
-	else if (!strcmp(string, "Cabbie", true)) return 438;
-	else if (!strcmp(string, "Stallion", true)) return 439;
-	else if (!strcmp(string, "Rumpo", true)) return 440;
-	else if (!strcmp(string, "RC Bandit", true)) return 441;
-	else if (!strcmp(string, "Romero", true)) return 442;
-	else if (!strcmp(string, "Packer", true)) return 443;
-	else if (!strcmp(string, "Monster", true)) return 444;
-	else if (!strcmp(string, "Admiral", true)) return 445;
-	else if (!strcmp(string, "Squallo", true)) return 446;
-	else if (!strcmp(string, "Seasparrow", true)) return 447;
-	else if (!strcmp(string, "Pizzaboy", true)) return 448;
-	else if (!strcmp(string, "Tram", true)) return 449;
-	else if (!strcmp(string, "Article Trailer 2", true)) return 450;
-	else if (!strcmp(string, "Turismo", true)) return 451;
-	else if (!strcmp(string, "Speeder", true)) return 452;
-	else if (!strcmp(string, "Reefer", true)) return 453;
-	else if (!strcmp(string, "Tropic", true)) return 454;
-	else if (!strcmp(string, "Flatbed", true)) return 455;
-	else if (!strcmp(string, "Yankee", true)) return 456;
-	else if (!strcmp(string, "Caddy", true)) return 457;
-	else if (!strcmp(string, "Solair", true)) return 458;
-	else if (!strcmp(string, "Berkley's RC Van", true)) return 459;
-	else if (!strcmp(string, "Skimmer", true)) return 460;
-	else if (!strcmp(string, "PCJ-600", true)) return 461;
-	else if (!strcmp(string, "Faggio", true)) return 462;
-	else if (!strcmp(string, "Freeway", true)) return 463;
-	else if (!strcmp(string, "RC Baron", true)) return 464;
-	else if (!strcmp(string, "RC Raider", true)) return 465;
-	else if (!strcmp(string, "Glendale", true)) return 466;
-	else if (!strcmp(string, "Oceanic", true)) return 467;
-	else if (!strcmp(string, "Sanchez", true)) return 468;
-	else if (!strcmp(string, "Sparrow", true)) return 469;
-	else if (!strcmp(string, "Patriot", true)) return 470;
-	else if (!strcmp(string, "Quad", true)) return 471;
-	else if (!strcmp(string, "Coastguard", true)) return 472;
-	else if (!strcmp(string, "Dinghy", true)) return 473;
-	else if (!strcmp(string, "Hermes", true)) return 474;
-	else if (!strcmp(string, "Sabre", true)) return 475;
-	else if (!strcmp(string, "Rustler", true)) return 476;
-	else if (!strcmp(string, "ZR-350", true)) return 477;
-	else if (!strcmp(string, "Walton", true)) return 478;
-	else if (!strcmp(string, "Regina", true)) return 479;
-	else if (!strcmp(string, "Comet", true)) return 480;
-	else if (!strcmp(string, "BMX", true)) return 481;
-	else if (!strcmp(string, "Burrito", true)) return 482;
-	else if (!strcmp(string, "Camper", true)) return 483;
-	else if (!strcmp(string, "Marquis", true)) return 484;
-	else if (!strcmp(string, "Baggage", true)) return 485;
-	else if (!strcmp(string, "Dozer", true)) return 486;
-	else if (!strcmp(string, "Maverick", true)) return 487;
-	else if (!strcmp(string, "SAN News Maverick", true)) return 488;
-	else if (!strcmp(string, "Rancher", true)) return 489;
-	else if (!strcmp(string, "FBI Rancher", true)) return 490;
-	else if (!strcmp(string, "Virgo", true)) return 491;
-	else if (!strcmp(string, "Greenwood", true)) return 492;
-	else if (!strcmp(string, "Jetmax", true)) return 493;
-	else if (!strcmp(string, "Hotring Racer", true)) return 494;
-	else if (!strcmp(string, "Sandking", true)) return 495;
-	else if (!strcmp(string, "Blista Compact", true)) return 496;
-	else if (!strcmp(string, "Police Maverick", true)) return 497;
-	else if (!strcmp(string, "Boxville", true)) return 498;
-	else if (!strcmp(string, "Benson", true)) return 499;
-	else if (!strcmp(string, "Mesa", true)) return 500;
-	else if (!strcmp(string, "RC Goblin", true)) return 501;
-	else if (!strcmp(string, "Hotring Racer", true)) return 502;
-	else if (!strcmp(string, "Hotring Racer", true)) return 503;
-	else if (!strcmp(string, "Bloodring Banger", true)) return 504;
-	else if (!strcmp(string, "Rancher", true)) return 505;
-	else if (!strcmp(string, "Super GT", true)) return 506;
-	else if (!strcmp(string, "Elegant", true)) return 507;
-	else if (!strcmp(string, "Journey", true)) return 508;
-	else if (!strcmp(string, "Bike", true)) return 509;
-	else if (!strcmp(string, "Mountain Bike", true)) return 510;
-	else if (!strcmp(string, "Beagle", true)) return 511;
-	else if (!strcmp(string, "Cropduster", true)) return 512;
-	else if (!strcmp(string, "Stuntplane", true)) return 513;
-	else if (!strcmp(string, "Tanker", true)) return 514;
-	else if (!strcmp(string, "Roadtrain", true)) return 515;
-	else if (!strcmp(string, "Nebula", true)) return 516;
-	else if (!strcmp(string, "Majestic", true)) return 517;
-	else if (!strcmp(string, "Buccaneer", true)) return 518;
-	else if (!strcmp(string, "Shamal", true)) return 519;
-	else if (!strcmp(string, "Hydra", true)) return 520;
-	else if (!strcmp(string, "FCR-900", true)) return 521;
-	else if (!strcmp(string, "NRG-500", true)) return 522;
-	else if (!strcmp(string, "HPV1000", true)) return 523;
-	else if (!strcmp(string, "Cement Truck", true)) return 524;
-	else if (!strcmp(string, "Towtruck", true)) return 525;
-	else if (!strcmp(string, "Fortune", true)) return 526;
-	else if (!strcmp(string, "Cadrona", true)) return 527;
-	else if (!strcmp(string, "FBI Truck", true)) return 528;
-	else if (!strcmp(string, "Willard", true)) return 529;
-	else if (!strcmp(string, "Forklift", true)) return 530;
-	else if (!strcmp(string, "Tractor", true)) return 531;
-	else if (!strcmp(string, "Combine Harvester", true)) return 532;
-	else if (!strcmp(string, "Feltzer", true)) return 533;
-	else if (!strcmp(string, "Remington", true)) return 534;
-	else if (!strcmp(string, "Slamvan", true)) return 535;
-	else if (!strcmp(string, "Blade", true)) return 536;
-	else if (!strcmp(string, "Freight (Train)", true)) return 537;
-	else if (!strcmp(string, "Brownstreak (Train)", true)) return 538;
-	else if (!strcmp(string, "Vortex", true)) return 539;
-	else if (!strcmp(string, "Vincent", true)) return 540;
-	else if (!strcmp(string, "Bullet", true)) return 541;
-	else if (!strcmp(string, "Clover", true)) return 542;
-	else if (!strcmp(string, "Sadler", true)) return 543;
-	else if (!strcmp(string, "Firetruck LA", true)) return 544;
-	else if (!strcmp(string, "Hustler", true)) return 545;
-	else if (!strcmp(string, "Intruder", true)) return 546;
-	else if (!strcmp(string, "Primo", true)) return 547;
-	else if (!strcmp(string, "Cargobob", true)) return 548;
-	else if (!strcmp(string, "Tampa", true)) return 549;
-	else if (!strcmp(string, "Sunrise", true)) return 550;
-	else if (!strcmp(string, "Merit", true)) return 551;
-	else if (!strcmp(string, "Utility Van", true)) return 552;
-	else if (!strcmp(string, "Nevada", true)) return 553;
-	else if (!strcmp(string, "Yosemite", true)) return 554;
-	else if (!strcmp(string, "Windsor", true)) return 555;
-	else if (!strcmp(string, "Monster \"A\"", true)) return 556;
-	else if (!strcmp(string, "Monster \"B\"", true)) return 557;
-	else if (!strcmp(string, "Uranus", true)) return 558;
-	else if (!strcmp(string, "Jester", true)) return 559;
-	else if (!strcmp(string, "Sultan", true)) return 560;
-	else if (!strcmp(string, "Stratum", true)) return 561;
-	else if (!strcmp(string, "Elegy", true)) return 562;
-	else if (!strcmp(string, "Raindance", true)) return 563;
-	else if (!strcmp(string, "RC Tiger", true)) return 564;
-	else if (!strcmp(string, "Flash", true)) return 565;
-	else if (!strcmp(string, "Tahoma", true)) return 566;
-	else if (!strcmp(string, "Savanna", true)) return 567;
-	else if (!strcmp(string, "Bandito", true)) return 568;
-	else if (!strcmp(string, "Freight Flat Trailer (Train)", true)) return 569;
-	else if (!strcmp(string, "Streak Trailer (Train)", true)) return 570;
-	else if (!strcmp(string, "Kart", true)) return 571;
-	else if (!strcmp(string, "Mower", true)) return 572;
-	else if (!strcmp(string, "Dune", true)) return 573;
-	else if (!strcmp(string, "Sweeper", true)) return 574;
-	else if (!strcmp(string, "Broadway", true)) return 575;
-	else if (!strcmp(string, "Tornado", true)) return 576;
-	else if (!strcmp(string, "AT400", true)) return 577;
-	else if (!strcmp(string, "DFT-30", true)) return 578;
-	else if (!strcmp(string, "Huntley", true)) return 579;
-	else if (!strcmp(string, "Stafford", true)) return 580;
-	else if (!strcmp(string, "BF-400", true)) return 581;
-	else if (!strcmp(string, "Newsvan", true)) return 582;
-	else if (!strcmp(string, "Tug", true)) return 583;
-	else if (!strcmp(string, "Petrol Trailer", true)) return 584;
-	else if (!strcmp(string, "Emperor", true)) return 585;
-	else if (!strcmp(string, "Wayfarer", true)) return 586;
-	else if (!strcmp(string, "Euros", true)) return 587;
-	else if (!strcmp(string, "Hotdog", true)) return 588;
-	else if (!strcmp(string, "Club", true)) return 589;
-	else if (!strcmp(string, "Freight Box Trailer (Train)", true)) return 590;
-	else if (!strcmp(string, "Article Trailer 3", true)) return 591;
-	else if (!strcmp(string, "Andromada", true)) return 592;
-	else if (!strcmp(string, "Dodo", true)) return 593;
-	else if (!strcmp(string, "RC Cam", true)) return 594;
-	else if (!strcmp(string, "Launch", true)) return 595;
-	else if (!strcmp(string, "Police Car (LSPD)", true)) return 596;
-	else if (!strcmp(string, "Police Car (SFPD)", true)) return 597;
-	else if (!strcmp(string, "Police Car (LVPD)", true)) return 598;
-	else if (!strcmp(string, "Police Ranger", true)) return 599;
-	else if (!strcmp(string, "Picador", true)) return 600;
-	else if (!strcmp(string, "S.W.A.T.", true)) return 601;
-	else if (!strcmp(string, "Alpha", true)) return 602;
-	else if (!strcmp(string, "Phoenix", true)) return 603;
-	else if (!strcmp(string, "Glendale Shit", true)) return 604;
-	else if (!strcmp(string, "Sadler Shit", true)) return 605;
-	else if (!strcmp(string, "Baggage Trailer \"A\"", true)) return 606;
-	else if (!strcmp(string, "Baggage Trailer \"B\"", true)) return 607;
-	else if (!strcmp(string, "Tug Stairs Trailer", true)) return 608;
-	else if (!strcmp(string, "Boxville", true)) return 609;
-	else if (!strcmp(string, "Farm Trailer", true)) return 610;
-	else if (!strcmp(string, "Utility Trailer", true)) return 611;
+	else
+	{
+		return SSCANF_GetClosestValue(string, candidates, results, -1);
+	}
 	return -1;
 }
 

@@ -187,6 +187,20 @@ AMX *
 		else (result) = ""; }                                                                \
 	while (false)
 
+#define LENGTH_STR_PARAM(amx,param,result,length)                                            \
+	do {                                                                                     \
+		cell * amx_cstr_;                                                                    \
+		amx_GetAddr((amx), (param), &amx_cstr_);                                             \
+		amx_StrLen(amx_cstr_, &length);                                                      \
+		if (length > 0) {                                                                    \
+			if (((result) = (char *)alloca((length + 1) * sizeof (*(result)))) != NULL)      \
+				amx_GetString((result), amx_cstr_, sizeof (*(result)) > 1, length + 1);      \
+			else {                                                                           \
+				logprintf("sscanf error: Unable to allocate memory.");                       \
+				return SSCANF_FAIL_RETURN; } }                                               \
+		else (result) = ""; }                                                                \
+	while (false)
+
 // Macros for the regular values.
 #define DO(m,n)                  \
 	{m b;                        \
@@ -1681,7 +1695,7 @@ static cell AMX_NATIVE_CALL
 		// Get.
 		char *
 			string;
-		STR_PARAM(amx, params[1], string);
+		SAFE_STR_PARAM(amx, params[1], string);
 		return GetOptions(string);
 	}
 	else if (params[0] == 2 * sizeof (cell))
@@ -1689,7 +1703,7 @@ static cell AMX_NATIVE_CALL
 		// Set.
 		char *
 			string;
-		STR_PARAM(amx, params[1], string);
+		SAFE_STR_PARAM(amx, params[1], string);
 		SetOptions(string, params[2]);
 		return 1;
 	}
@@ -1748,6 +1762,72 @@ static cell AMX_NATIVE_CALL
 	return return_val;
 }
 
+#if !defined min
+	inline int min(int a, int b)
+	{
+		return a < b ? a : b;
+	}
+#endif
+
+static cell AMX_NATIVE_CALL
+	n_SSCANF_Levenshtein(AMX * amx, cell const * params)
+{
+	if (params[0] != 2 * sizeof(cell))
+	{
+		logprintf("sscanf error: SSCANF_Levenshtein has incorrect parameters.");
+		return -1;
+	}
+	// Get the two strings to compare.
+	char
+		* string1,
+		* string2;
+	int
+		len1,
+		len2;
+	LENGTH_STR_PARAM(amx, params[1], string1, len1);
+	LENGTH_STR_PARAM(amx, params[2], string2, len2);
+	if (len1 == 0)
+	{
+		return len2;
+	}
+	if (len2 == 0)
+	{
+		return len1;
+	}
+	int *
+		matrix = (int *)malloc(sizeof(int) * (len1 + 1) * (len2 + 1));
+	if (matrix == NULL)
+	{
+		return 0;
+	}
+	int step = len2 + 1;
+	for (int i = 0; i <= len1; i++)
+	{
+		matrix[i * step + 0] = i;
+	}
+	for (int j = 0; j <= len2; j++)
+	{
+		matrix[0 * step + j] = j;
+	}
+	for (int i = 1; i <= len1; i++)
+	{
+		for (int j = 1; j <= len2; j++)
+		{
+			matrix[i * step + j] =
+				min(
+					min(
+						matrix[(i - 1) * step + j] + 1,
+						matrix[i * step + (j - 1)] + 1
+					),
+					matrix[(i - 1) * step + (j - 1)] + ((string1[i - 1] == string2[j - 1]) ? 0 : 1)
+				);
+		}
+	}
+	int ret = matrix[len1 * step + len2];
+	free(matrix);
+	return ret;
+}
+
 //----------------------------------------------------------
 // The AmxLoad() function gets called when a new gamemode or
 // filterscript gets loaded with the server. In here we register
@@ -1764,6 +1844,7 @@ AMX_NATIVE_INFO
 			{"SSCANF_IsConnected", n_SSCANF_IsConnected},
 			{"SSCANF_Option", n_SSCANF_Option},
 			{"SSCANF_Version", n_SSCANF_Version},
+			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
 			{0,        0}
 		};
 
