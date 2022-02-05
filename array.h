@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.11.2
+ *  sscanf 2.11.3
  *
  *  Version: MPL 1.1
  *
@@ -25,6 +25,7 @@
  *      DEntisT
  *      Emmet_
  *      karimcambridge
+ *      Kirima
  *      leHeix
  *      maddinat0r
  *      Southclaws

@@ -126,10 +126,11 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
     * 14.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
     * 14.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
-    * 14.7 [sscanf 2.11.2 - 28/04/2021](#sscanf-2103---28042021)
+    * 14.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
     * 14.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
     * 14.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
     * 14.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
+    * 14.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
 
 ## NPC modes
 
@@ -1709,6 +1710,7 @@ the Initial Developer. All Rights Reserved.
 * DEntisT
 * Emmet_
 * karimcambridge
+* Kirima
 * leHeix
 * maddinat0r
 * Southclaws
@@ -1775,4 +1777,10 @@ the Initial Developer. All Rights Reserved.
 ### sscanf 2.11.2 - 04/02/2022
 
 * Minor Linux build fixes.
+
+### sscanf 2.11.3 - 05/02/2022
+
+* Added `SSCANF_Levenshtein` for better string candidate processing.
+* Added `SSCANF_GetClosestString` for better string candidate processing.
+* Added `SSCANF_GetClosestValue` for better string candidate processing.
 
