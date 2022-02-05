@@ -66,9 +66,9 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 9.8 [`SSCANF_Version();`](#sscanf_version)
     * 9.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
     * 9.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
-    * 9.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_versionbcd)
-    * 9.12 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_versionbcd)
-    * 9.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_versionbcd)
+    * 9.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
+    * 9.12 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
+    * 9.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
     * 9.14 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
     * 9.15 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
 * 10 [`extract`](#extract)
@@ -1104,7 +1104,7 @@ Takes an input string and an array of string possibilities (candidates) and retu
 
 ### `SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`
 
-Similar to [`SSCANF_GetClosestString`](#) in that it searches the `candidates` array for the string most closely matching the `input` and bounded by `threshold`.  But instead of returning the index this function returns the value in the second `results` array at that index; and instead of returning `-1` on failure it returns the value of `fail`.  The two arrays must match in size and an `assert` in the function checks for this.
+Similar to [`SSCANF_GetClosestString`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates) in that it searches the `candidates` array for the string most closely matching the `input` and bounded by `threshold`.  But instead of returning the index this function returns the value in the second `results` array at that index; and instead of returning `-1` on failure it returns the value of `fail`.  The two arrays must match in size and an `assert` in the function checks for this.
 
 ### `SSCANF_VERSION_STRING`
 
