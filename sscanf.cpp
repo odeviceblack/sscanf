@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.11.2
+ *  sscanf 2.11.3
  *
  *  Version: MPL 1.1
  *
@@ -56,7 +56,7 @@
 
 #define SSCANF_VERSION_MAJOR 2
 #define SSCANF_VERSION_MINOR 11
-#define SSCANF_VERSION_BUILD 2
+#define SSCANF_VERSION_BUILD 3
 
 #define SSCANF_VERSION STRINGISE(SSCANF_VERSION_MAJOR) "." STRINGISE(SSCANF_VERSION_MINOR) "." STRINGISE(SSCANF_VERSION_BUILD)
 
@@ -1456,7 +1456,7 @@ static cell AMX_NATIVE_CALL
 	gCallFile = 0;
 	gCallLine = -1;
 	gCallResolve = 0;
-	logprintf("sscanf warning: include/plugin mismatch, please recompile your script for the latest features.");
+	SscanfWarning("Include / plugin mismatch, please recompile your script for the latest features.");
 	// Set up function wide values.
 	// Get and check the main data.
 	// Pointer to the current format specifier.
@@ -1594,7 +1594,7 @@ static cell AMX_NATIVE_CALL
 {
 	if (params[0] != 3 * sizeof (cell))
 	{
-		SscanfError("SSCANF_Init has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_Init has incorrect parameters.");
 		g_iTrueMax = 0;
 		return 0;
 	}
@@ -1649,7 +1649,7 @@ static cell AMX_NATIVE_CALL
 {
 	if (params[0] != 3 * sizeof (cell))
 	{
-		SscanfError("SSCANF_Join has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_Join has incorrect parameters.");
 		return 0;
 	}
 	cell
@@ -1665,7 +1665,7 @@ static cell AMX_NATIVE_CALL
 {
 	if (params[0] != 1 * sizeof (cell))
 	{
-		SscanfError("SSCANF_Leave has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_Leave has incorrect parameters.");
 		return 0;
 	}
 	// To be correct for multiple scripts with loads and unloads (unloadfs).
@@ -1695,7 +1695,7 @@ static cell AMX_NATIVE_CALL
 	}
 	else
 	{
-		SscanfError("SSCANF_Option has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_Option has incorrect parameters.");
 		return 0;
 	}
 }
@@ -1716,7 +1716,7 @@ static cell AMX_NATIVE_CALL
 	}
 	else if (params[0] != 0 * sizeof(cell))
 	{
-		SscanfError("SSCANF_Version has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_Version has incorrect parameters.");
 		return 0;
 	}
 	// Return the version in BCD.
@@ -1739,7 +1739,7 @@ static cell AMX_NATIVE_CALL
 	//amx_Callback(amx, 0, &result, params);
 	if (params[0] != 2 * sizeof (cell))
 	{
-		SscanfError("SSCANF_SetPlayerName has incorrect parameters.");
+		logprintf("sscanf error: SSCANF_SetPlayerName has incorrect parameters.");
 		return 0;
 	}
 	cell return_val = SetPlayerName(amx, params);

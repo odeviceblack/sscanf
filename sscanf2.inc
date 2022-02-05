@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.11.2
+ *  sscanf 2.11.3
  *
  *  Version: MPL 1.1
  *
@@ -62,7 +62,7 @@
 
 #define SSCANF_VERSION_MAJOR  2
 #define SSCANF_VERSION_MINOR 11
-#define SSCANF_VERSION_BUILD  2
+#define SSCANF_VERSION_BUILD  3
 
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
@@ -218,14 +218,14 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#if !defined SSCANF_NO_PLAYERS
 		public SSCANF_PlayerCheck()
 		{
+			new
+				name[MAX_PLAYER_NAME + 1];
 			for (new i = 0; i != MAX_PLAYERS; ++i)
 			{
 				if (IsPlayerConnected(i))
 				{
 					if (!SSCANF_IsConnected(i))
 					{
-						new
-							name[MAX_PLAYER_NAME + 1];
 						GetPlayerName(i, name, sizeof (name));
 						// We have no way to know if they are an NPC or not!
 						SSCANF_Join(i, name, 0);
