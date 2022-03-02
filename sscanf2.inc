@@ -639,7 +639,9 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	return results[closest];
 }
 
-#if !defined SSCANF_NO_K_WEAPON
+#if defined SSCANF_NO_K_WEAPON
+	native SSCANF_no_k_weapon(const string[]);
+#else
 	SSCANF:weapon(const string[])
 	{
 		static const results[] = {
@@ -716,7 +718,9 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	}
 #endif
 
-#if !defined SSCANF_NO_K_VEHICLE
+#if defined SSCANF_NO_K_VEHICLE
+	native SSCANF_no_k_vehicle(const string[]);
+#else
 	SSCANF:vehicle(const string[])
 	{
 		static const results[] = {
