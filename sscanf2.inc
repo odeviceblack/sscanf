@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.11.3
+ *  sscanf 2.11.4
  *
  *  Version: MPL 1.1
  *
@@ -85,8 +85,8 @@ static stock SSCANF_VERSION_MINOR = 11;
 /**
  * The sscanf build number.
  */
-static stock SSCANF_VERSION_BUILD =  3;
-#define SSCANF_VERSION_BUILD  3
+static stock SSCANF_VERSION_BUILD =  4;
+#define SSCANF_VERSION_BUILD  4
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
 /**

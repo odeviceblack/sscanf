@@ -1,4 +1,4 @@
-# sscanf 2.11.3
+# sscanf 2.11.4
 
 ## Introduction
 
@@ -135,6 +135,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
     * 14.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
     * 14.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
+    * 14.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
 
 ## NPC modes
 
@@ -1802,5 +1803,8 @@ the Initial Developer. All Rights Reserved.
 * Added `SSCANF_GetClosestValue` for better string candidate processing.
 * Added `SSCANF_NO_K_VEHICLE` to disable the default `k<vehicle>` specifier code.
 * Added `SSCANF_NO_K_WEAPON` to disable the default `k<weapon>` specifier code.
+
+### sscanf 2.11.4 - 02/03/2022
+
 * Documentation comments on all functions via pawndoc.
 
