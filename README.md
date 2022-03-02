@@ -1802,4 +1802,5 @@ the Initial Developer. All Rights Reserved.
 * Added `SSCANF_GetClosestValue` for better string candidate processing.
 * Added `SSCANF_NO_K_VEHICLE` to disable the default `k<vehicle>` specifier code.
 * Added `SSCANF_NO_K_WEAPON` to disable the default `k<weapon>` specifier code.
+* Documentation comments on all functions via pawndoc.
 

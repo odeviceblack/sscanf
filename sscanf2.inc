@@ -49,6 +49,15 @@
 	#error Please include <a_npc> or <a_samp> first.
 #endif
 
+/**
+ * <library
+ *   name="sscanf"
+ *   summary="Extracts structured information from strings."
+ *   license="Copyright (c) 2022 Alex &quot;Y_Less&quot; Cole.  Licensed under MPL 1.1"
+ * >
+ * </library>
+ */
+
 #if defined GetDistanceFromMeToPoint
 	// NPC script.
 	#define SSCANF_NPC (1)
@@ -61,18 +70,34 @@
 	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.
 #endif
 
+/**
+ * The sscanf major version number.
+ */
+static stock SSCANF_VERSION_MAJOR =  2;
 #define SSCANF_VERSION_MAJOR  2
-#define SSCANF_VERSION_MINOR 11
-#define SSCANF_VERSION_BUILD  3
 
+/**
+ * The sscanf minor version number.
+ */
+static stock SSCANF_VERSION_MINOR = 11;
+#define SSCANF_VERSION_MINOR 11
+
+/**
+ * The sscanf build number.
+ */
+static stock SSCANF_VERSION_BUILD =  3;
+#define SSCANF_VERSION_BUILD  3
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
-// Example:
-//
-//         2.10.3
-//     => 02 10 03
-//     => 0x021003
-//
+/**
+ * The sscanf version in BCD.  Example:
+ *
+ * <code>
+ *         2.10.3  <br />
+ *     => 02 10 03 <br />
+ *     => 0x021003
+ * </code>
+ */
 const SSCANF_VERSION =
 	((SSCANF_VERSION_MAJOR / 10) << 20) |
 	((SSCANF_VERSION_MAJOR % 10) << 16) |
@@ -90,30 +115,126 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 	#error sscanf (possibly the PAWN version) already defined.
 #endif
 
+/**
+ * The current true implementation of <c>sscanf</c> in the plugin.  This is
+ * wrapped by macros to provide <c>sscanf</c> enhanced with filenames and line
+ * numbers so that errors have more information.
+ */
 native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
-native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
-native SSCANF_Init(players, invalid, len);
-native SSCANF_Join(playerid, const name[], npc);
-native SSCANF_Leave(playerid);
-native SSCANF_IsConnected(playerid);
 
+/**
+ * An alternative name for <c>SSCANF__</c>, used by <c>extract</c> so that the
+ * name can be used as a macro.
+ */
+native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
+
+/**
+ * <param name="players">The maximum players on the server.</param>
+ * <param name="invalid">The invalid player ID.</param>
+ * <param name="len"><c>MAX_PLAYER_NAME</c>.</param>
+ * Initialise the plugin with real server information.
+ */
+native SSCANF_Init(players, invalid, len);
+
+/**
+ * <param name="playerid">The ID of the player.</param>
+ * <param name="name">The name of the player.</param>
+ * <param name="npc">Is this player an NPC?</param>
+ * Called when a player joins to inform the plugin of the connection.
+ */
+native SSCANF_Join(playerid, const name[], bool:npc);
+
+/**
+ * <param name="playerid">The ID of the player.</param>
+ * Called when a player leaves to inform the plugin of the disconnection.
+ */
+native SSCANF_Leave(playerid);
+
+/**
+ * <param name="playerid">The ID of the player.</param>
+ * Checks if the plugin knows about a given player ID.  Used when modes restart
+ * to re-add players.
+ */
+native bool:SSCANF_IsConnected(playerid);
+
+/**
+ * <param name="string1">The first string to compare.</param>
+ * <param name="string2">The second string to compare.</param>
+ * Computes the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
+ * Levenshtein Distance</a> between two strings.  This is simlar to
+ * <c>strcmp</c> in usage, but is slightly more "fuzzy".  Distances are used to
+ * work out which string is the most similar to another one, though they may not
+ * be identical.
+ */
 native SSCANF_Levenshtein(const string1[], const string2[]);
 
-// Get a global SSCANF setting/option.
+/**
+ * <param name="name">The sscanf option to look up.  For example <c>SSCANF_COLOUR_FORMS</c>.</param>
+ * The old API used <c>SSCANF_Option</c> to both get and set parse options,
+ * with an optional parameter for setting.  This was problematic if you wanted
+ * to actually set an option to the default value - there was no way to
+ * differentiate between getting an option and setting an option to the default
+ * value.  Instead the new API has explicit <c>Get</c> and <c>Set</c> functions.
+ */
 native SSCANF_GetOption(const name[]) = SSCANF_Option;
+
+/**
+ * <param name="name">The sscanf option to look up.  For example <c>MATCH_NAME_PARTIAL</c>.</param>
+ * The old API used <c>SSCANF_Option</c> to both get and set parse options,
+ * with an optional parameter for setting.  This was problematic if you wanted
+ * to actually set an option to the default value - there was no way to
+ * differentiate between getting an option and setting an option to the default
+ * value.  Instead the new API uses true parameter counts to differentiate in
+ * the legacy <c>SSCANF_Option</c> function, which are resolved through macros
+ * to <c>Get__</c> and <c>Set__</c> functions.
+ */
 native SSCANF_GetOption__(const name[]) = SSCANF_Option;
 
-// Set a global SSCANF setting/option.
+/**
+ * <param name="name">The sscanf option to set.  For example <c>CELLMIN_ON_MATCHES</c>.</param>
+ * <param name="value">The value to set the option to.</param>
+ * The old API used <c>SSCANF_Option</c> to both get and set parse options,
+ * with an optional parameter for setting.  This was problematic if you wanted
+ * to actually set an option to the default value - there was no way to
+ * differentiate between getting an option and setting an option to the default
+ * value.  Instead the new API has explicit <c>Get</c> and <c>Set</c> functions.
+ */
 native SSCANF_SetOption(const name[], value) = SSCANF_Option;
+
+/**
+ * <param name="name">The sscanf option to set.  For example <c>OLD_DEFAULT_CUSTOM</c>.</param>
+ * <param name="value">The value to set the option to.</param>
+ * The old API used <c>SSCANF_Option</c> to both get and set parse options,
+ * with an optional parameter for setting.  This was problematic if you wanted
+ * to actually set an option to the default value - there was no way to
+ * differentiate between getting an option and setting an option to the default
+ * value.  Instead the new API uses true parameter counts to differentiate in
+ * the legacy <c>SSCANF_Option</c> function, which are resolved through macros
+ * to <c>Get__</c> and <c>Set__</c> functions.
+ */
 native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
 
-// Backwards-compatibility with `SSCANF_Option`.  Usage:
-//
-//     SSCANF_Option(SSCANF_QUIET, 1);
-//     new quiet = SSCANF_Option(SSCANF_QUIET);
-//
-// This can't just use a default parameter because a user may want to set the
-// option to whatever that parameter is.
+/**
+ * <param name="name">The sscanf option to get or set.  For example <c>SSCANF_ARGB</c>.</param>
+ * <param name="value">The optional value to use when setting the option.</param>
+ * Backwards-compatibility with <c>SSCANF_Option</c>.  Usage:
+ *
+ * <code>
+ *     SSCANF_Option(SSCANF_QUIET, 1);           <br />
+ *     new quiet = SSCANF_Option(SSCANF_QUIET);
+ * </code>
+ *
+ * This doesn't actually use a default parameter because a user may want to set
+ * the option to whatever that parameter is.  Instead this is a macro that calls
+ * <c>SSCANF_GetOption__</c> when called with one parameter (just a name), or
+ * instead calls <c>SSCANF_SetOption__</c> when called with two - a name and a
+ * value.
+ */
+static stock SSCANF_Option(const name[], value = -1)
+{
+	return value;
+}
+
 #define SSCANF_Option SSCANF_GetOption__
 #define SSCANF_GetOption__(%0,%1) SSCANF_SetOption__(%0,%1)
 #define _ALS_SSCANF_Option
@@ -232,7 +353,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 					{
 						GetPlayerName(i, name, sizeof (name));
 						// We have no way to know if they are an NPC or not!
-						SSCANF_Join(i, name, 0);
+						SSCANF_Join(i, name, false);
 					}
 				}
 				else
@@ -261,7 +382,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
 			{
 				GetPlayerName(i, name, sizeof (name));
-				SSCANF_Join(i, name, IsPlayerNPC(i));
+				SSCANF_Join(i, name, bool:IsPlayerNPC(i));
 			}
 		}
 	}
@@ -382,7 +503,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 		new
 			name[MAX_PLAYER_NAME + 1];
 		GetPlayerName(playerid, name, sizeof(name));
-		SSCANF_Join(playerid, name, IsPlayerNPC(playerid));
+		SSCANF_Join(playerid, name, bool:IsPlayerNPC(playerid));
 		SSCANF_OnPlayerConnect(playerid);
 		return 1;
 	}
