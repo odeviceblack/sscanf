@@ -1717,7 +1717,7 @@ License.
 The Original Code is the sscanf 2.0 SA:MP plugin.
 
 The Initial Developer of the Original Code is Alex "Y_Less" Cole.
-Portions created by the Initial Developer are Copyright (C) 2020
+Portions created by the Initial Developer are Copyright (c) 2022
 the Initial Developer. All Rights Reserved.
 
 ### Contributor(s):

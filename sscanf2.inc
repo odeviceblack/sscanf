@@ -16,7 +16,7 @@
  *  The Original Code is the sscanf 2.0 SA:MP plugin.
  *
  *  The Initial Developer of the Original Code is Alex "Y_Less" Cole.
- *  Portions created by the Initial Developer are Copyright (C) 2020
+ *  Portions created by the Initial Developer are Copyright (c) 2022
  *  the Initial Developer. All Rights Reserved.
  *
  *  Contributor(s):
@@ -40,11 +40,10 @@
  *      Emmet_, for his efforts in maintaining it for almost a year.
  */
 
-#if !defined _INC_SSCANF
-	#define _INC_SSCANF
-#else
+#if defined _INC_SSCANF
 	#endinput
 #endif
+#define _INC_SSCANF
 
 #if !defined _samp_included
 	#error Please include <a_npc> or <a_samp> first.
