@@ -62,7 +62,9 @@
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Was sscanf built for an NPC mode or a normal mode?
+ * </remarks>
  */
 #if defined GetDistanceFromMeToPoint
 	// NPC script.
@@ -80,34 +82,43 @@
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf major version number.
+ * </remarks>
  */
 static stock SSCANF_VERSION_MAJOR =  2;
 #define SSCANF_VERSION_MAJOR  2
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf minor version number.
+ * </remarks>
  */
 static stock SSCANF_VERSION_MINOR = 11;
 #define SSCANF_VERSION_MINOR 11
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf build number.
+ * </remarks>
  */
 static stock SSCANF_VERSION_BUILD =  4;
 #define SSCANF_VERSION_BUILD  4
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf version as a string.  E.g. <c>"2.8.1"</c>.
+ * </remarks>
  */
 static stock SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD;
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Converts a version string to
  * <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">BCD</a>.  For example:
  *
@@ -125,6 +136,7 @@ static stock SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION
  * always in the lowest byte.  This implies a maximum of four sections and two
  * digits per section.
  *
+ * </remarks>
  */
 static stock BCD(number)
 {
@@ -138,6 +150,7 @@ static stock BCD(number)
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf version in BCD as a proper constant.  Example:
  *
  * <code>
@@ -145,11 +158,13 @@ static stock BCD(number)
  *     => 02 10 03 <br />
  *     => 0x021003
  * </code>
+ * </remarks>
  */
 const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD);
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The sscanf version in BCD.  Example:
  *
  * <code>
@@ -157,6 +172,7 @@ const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERS
  *     => 02 10 03 <br />
  *     => 0x021003
  * </code>
+ * </remarks>
  */
 stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
@@ -176,11 +192,13 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * <param name="line">The line at which this call is found.</param>
  * <param name="data">The input string containing the data to parse out.</param>
  * <param name="format">The format description of what the input data should contain.</param>
+ * <remarks>
  * The current true implementation of <c>sscanf</c> in the plugin.  This is
  * wrapped by macros to provide <c>sscanf</c> enhanced with filenames and line
  * numbers so that errors have more information.  The plugin also contains a
  * native function called <c>sscanf</c> which is only for backwards-
  * compatibility with older versions of this include.
+ * </remarks>
  */
 native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
 
@@ -190,8 +208,10 @@ native SSCANF__(const file[], const line, const data[], const format[], {Float, 
  * <param name="line">The line at which this call is found.</param>
  * <param name="data">The input string containing the data to parse out.</param>
  * <param name="format">The format description of what the input data should contain.</param>
+ * <remarks>
  * An alternative name for <c>SSCANF__</c>, used by <c>extract</c> so that the
  * name can be used as a macro.
+ * </remarks>
  */
 native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
 
@@ -200,7 +220,9 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * <param name="players">The maximum players on the server.</param>
  * <param name="invalid">The invalid player ID.</param>
  * <param name="len"><c>MAX_PLAYER_NAME</c>.</param>
+ * <remarks>
  * Initialise the plugin with real server information.
+ * </remarks>
  */
 native SSCANF_Init(players, invalid, len);
 
@@ -209,22 +231,28 @@ native SSCANF_Init(players, invalid, len);
  * <param name="playerid">The ID of the player.</param>
  * <param name="name">The name of the player.</param>
  * <param name="npc">Is this player an NPC?</param>
+ * <remarks>
  * Called when a player joins to inform the plugin of the connection.
+ * </remarks>
  */
 native SSCANF_Join(playerid, const name[], bool:npc);
 
 /**
  * <library>sscanf</library>
  * <param name="playerid">The ID of the player.</param>
+ * <remarks>
  * Called when a player leaves to inform the plugin of the disconnection.
+ * </remarks>
  */
 native SSCANF_Leave(playerid);
 
 /**
  * <library>sscanf</library>
  * <param name="playerid">The ID of the player.</param>
+ * <remarks>
  * Checks if the plugin knows about a given player ID.  Used when modes restart
  * to re-add players.
+ * </remarks>
  */
 native bool:SSCANF_IsConnected(playerid);
 
@@ -232,29 +260,34 @@ native bool:SSCANF_IsConnected(playerid);
  * <library>sscanf</library>
  * <param name="string1">The first string to compare.</param>
  * <param name="string2">The second string to compare.</param>
+ * <remarks>
  * Computes the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
  * Levenshtein Distance</a> between two strings.  This is simlar to
  * <c>strcmp</c> in usage, but is slightly more "fuzzy".  Distances are used to
  * work out which string is the most similar to another one, though they may not
  * be identical.  Useful in <c>k</c> callback functions to determine if the
  * entered string is close to a possible string.
+ * </remarks>
  */
 native SSCANF_Levenshtein(const string1[], const string2[]);
 
 /**
  * <library>sscanf</library>
  * <param name="name">The sscanf option to look up.  For example <c>SSCANF_COLOUR_FORMS</c>.</param>
+ * <remarks>
  * The old API used <c>SSCANF_Option</c> to both get and set parse options,
  * with an optional parameter for setting.  This was problematic if you wanted
  * to actually set an option to the default value - there was no way to
  * differentiate between getting an option and setting an option to the default
  * value.  Instead the new API has explicit <c>Get</c> and <c>Set</c> functions.
+ * </remarks>
  */
 native SSCANF_GetOption(const name[]) = SSCANF_Option;
 
 /**
  * <library>sscanf</library>
  * <param name="name">The sscanf option to look up.  For example <c>MATCH_NAME_PARTIAL</c>.</param>
+ * <remarks>
  * The old API used <c>SSCANF_Option</c> to both get and set parse options,
  * with an optional parameter for setting.  This was problematic if you wanted
  * to actually set an option to the default value - there was no way to
@@ -262,6 +295,7 @@ native SSCANF_GetOption(const name[]) = SSCANF_Option;
  * value.  Instead the new API uses true parameter counts to differentiate in
  * the legacy <c>SSCANF_Option</c> function, which are resolved through macros
  * to <c>Get__</c> and <c>Set__</c> functions.
+ * </remarks>
  */
 native SSCANF_GetOption__(const name[]) = SSCANF_Option;
 
@@ -269,11 +303,13 @@ native SSCANF_GetOption__(const name[]) = SSCANF_Option;
  * <library>sscanf</library>
  * <param name="name">The sscanf option to set.  For example <c>CELLMIN_ON_MATCHES</c>.</param>
  * <param name="value">The value to set the option to.</param>
+ * <remarks>
  * The old API used <c>SSCANF_Option</c> to both get and set parse options,
  * with an optional parameter for setting.  This was problematic if you wanted
  * to actually set an option to the default value - there was no way to
  * differentiate between getting an option and setting an option to the default
  * value.  Instead the new API has explicit <c>Get</c> and <c>Set</c> functions.
+ * </remarks>
  */
 native SSCANF_SetOption(const name[], value) = SSCANF_Option;
 
@@ -281,6 +317,7 @@ native SSCANF_SetOption(const name[], value) = SSCANF_Option;
  * <library>sscanf</library>
  * <param name="name">The sscanf option to set.  For example <c>OLD_DEFAULT_CUSTOM</c>.</param>
  * <param name="value">The value to set the option to.</param>
+ * <remarks>
  * The old API used <c>SSCANF_Option</c> to both get and set parse options,
  * with an optional parameter for setting.  This was problematic if you wanted
  * to actually set an option to the default value - there was no way to
@@ -288,6 +325,7 @@ native SSCANF_SetOption(const name[], value) = SSCANF_Option;
  * value.  Instead the new API uses true parameter counts to differentiate in
  * the legacy <c>SSCANF_Option</c> function, which are resolved through macros
  * to <c>Get__</c> and <c>Set__</c> functions.
+ * </remarks>
  */
 native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
 
@@ -295,6 +333,7 @@ native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
  * <library>sscanf</library>
  * <param name="name">The sscanf option to get or set.  For example <c>SSCANF_ARGB</c>.</param>
  * <param name="value">The optional value to use when setting the option.</param>
+ * <remarks>
  * Backwards-compatibility with <c>SSCANF_Option</c>.  Usage:
  *
  * <code>
@@ -307,6 +346,7 @@ native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
  * <c>SSCANF_GetOption__</c> when called with one parameter (just a name), or
  * instead calls <c>SSCANF_SetOption__</c> when called with two - a name and a
  * value.
+ * </remarks>
  */
 static stock SSCANF_Option(const name[], value = -1)
 {
@@ -322,8 +362,10 @@ static stock SSCANF_Option(const name[], value = -1)
  * <library>sscanf</library>
  * <param name="version">Pass-by-reference return value.</param>
  * <param name="size">The size of the destination array.</param>
+ * <remarks>
  * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>).  Compare
  * this value to the constant <c>SSCANF_VERSION_STRING</c>.
+ * </remarks>
  */
 native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version;
 
@@ -331,26 +373,32 @@ native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version
  * <library>sscanf</library>
  * <param name="version">Pass-by-reference return value.</param>
  * <param name="size">The size of the destination array.</param>
+ * <remarks>
  * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>).  Compare
  * this value to the constant <c>SSCANF_VERSION_STRING</c>.  This internal
  * alternate spelling is used by the <c>SSCANF_Version</c> macro, which will
  * return a string when called with parameters, or a BCD value when not.
+ * </remarks>
  */
 native SSCANF_VersionString__(version[], size = sizeof (version)) = SSCANF_Version;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Get the SSCANF plugin version as a BCD-encoded value (e.g. <c>0x021102</c>).
  * Compare this value to the constant <c>SSCANF_VERSION_BCD</c>.
+ * </remarks>
  */
 native SSCANF_VersionBCD() = SSCANF_Version;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Get the SSCANF plugin version as a BCD-encoded value (e.g. <c>0x021102</c>).
  * Compare this value to the constant <c>SSCANF_VERSION_BCD</c>.  This internal
  * alternate spelling is used by the <c>SSCANF_Version</c> macro, which will
  * return a string when called with parameters, or a BCD value when not.
+ * </remarks>
  */
 native SSCANF_VersionBCD__() = SSCANF_Version;
 
@@ -360,9 +408,11 @@ native SSCANF_VersionBCD__() = SSCANF_Version;
  * <library>sscanf</library>
  * <param name="version">Pass-by-reference return value.</param>
  * <param name="size">The size of the destination array.</param>
+ * <remarks>
  * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>) <em>or</em>
  * a BCD-encoded value (e.g. <c>0x021102</c>).  This function returns a string
  * (by reference) when called with parameters, or a number (directly) when not.
+ * </remarks>
  */
 static stock SSCANF_Version(version[] = "", size = sizeof (version))
 {
@@ -378,10 +428,12 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  * <library>sscanf</library>
  * <param name="data">The input string containing the data to parse out.</param>
  * <param name="format">The format description of what the input data should contain.</param>
+ * <remarks>
  * The main entry point.  See the readme for vast amounts of information on how
  * to call this function and all the details on what it does.  This is a macro
  * that calls <c>SSCANF__</c> and passes the current file and line number as
  * well for improved error messages.
+ * </remarks>
  */
 stock sscanf(const data[], const format[], {Float, _}:...)
 {
@@ -392,10 +444,12 @@ stock sscanf(const data[], const format[], {Float, _}:...)
  * <library>sscanf</library>
  * <param name="data">The input string containing the data to parse out.</param>
  * <param name="format">The format description of what the input data should contain.</param>
+ * <remarks>
  * An alternative spelling of <c>sscanf</c>, requested by Kalcor because the
  * original doesn't match the C specification for the format descriptor.  This
  * is a macro that calls <c>UNFORMAT__</c> and passes the current file and line
  * number as well for improved error messages.
+ * </remarks>
  */
 stock unformat(const data[], const format[], {Float, _}:...)
 {
@@ -412,97 +466,123 @@ stock unformat(const data[], const format[], {Float, _}:...)
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The fallback for the filename in <c>sscanf</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
  * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * </remarks>
  */
 stock const SSCANF_UNK_[] = "sscanf";   // Append "unknown file" in the plugin when line number < 0.
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The fallback for the filename in <c>unformat</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
  * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * </remarks>
  */
 stock const SSCANF_FOM_[] = "unformat"; // Append "unknown file" in the plugin when line number < 0.
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The fallback for the filename in <c>extract</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
  * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * </remarks>
  */
 stock const SSCANF_EXT_[] = "extract";  // Append "unknown file" in the plugin when line number < 0.
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>SSCANF_QUIET</c> option as a constant string so you can get compile-
  * time spell checking on the name.
+ * </remarks>
  */
 stock const SSCANF_QUIET[] = "SSCANF_QUIET";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>OLD_DEFAULT_NAME</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const OLD_DEFAULT_NAME[] = "OLD_DEFAULT_NAME";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>MATCH_NAME_PARTIAL</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const MATCH_NAME_PARTIAL[] = "MATCH_NAME_PARTIAL";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>CELLMIN_ON_MATCHES</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const CELLMIN_ON_MATCHES[] = "CELLMIN_ON_MATCHES";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>OLD_DEFAULT_KUSTOM</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const OLD_DEFAULT_KUSTOM[] = "OLD_DEFAULT_KUSTOM";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>OLD_DEFAULT_CUSTOM</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const OLD_DEFAULT_CUSTOM[] = "OLD_DEFAULT_CUSTOM";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>SSCANF_COLOUR_FORMS</c> option as a constant string so you can get
  * compile-time spell checking on the name.
+ * </remarks>
  */
 stock const SSCANF_COLOUR_FORMS[] = "SSCANF_COLOUR_FORMS";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>SSCANF_ALPHA</c> option as a constant string so you can get compile-
  * time spell checking on the name.
+ * </remarks>
  */
 stock const SSCANF_ALPHA[] = "SSCANF_ALPHA";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * The <c>SSCANF_ARGB</c> option as a constant string so you can get compile-
  * time spell checking on the name.
+ * </remarks>
  */
 stock const SSCANF_ARGB[] = "SSCANF_ARGB";
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Has sscanf been initialised at least once already in this script?  Avoids the
  * need to define <c>FILTERSCRIPT</c> by including <c>OnFilterScriptInit</c>
  * and <c>OnGameModeInit</c> (plus <c>OnNPCModeInit</c>) and seeing which one
  * gets called first.
+ * </remarks>
  */
 static stock bool:SSCANF_gInit = false;
 
@@ -527,8 +607,10 @@ CHAIN_HOOK(SSCANF)
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Common ALS boilerplate to ensure that all the <c>&lt;_ALS : &gt;</c> states
  * are known to the compiler.
+ * </remarks>
  */
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
@@ -537,14 +619,18 @@ forward SSCANF_PlayerCheck();
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * const-correct wrapper for <c>SetTimer</c>, mainly for NPC modes.
+ * </remarks>
  */
 native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when the script starts if it is a NPC mode, sets up the system, then
  * calls the "real" OnNPCModeInit (using the new ALS 2 hook method).
+ * </remarks>
  */
 #if SSCANF_NPC
 	public OnNPCModeInit()
@@ -575,7 +661,9 @@ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * NPC modes have no "OnPlayerConnect callback, so we need to simulate one.
+ * </remarks>
  */
 #if SSCANF_NPC && !defined SSCANF_NO_PLAYERS
 	public SSCANF_PlayerCheck()
@@ -609,7 +697,9 @@ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Generic initialisation code called from a range of different init publics.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_RunInit();
@@ -643,7 +733,9 @@ forward OnScriptInit SSCANF_BRACKETS;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called for earlier initialisation by YSI.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnScriptInit();
@@ -670,8 +762,10 @@ forward OnScriptInit SSCANF_BRACKETS;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when the script starts if it is a filterscript, sets up the system,
  * then calls the "real" OnFilterScriptInit (using the new ALS 2 hook method).
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnFilterScriptInit();
@@ -698,9 +792,11 @@ forward OnScriptInit SSCANF_BRACKETS;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when the script starts if it is a gamemode.  This callback is also
  * called in filterscripts so we don't want to reinitialise the system in that
  * case.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnGameModeInit();
@@ -729,7 +825,9 @@ forward OnCachedInit();
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when the script starts if it is (legacy) YSI cached mode.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnCachedInit();
@@ -753,10 +851,12 @@ forward OnCachedInit();
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when a player connects.  Actually increments an internal count so that
  * if a script ends and <c>OnPlayerDisconnect</c> is called then <c>sscanf</c>
  * still knows that the player is really connected.  Also stores their name
  * internally.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnPlayerConnect();
@@ -783,7 +883,9 @@ forward OnCachedInit();
 
 /**
  * <library>sscanf</library>
+ * <remarks>
  * Called when a player disconnects, or when a script is ended.
+ * </remarks>
  */
 #if SSCANF_NPC
 	native SSCANF_OnPlayerDisconnect();
@@ -886,6 +988,7 @@ forward OnCachedInit();
  * <param name="candidates">A list of other strings to compare against.</param>
  * <param name="threshold">How similar the strings must be to be considered a match.</param>
  * <param name="count">The number of candidates.</param>
+ * <remarks>
  * Takes an input string and an array of string possibilities (candidates) and
  * returns the index of the string closest to the input string.  If no valid
  * match is found, <c>-1</c> is returned.  Note that this will always return the
@@ -893,6 +996,7 @@ forward OnCachedInit();
  * <c>threshold</c> parameter is available.  When this parameter is provided the
  * closest match must be closer in Levenshtein distance than the threshold,
  * otherwise again <c>-1</c> is returned.
+ * </remarks>
  */
 stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
@@ -920,6 +1024,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * <param name="threshold">How similar the strings must be to be considered a match.</param>
  * <param name="count">The number of candidates (must match <c>check</c>).</param>
  * <param name="check">The number of results (must match <c>count</c>).</param>
+ * <remarks>
  * Similar to <c>SSCANF_GetClosestString</c> in that it searches the
  * <c>candidates</c> array for the string most closely matching the <c>input</c>
  * and bounded by <c>threshold</c>.  But instead of returning the index this
@@ -927,6 +1032,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * and instead of returning <c>-1</c> on failure it returns the value of
  * <c>fail</c>.  The two arrays must match in size and an <c>assert</c> in the
  * function checks for this.
+ * </remarks>
  */
 stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
 {
@@ -942,8 +1048,10 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 /**
  * <library>sscanf</library>
  * <param name="string">The current word being parsed out of the <c>sscanf</c> input.</param>
+ * <remarks>
  * The default implementation of <c>k&lt;weapon&gt;</c>.  Finds the closest
  * weapon by Levenshtein distance to the input.
+ * </remarks>
  */
 #if defined SSCANF_NO_K_WEAPON
 	native SSCANF_no_k_weapon();
@@ -1028,8 +1136,10 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 /**
  * <library>sscanf</library>
  * <param name="string">The current word being parsed out of the <c>sscanf</c> input.</param>
+ * <remarks>
  * The default implementation of <c>k&lt;vehicle&gt;</c>.  Finds the closest
  * vehicle by Levenshtein distance to the input.
+ * </remarks>
  */
 #if defined SSCANF_NO_K_VEHICLE
 	native SSCANF_no_k_vehicle();
