@@ -753,6 +753,11 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	return results[closest];
 }
 
+/**
+ * <param name="string">The current word being parsed out of the <c>sscanf</c> input.</param>
+ * The default implementation of <c>k&lt;weapon&gt;</c>.  Finds the closest
+ * weapon by Levenshtein distance to the input.
+ */
 #if defined SSCANF_NO_K_WEAPON
 	native SSCANF_no_k_weapon(const string[]);
 #else
@@ -832,6 +837,11 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	}
 #endif
 
+/**
+ * <param name="string">The current word being parsed out of the <c>sscanf</c> input.</param>
+ * The default implementation of <c>k&lt;vehicle&gt;</c>.  Finds the closest
+ * vehicle by Levenshtein distance to the input.
+ */
 #if defined SSCANF_NO_K_VEHICLE
 	native SSCANF_no_k_vehicle(const string[]);
 #else
