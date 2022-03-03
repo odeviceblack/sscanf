@@ -155,11 +155,15 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 #define sscanf_%0\32; sscanf_
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
-#if defined sscanf
+#if defined sscanf && !defined SSCANF_Option
 	#error sscanf (possibly the PAWN version) already defined.
 #endif
 
 /**
+ * <param name="file">The file in which this call is found.</param>
+ * <param name="line">The line at which this call is found.</param>
+ * <param name="data">The input string containing the data to parse out.</param>
+ * <param name="format">The format description of what the input data should contain.</param>
  * The current true implementation of <c>sscanf</c> in the plugin.  This is
  * wrapped by macros to provide <c>sscanf</c> enhanced with filenames and line
  * numbers so that errors have more information.  The plugin also contains a
@@ -169,6 +173,10 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
 
 /**
+ * <param name="file">The file in which this call is found.</param>
+ * <param name="line">The line at which this call is found.</param>
+ * <param name="data">The input string containing the data to parse out.</param>
+ * <param name="format">The format description of what the input data should contain.</param>
  * An alternative name for <c>SSCANF__</c>, used by <c>extract</c> so that the
  * name can be used as a macro.
  */
@@ -338,6 +346,32 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
 #define _ALS_SSCANF_Version
 #define _ALS_SSCANF_VersionString__
 
+/**
+ * <param name="data">The input string containing the data to parse out.</param>
+ * <param name="format">The format description of what the input data should contain.</param>
+ * The main entry point.  See the readme for vast amounts of information on how
+ * to call this function and all the details on what it does.  This is a macro
+ * that calls <c>SSCANF__</c> and passes the current file and line number as
+ * well for improved error messages.
+ */
+stock sscanf(const data[], const format[], {Float, _}:...)
+{
+	return 0;
+}
+
+/**
+ * <param name="data">The input string containing the data to parse out.</param>
+ * <param name="format">The format description of what the input data should contain.</param>
+ * An alternative spelling of <c>sscanf</c>, requested by Kalcor because the
+ * original doesn't match the C specification for the format descriptor.  This
+ * is a macro that calls <c>UNFORMAT__</c> and passes the current file and line
+ * number as well for improved error messages.
+ */
+stock unformat(const data[], const format[], {Float, _}:...)
+{
+	return 0;
+}
+
 #if defined __PawnBuild
 	#define sscanf( SSCANF__(__file,__line,
 	#define unformat( SSCANF__(__file,__line,
@@ -346,22 +380,88 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
 	#define unformat( SSCANF__(SSCANF_FOM_,-1,
 #endif
 
-stock const
-	SSCANF_UNK_[] = "sscanf",   // Append "unknown file" in the plugin when line number < 0.
-	SSCANF_FOM_[] = "unformat", // Append "unknown file" in the plugin when line number < 0.
-	SSCANF_EXT_[] = "extract",  // Append "unknown file" in the plugin when line number < 0.
-	SSCANF_QUIET[] = "SSCANF_QUIET",
-	OLD_DEFAULT_NAME[] = "OLD_DEFAULT_NAME",
-	MATCH_NAME_PARTIAL[] = "MATCH_NAME_PARTIAL",
-	CELLMIN_ON_MATCHES[] = "CELLMIN_ON_MATCHES",
-	OLD_DEFAULT_KUSTOM[] = "OLD_DEFAULT_KUSTOM",
-	OLD_DEFAULT_CUSTOM[] = "OLD_DEFAULT_CUSTOM",
-	SSCANF_COLOUR_FORMS[] = "SSCANF_COLOUR_FORMS",
-	SSCANF_ALPHA[] = "SSCANF_ALPHA",
-	SSCANF_ARGB[] = "SSCANF_ARGB";
+/**
+ * The fallback for the filename in <c>sscanf</c> on the old compiler, which
+ * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ */
+stock const SSCANF_UNK_[] = "sscanf";   // Append "unknown file" in the plugin when line number < 0.
 
-static stock
-	bool:SSCANF_gInit = false;
+/**
+ * The fallback for the filename in <c>unformat</c> on the old compiler, which
+ * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ */
+stock const SSCANF_FOM_[] = "unformat"; // Append "unknown file" in the plugin when line number < 0.
+
+/**
+ * The fallback for the filename in <c>extract</c> on the old compiler, which
+ * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ */
+stock const SSCANF_EXT_[] = "extract";  // Append "unknown file" in the plugin when line number < 0.
+
+/**
+ * The <c>SSCANF_QUIET</c> option as a constant string so you can get compile-
+ * time spell checking on the name.
+ */
+stock const SSCANF_QUIET[] = "SSCANF_QUIET";
+
+/**
+ * The <c>OLD_DEFAULT_NAME</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const OLD_DEFAULT_NAME[] = "OLD_DEFAULT_NAME";
+
+/**
+ * The <c>MATCH_NAME_PARTIAL</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const MATCH_NAME_PARTIAL[] = "MATCH_NAME_PARTIAL";
+
+/**
+ * The <c>CELLMIN_ON_MATCHES</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const CELLMIN_ON_MATCHES[] = "CELLMIN_ON_MATCHES";
+
+/**
+ * The <c>OLD_DEFAULT_KUSTOM</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const OLD_DEFAULT_KUSTOM[] = "OLD_DEFAULT_KUSTOM";
+
+/**
+ * The <c>OLD_DEFAULT_CUSTOM</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const OLD_DEFAULT_CUSTOM[] = "OLD_DEFAULT_CUSTOM";
+
+/**
+ * The <c>SSCANF_COLOUR_FORMS</c> option as a constant string so you can get
+ * compile-time spell checking on the name.
+ */
+stock const SSCANF_COLOUR_FORMS[] = "SSCANF_COLOUR_FORMS";
+
+/**
+ * The <c>SSCANF_ALPHA</c> option as a constant string so you can get compile-
+ * time spell checking on the name.
+ */
+stock const SSCANF_ALPHA[] = "SSCANF_ALPHA";
+
+/**
+ * The <c>SSCANF_ARGB</c> option as a constant string so you can get compile-
+ * time spell checking on the name.
+ */
+stock const SSCANF_ARGB[] = "SSCANF_ARGB";
+
+/**
+ * Has sscanf been initialised at least once already in this script?  Avoids the
+ * need to define <c>FILTERSCRIPT</c> by including <c>OnFilterScriptInit</c>
+ * and <c>OnGameModeInit</c> (plus <c>OnNPCModeInit</c>) and seeing which one
+ * gets called first.
+ */
+static stock bool:SSCANF_gInit = false;
 
 // Pre-hook data.
 #if !defined CHAIN_ORDER
@@ -382,6 +482,10 @@ CHAIN_HOOK(SSCANF)
 #undef CHAIN_ORDER
 #define CHAIN_ORDER CHAIN_NEXT(SSCANF)
 
+/**
+ * Common ALS boilerplate to ensure that all the <c>&lt;_ALS : &gt;</c> states
+ * are known to the compiler.
+ */
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
