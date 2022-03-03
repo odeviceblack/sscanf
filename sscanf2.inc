@@ -685,7 +685,7 @@ static stock SSCANF_RunInit()
 #if SSCANF_NPC
 	public OnNPCModeInit()
 	{
-		SSCANF_RunInit()();
+		SSCANF_RunInit();
 		SSCANF_OnNPCModeInit();
 		return 1;
 	}
