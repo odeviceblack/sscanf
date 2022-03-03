@@ -535,6 +535,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
 #if SSCANF_NPC
 	forward SSCANF_PlayerCheck();
+#endif
 
 	/*
 	  OnNPCModeInit
@@ -543,8 +544,11 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  then calls the "real" OnNPCModeInit (using the new ALS 2 hook method).
 	*/
 
+#if SSCANF_NPC
 	native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
+#endif
 
+#if SSCANF_NPC
 	public OnNPCModeInit()
 	{
 		state _ALS : _ALS_go;
@@ -566,6 +570,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnNPCModeInit(%0) CHAIN_PUBLIC:SSCANF_OnNPCModeInit(%0)
 	CHAIN_FORWARD:SSCANF_OnNPCModeInit() = 1;
+#endif
 
 	/*
 	  SSCANF_PlayerCheck
@@ -573,6 +578,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  NPC modes have no "OnPlayerConnect callback, so we need to simulate one.
 	*/
 
+#if SSCANF_NPC
 	#if !defined SSCANF_NO_PLAYERS
 		public SSCANF_PlayerCheck()
 		{
@@ -599,7 +605,9 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 			}
 		}
 	#endif
-#else
+#endif
+
+#if !SSCANF_NPC
 	static stock SSCANF_RunInit()
 	{
 		state _ALS : _ALS_go;
@@ -619,6 +627,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 			}
 		}
 	}
+#endif
 
 	/*
 	  OnScriptInit
@@ -626,10 +635,13 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  Called for earlier initialisation by YSI.
 	*/
 
+#if !SSCANF_NPC
 	#define SSCANF_BRACKETS ()
 	forward OnScriptInit SSCANF_BRACKETS;
 	#undef SSCANF_BRACKETS
+#endif
 
+#if !SSCANF_NPC
 	public OnScriptInit()
 	{
 		if (!SSCANF_gInit)
@@ -647,6 +659,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnScriptInit(%0) CHAIN_PUBLIC:SSCANF_OnScriptInit(%0)
 	CHAIN_FORWARD:SSCANF_OnScriptInit() = 1;
+#endif
 
 	/*
 	  OnFilterScriptInit
@@ -656,6 +669,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  method).
 	*/
 
+#if !SSCANF_NPC
 	public OnFilterScriptInit()
 	{
 		if (!SSCANF_gInit)
@@ -673,6 +687,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnFilterScriptInit(%0) CHAIN_PUBLIC:SSCANF_OnFilterScriptInit(%0)
 	CHAIN_FORWARD:SSCANF_OnFilterScriptInit() = 1;
+#endif
 
 	/*
 	  OnGameModeInit
@@ -682,6 +697,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  that case.
 	*/
 
+#if !SSCANF_NPC
 	public OnGameModeInit()
 	{
 		if (!SSCANF_gInit)
@@ -699,6 +715,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnGameModeInit(%0) CHAIN_PUBLIC:SSCANF_OnGameModeInit(%0)
 	CHAIN_FORWARD:SSCANF_OnGameModeInit() = 1;
+#endif
 
 	/*
 	  OnCachedInit
@@ -706,7 +723,11 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  Called when the script starts if it is YSI cached mode.
 	*/
 
+#if !SSCANF_NPC
 	forward OnCachedInit();
+#endif
+
+#if !SSCANF_NPC
 	public OnCachedInit()
 	{
 		SSCANF_RunInit();
@@ -721,6 +742,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnCachedInit(%0) CHAIN_PUBLIC:SSCANF_OnCachedInit(%0)
 	CHAIN_FORWARD:SSCANF_OnCachedInit() = 1;
+#endif
 
 	/*
 	  OnPlayerConnect
@@ -731,6 +753,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  internally.
 	*/
 
+#if !SSCANF_NPC
 	public OnPlayerConnect(playerid)
 	{
 		new
@@ -748,6 +771,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnPlayerConnect(%0) CHAIN_PUBLIC:SSCANF_OnPlayerConnect(%0)
 	CHAIN_FORWARD:SSCANF_OnPlayerConnect(playerid) = 1;
+#endif
 
 	/*
 	  OnPlayerDisconnect
@@ -755,6 +779,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	  Called when a player disconnects, or when a script is ended.
 	*/
 
+#if !SSCANF_NPC
 	public OnPlayerDisconnect(playerid, reason)
 	{
 		SSCANF_OnPlayerDisconnect(playerid, reason);
@@ -771,6 +796,8 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnPlayerDisconnect(playerid, reason) = 1;
 #endif
 
+// Ensure that these purely internal natives can't be called from outside this
+// include.
 #define SSCANF_Init
 #define SSCANF_Join
 #define SSCANF_Leave
