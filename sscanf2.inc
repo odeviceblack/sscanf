@@ -533,21 +533,19 @@ CHAIN_HOOK(SSCANF)
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
 static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
-#if SSCANF_NPC
-	forward SSCANF_PlayerCheck();
-#endif
+forward SSCANF_PlayerCheck();
 
-	/*
-	  OnNPCModeInit
+/**
+ * <library>sscanf</library>
+ * const-correct wrapper for <c>SetTimer</c>, mainly for NPC modes.
+ */
+native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
-	  Called when the script starts if it is a NPC mode, sets up the system,
-	  then calls the "real" OnNPCModeInit (using the new ALS 2 hook method).
-	*/
-
-#if SSCANF_NPC
-	native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
-#endif
-
+/**
+ * <library>sscanf</library>
+ * Called when the script starts if it is a NPC mode, sets up the system, then
+ * calls the "real" OnNPCModeInit (using the new ALS 2 hook method).
+ */
 #if SSCANF_NPC
 	public OnNPCModeInit()
 	{
@@ -570,44 +568,53 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	#endif
 	#define OnNPCModeInit(%0) CHAIN_PUBLIC:SSCANF_OnNPCModeInit(%0)
 	CHAIN_FORWARD:SSCANF_OnNPCModeInit() = 1;
+#else
+	native SSCANF_OnNPCModeInit();
+	#define SSCANF_OnNPCModeInit()
 #endif
 
-	/*
-	  SSCANF_PlayerCheck
-
-	  NPC modes have no "OnPlayerConnect callback, so we need to simulate one.
-	*/
-
-#if SSCANF_NPC
-	#if !defined SSCANF_NO_PLAYERS
-		public SSCANF_PlayerCheck()
+/**
+ * <library>sscanf</library>
+ * NPC modes have no "OnPlayerConnect callback, so we need to simulate one.
+ */
+#if SSCANF_NPC && !defined SSCANF_NO_PLAYERS
+	public SSCANF_PlayerCheck()
+	{
+		new
+			name[MAX_PLAYER_NAME + 1];
+		for (new i = 0; i != MAX_PLAYERS; ++i)
 		{
-			new
-				name[MAX_PLAYER_NAME + 1];
-			for (new i = 0; i != MAX_PLAYERS; ++i)
+			if (IsPlayerConnected(i))
 			{
-				if (IsPlayerConnected(i))
+				if (!SSCANF_IsConnected(i))
 				{
-					if (!SSCANF_IsConnected(i))
-					{
-						GetPlayerName(i, name, sizeof (name));
-						// We have no way to know if they are an NPC or not!
-						SSCANF_Join(i, name, false);
-					}
+					GetPlayerName(i, name, sizeof (name));
+					// We have no way to know if they are an NPC or not!
+					SSCANF_Join(i, name, false);
 				}
-				else
+			}
+			else
+			{
+				if (SSCANF_IsConnected(i))
 				{
-					if (SSCANF_IsConnected(i))
-					{
-						SSCANF_Leave(i);
-					}
+					SSCANF_Leave(i);
 				}
 			}
 		}
-	#endif
+	}
+#else
+	native SSCANF_PlayerCheck();
+	#define SSCANF_PlayerCheck()
 #endif
 
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Generic initialisation code called from a range of different init publics.
+ */
+#if SSCANF_NPC
+	native SSCANF_RunInit();
+	#define SSCANF_RunInit()
+#else
 	static stock SSCANF_RunInit()
 	{
 		state _ALS : _ALS_go;
@@ -629,19 +636,19 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	}
 #endif
 
-	/*
-	  OnScriptInit
+// `SSCANF_BRACKETS` to avoid macro replacements.
+#define SSCANF_BRACKETS ()
+forward OnScriptInit SSCANF_BRACKETS;
+#undef SSCANF_BRACKETS
 
-	  Called for earlier initialisation by YSI.
-	*/
-
-#if !SSCANF_NPC
-	#define SSCANF_BRACKETS ()
-	forward OnScriptInit SSCANF_BRACKETS;
-	#undef SSCANF_BRACKETS
-#endif
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called for earlier initialisation by YSI.
+ */
+#if SSCANF_NPC
+	native SSCANF_OnScriptInit();
+	#define SSCANF_OnScriptInit()
+#else
 	public OnScriptInit()
 	{
 		if (!SSCANF_gInit)
@@ -661,15 +668,15 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnScriptInit() = 1;
 #endif
 
-	/*
-	  OnFilterScriptInit
-
-	  Called when the script starts if it is a filterscript, sets up the system,
-	  then calls the "real" OnFilterScriptInit (using the new ALS 2 hook
-	  method).
-	*/
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called when the script starts if it is a filterscript, sets up the system,
+ * then calls the "real" OnFilterScriptInit (using the new ALS 2 hook method).
+ */
+#if SSCANF_NPC
+	native SSCANF_OnFilterScriptInit();
+	#define SSCANF_OnFilterScriptInit()
+#else
 	public OnFilterScriptInit()
 	{
 		if (!SSCANF_gInit)
@@ -689,15 +696,16 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnFilterScriptInit() = 1;
 #endif
 
-	/*
-	  OnGameModeInit
-
-	  Called when the script starts if it is a gamemode.  This callback is also
-	  called in filterscripts so we don't want to reinitialise the system in
-	  that case.
-	*/
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called when the script starts if it is a gamemode.  This callback is also
+ * called in filterscripts so we don't want to reinitialise the system in that
+ * case.
+ */
+#if SSCANF_NPC
+	native SSCANF_OnGameModeInit();
+	#define SSCANF_OnGameModeInit()
+#else
 	public OnGameModeInit()
 	{
 		if (!SSCANF_gInit)
@@ -717,17 +725,16 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnGameModeInit() = 1;
 #endif
 
-	/*
-	  OnCachedInit
+forward OnCachedInit();
 
-	  Called when the script starts if it is YSI cached mode.
-	*/
-
-#if !SSCANF_NPC
-	forward OnCachedInit();
-#endif
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called when the script starts if it is (legacy) YSI cached mode.
+ */
+#if SSCANF_NPC
+	native SSCANF_OnCachedInit();
+	#define SSCANF_OnCachedInit()
+#else
 	public OnCachedInit()
 	{
 		SSCANF_RunInit();
@@ -744,16 +751,17 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnCachedInit() = 1;
 #endif
 
-	/*
-	  OnPlayerConnect
-
-	  Called when a player connects.  Actually increments an internal count so
-	  that if a script ends and "OnPlayerDisconnect" is called then "sscanf"
-	  still knows that the player is really connected.  Also stores their name
-	  internally.
-	*/
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called when a player connects.  Actually increments an internal count so that
+ * if a script ends and <c>OnPlayerDisconnect</c> is called then <c>sscanf</c>
+ * still knows that the player is really connected.  Also stores their name
+ * internally.
+ */
+#if SSCANF_NPC
+	native SSCANF_OnPlayerConnect();
+	#define SSCANF_OnPlayerConnect()
+#else
 	public OnPlayerConnect(playerid)
 	{
 		new
@@ -773,13 +781,14 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 	CHAIN_FORWARD:SSCANF_OnPlayerConnect(playerid) = 1;
 #endif
 
-	/*
-	  OnPlayerDisconnect
-
-	  Called when a player disconnects, or when a script is ended.
-	*/
-
-#if !SSCANF_NPC
+/**
+ * <library>sscanf</library>
+ * Called when a player disconnects, or when a script is ended.
+ */
+#if SSCANF_NPC
+	native SSCANF_OnPlayerDisconnect();
+	#define SSCANF_OnPlayerDisconnect()
+#else
 	public OnPlayerDisconnect(playerid, reason)
 	{
 		SSCANF_OnPlayerDisconnect(playerid, reason);
@@ -883,7 +892,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
  * closest, even if the closest is not that close; which is why an optional
  * <c>threshold</c> parameter is available.  When this parameter is provided the
  * closest match must be closer in Levenshtein distance than the threshold,
- * otherwise again `-1` is returned.
+ * otherwise again <c>-1</c> is returned.
  */
 stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
@@ -937,7 +946,8 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * weapon by Levenshtein distance to the input.
  */
 #if defined SSCANF_NO_K_WEAPON
-	native SSCANF_no_k_weapon(const string[]);
+	native SSCANF_no_k_weapon();
+	#define SSCANF_no_k_weapon()
 #else
 	SSCANF:weapon(const string[])
 	{
@@ -1022,7 +1032,8 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * vehicle by Levenshtein distance to the input.
  */
 #if defined SSCANF_NO_K_VEHICLE
-	native SSCANF_no_k_vehicle(const string[]);
+	native SSCANF_no_k_vehicle();
+	#define SSCANF_no_k_vehicle()
 #else
 	SSCANF:vehicle(const string[])
 	{
