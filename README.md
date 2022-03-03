@@ -1090,7 +1090,7 @@ Get the SSCANF plugin version as a string (e.g. `"2.11.2"`).  Compare to the mac
 
 ### `SSCANF_Version();`
 
-Get the SSCANF plugin version as binary coded decimal (BCD) number (e.g. `0x2A3`).  Compare to the macro `SSCANF_VERSION_BCD`.
+Get the SSCANF plugin version as binary coded decimal (BCD) number (e.g. `0x021003`).  Compare to the macro `SSCANF_VERSION_BCD`.
 
 ### `SSCANF_VersionString(version[], size = sizeof (version));`
 

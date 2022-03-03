@@ -90,6 +90,34 @@ static stock SSCANF_VERSION_BUILD =  4;
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
 /**
+ * Converts a version string to
+ * <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">BCD</a>.  For example:
+ *
+ * <code>
+ *   BCD(5.6.17);
+ * </code>
+ *
+ * Returns:
+ *
+ * <code>
+ *   0x050617
+ * </code>
+ *
+ * Each section (between dots) is assigned a single byte ans the last section is
+ * always in the lowest byte.  This implies a maximum of four sections and two
+ * digits per section.
+ *
+ */
+static stock BCD(number)
+{
+	return number;
+}
+#define BCD(%0) (_:MORE_BCD:NO_MORE_BCD:%0.$0)
+#define MORE_BCD:NO_MORE_BCD:%0.%1$%2) MORE_BCD:NO_MORE_BCD:%1$(%2) << 8 | DO_BCD(%0))
+#define NO_MORE_BCD:$
+#define DO_BCD(%0) _:(%0) / 10 << 4 | _:(%0) % 10
+
+/**
  * The sscanf version in BCD.  Example:
  *
  * <code>
@@ -98,13 +126,7 @@ static stock SSCANF_VERSION_BUILD =  4;
  *     => 0x021003
  * </code>
  */
-const SSCANF_VERSION =
-	((SSCANF_VERSION_MAJOR / 10) << 20) |
-	((SSCANF_VERSION_MAJOR % 10) << 16) |
-	((SSCANF_VERSION_MINOR / 10) << 12) |
-	((SSCANF_VERSION_MINOR % 10) <<  8) |
-	((SSCANF_VERSION_BUILD / 10) <<  4) |
-	((SSCANF_VERSION_BUILD % 10) <<  0) ;
+const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD);
 
 stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
@@ -118,7 +140,9 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 /**
  * The current true implementation of <c>sscanf</c> in the plugin.  This is
  * wrapped by macros to provide <c>sscanf</c> enhanced with filenames and line
- * numbers so that errors have more information.
+ * numbers so that errors have more information.  The plugin also contains a
+ * native function called <c>sscanf</c> which is only for backwards-
+ * compatibility with older versions of this include.
  */
 native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
 
@@ -240,14 +264,52 @@ static stock SSCANF_Option(const name[], value = -1)
 #define _ALS_SSCANF_Option
 #define _ALS_SSCANF_GetOption__
 
-// Get the sscanf plugin version.
+/**
+ * <param name="version">Pass-by-reference return value.</param>
+ * <param name="size">The size of the destination array.</param>
+ * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>).  Compare
+ * this value to the constant <c>SSCANF_VERSION_STRING</c>.
+ */
 native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version;
+
+/**
+ * <param name="version">Pass-by-reference return value.</param>
+ * <param name="size">The size of the destination array.</param>
+ * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>).  Compare
+ * this value to the constant <c>SSCANF_VERSION_STRING</c>.  This internal
+ * alternate spelling is used by the <c>SSCANF_Version</c> macro, which will
+ * return a string when called with parameters, or a BCD value when not.
+ */
 native SSCANF_VersionString__(version[], size = sizeof (version)) = SSCANF_Version;
 
+/**
+ * Get the SSCANF plugin version as a BCD-encoded value (e.g. <c>0x021102</c>).
+ * Compare this value to the constant <c>SSCANF_VERSION_BCD</c>.
+ */
 native SSCANF_VersionBCD() = SSCANF_Version;
+
+/**
+ * Get the SSCANF plugin version as a BCD-encoded value (e.g. <c>0x021102</c>).
+ * Compare this value to the constant <c>SSCANF_VERSION_BCD</c>.  This internal
+ * alternate spelling is used by the <c>SSCANF_Version</c> macro, which will
+ * return a string when called with parameters, or a BCD value when not.
+ */
 native SSCANF_VersionBCD__() = SSCANF_Version;
 
 // The `SSCANF_Version` function is overloaded to take 0 or 2 parameters (or 1 plus a default).
+
+/**
+ * <param name="version">Pass-by-reference return value.</param>
+ * <param name="size">The size of the destination array.</param>
+ * Get the SSCANF plugin version as a string (e.g. <c>"2.11.2"</c>) <em>or</em>
+ * a BCD-encoded value (e.g. <c>0x021102</c>).  This function returns a string
+ * (by reference) when called with parameters, or a number (directly) when not.
+ */
+static stock SSCANF_Version(version[] = "", size = sizeof (version)
+{
+	return SSCANF_VERSION_BCD;
+}
+
 #define SSCANF_Version SSCANF_VersionString__
 #define SSCANF_VersionString__() SSCANF_VersionBCD__()
 #define _ALS_SSCANF_Version
