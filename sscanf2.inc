@@ -163,6 +163,9 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 #define sscanf_%0\32; sscanf_
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
+// The check for `SSCANF_Option` ensures that this is the first compiler pass
+// and thus the check for `sscanf` only finds earlier definitions not our
+// later fake definition made purely for documentation purposes.
 #if defined sscanf && !defined SSCANF_Option
 	#error sscanf (possibly the PAWN version) already defined.
 #endif
