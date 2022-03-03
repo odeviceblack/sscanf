@@ -58,11 +58,18 @@
  * </library>
  */
 
+///
+
+/**
+ * Was sscanf built for an NPC mode or a normal mode?
+ */
 #if defined GetDistanceFromMeToPoint
 	// NPC script.
+	static stock SSCANF_NPC = 1;
 	#define SSCANF_NPC (1)
 	#pragma library sscanf
 #else
+	static stock SSCANF_NPC = 0;
 	#define SSCANF_NPC (0)
 #endif
 
@@ -87,6 +94,11 @@ static stock SSCANF_VERSION_MINOR = 11;
  */
 static stock SSCANF_VERSION_BUILD =  4;
 #define SSCANF_VERSION_BUILD  4
+
+/**
+ * The sscanf version as a string.  E.g. <c>"2.8.1"</c>.
+ */
+static stock SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD;
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
 /**
@@ -103,7 +115,7 @@ static stock SSCANF_VERSION_BUILD =  4;
  *   0x050617
  * </code>
  *
- * Each section (between dots) is assigned a single byte ans the last section is
+ * Each section (between dots) is assigned a single byte and the last section is
  * always in the lowest byte.  This implies a maximum of four sections and two
  * digits per section.
  *
@@ -112,10 +124,22 @@ static stock BCD(number)
 {
 	return number;
 }
+
 #define BCD(%0) (_:MORE_BCD:NO_MORE_BCD:%0.$0)
 #define MORE_BCD:NO_MORE_BCD:%0.%1$%2) MORE_BCD:NO_MORE_BCD:%1$(%2) << 8 | DO_BCD(%0))
 #define NO_MORE_BCD:$
 #define DO_BCD(%0) _:(%0) / 10 << 4 | _:(%0) % 10
+
+/**
+ * The sscanf version in BCD as a proper constant.  Example:
+ *
+ * <code>
+ *         2.10.3  <br />
+ *     => 02 10 03 <br />
+ *     => 0x021003
+ * </code>
+ */
+const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD);
 
 /**
  * The sscanf version in BCD.  Example:
@@ -126,8 +150,6 @@ static stock BCD(number)
  *     => 0x021003
  * </code>
  */
-const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD);
-
 stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
 #define sscanf_%0\32; sscanf_
@@ -188,7 +210,8 @@ native bool:SSCANF_IsConnected(playerid);
  * Levenshtein Distance</a> between two strings.  This is simlar to
  * <c>strcmp</c> in usage, but is slightly more "fuzzy".  Distances are used to
  * work out which string is the most similar to another one, though they may not
- * be identical.
+ * be identical.  Useful in <c>k</c> callback functions to determine if the
+ * entered string is close to a possible string.
  */
 native SSCANF_Levenshtein(const string1[], const string2[]);
 
@@ -305,7 +328,7 @@ native SSCANF_VersionBCD__() = SSCANF_Version;
  * a BCD-encoded value (e.g. <c>0x021102</c>).  This function returns a string
  * (by reference) when called with parameters, or a number (directly) when not.
  */
-static stock SSCANF_Version(version[] = "", size = sizeof (version)
+static stock SSCANF_Version(version[] = "", size = sizeof (version))
 {
 	return SSCANF_VERSION_BCD;
 }
@@ -673,6 +696,19 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 #define kustom_EXTRN:%0#%1,%2|||%3<%8>|||%4,%5) EXTRY:%0#%1k<%8>,%2,%3|||%4|||%5)
 //#define bin_EXTRW:%0#%1,%2|||%3[%7]|||%4,%5) EXTRY:%0#%1a<b>[*],%2,(%7),%3|||%4|||%5)
 
+/**
+ * <param name="input">The first string to compare.</param>
+ * <param name="candidates">A list of other strings to compare against.</param>
+ * <param name="threshold">How similar the strings must be to be considered a match.</param>
+ * <param name="count">The number of candidates.</param>
+ * Takes an input string and an array of string possibilities (candidates) and
+ * returns the index of the string closest to the input string.  If no valid
+ * match is found, <c>-1</c> is returned.  Note that this will always return the
+ * closest, even if the closest is not that close; which is why an optional
+ * <c>threshold</c> parameter is available.  When this parameter is provided the
+ * closest match must be closer in Levenshtein distance than the threshold,
+ * otherwise again `-1` is returned.
+ */
 stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
 	new
@@ -690,6 +726,22 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
 	return closest;
 }
 
+/**
+ * <param name="input">The first string to compare.</param>
+ * <param name="candidates">A list of other strings to compare against.</param>
+ * <param name="results">The values to return when the corresponding candidate (by index) is the closest match.</param>
+ * <param name="fail">The value to return when there is no good match.</param>
+ * <param name="threshold">How similar the strings must be to be considered a match.</param>
+ * <param name="count">The number of candidates (must match <c>check</c>).</param>
+ * <param name="check">The number of results (must match <c>count</c>).</param>
+ * Similar to <c>SSCANF_GetClosestString</c> in that it searches the
+ * <c>candidates</c> array for the string most closely matching the <c>input</c>
+ * and bounded by <c>threshold</c>.  But instead of returning the index this
+ * function returns the value in the second <c>results</c> array at that index;
+ * and instead of returning <c>-1</c> on failure it returns the value of
+ * <c>fail</c>.  The two arrays must match in size and an <c>assert</c> in the
+ * function checks for this.
+ */
 stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
 {
 	assert(count == check);
