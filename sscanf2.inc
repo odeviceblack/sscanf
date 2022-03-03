@@ -625,6 +625,56 @@ forward SSCANF_PlayerCheck();
  */
 native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
+///
+/// <library>sscanf</library>
+/// <remarks>
+/// Generic initialisation code called from a range of different init publics.
+/// </remarks>
+///
+/// <!--
+#if !defined __PawnBuild ///
+	forward SSCANF_RunInit(); ///
+	/// There's a bug in the old compiler with the pawndoc generation for
+	/// functions containing <c>state</c>.  This little trick starts an XML
+	/// comment at the end of the documentation <c>SSCANF_RunInit</c> and
+	/// immediately closes it again in a dedicated function
+	/// <c>SSCANF_RunInit0</c>, which is sorted next lexicographically.
+	/// -->
+	static stock SSCANF_RunInit0()
+	{
+	}
+#endif
+static stock SSCANF_RunInit()
+{
+	#if SSCANF_NPC
+		state _ALS : _ALS_go;
+		SSCANF_Init(MAX_PLAYERS, INVALID_PLAYER_ID, MAX_PLAYER_NAME);
+		#if !defined SSCANF_NO_PLAYERS
+			// Initialise the system.
+			SSCANF_PlayerCheck();
+			// Will be run once per frame.
+			SSCANF_SetTimer("SSCANF_PlayerCheck", 0, true);
+		#endif
+	#else
+		state _ALS : _ALS_go;
+		new
+			name[MAX_PLAYER_NAME + 1];
+
+		SSCANF_Init(GetMaxPlayers(), INVALID_PLAYER_ID, MAX_PLAYER_NAME);
+		SSCANF_gInit = true;
+
+		// Check if there are any players that aren't initialized.
+		for (new i = 0; i < MAX_PLAYERS; i ++)
+		{
+			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
+			{
+				GetPlayerName(i, name, sizeof (name));
+				SSCANF_Join(i, name, bool:IsPlayerNPC(i));
+			}
+		}
+	#endif
+}
+
 /**
  * <library>sscanf</library>
  * <remarks>
@@ -635,14 +685,7 @@ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 #if SSCANF_NPC
 	public OnNPCModeInit()
 	{
-		state _ALS : _ALS_go;
-		SSCANF_Init(MAX_PLAYERS, INVALID_PLAYER_ID, MAX_PLAYER_NAME);
-		#if !defined SSCANF_NO_PLAYERS
-			// Initialise the system.
-			SSCANF_PlayerCheck();
-			// Will be run once per frame.
-			SSCANF_SetTimer("SSCANF_PlayerCheck", 0, true);
-		#endif
+		SSCANF_RunInit()();
 		SSCANF_OnNPCModeInit();
 		return 1;
 	}
@@ -693,50 +736,6 @@ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 #else
 	native SSCANF_PlayerCheck();
 	#define SSCANF_PlayerCheck()
-#endif
-
-///
-/// <library>sscanf</library>
-/// <remarks>
-/// Generic initialisation code called from a range of different init publics.
-/// </remarks>
-///
-/// <!--
-#if !defined __PawnBuild ///
-	forward SSCANF_RunInit(); ///
-	/// There's a bug in the old compiler with the pawndoc generation for
-	/// functions containing <c>state</c>.  This little trick starts an XML
-	/// comment at the end of the documentation <c>SSCANF_RunInit</c> and
-	/// immediately closes it again in a dedicated function
-	/// <c>SSCANF_RunInit0</c>, which is sorted next lexicographically.
-	/// -->
-	static stock SSCANF_RunInit0()
-	{
-	}
-#endif
-#if SSCANF_NPC
-	native SSCANF_RunInit();
-	#define SSCANF_RunInit()
-#else
-	static stock SSCANF_RunInit()
-	{
-		state _ALS : _ALS_go;
-		new
-			name[MAX_PLAYER_NAME + 1];
-
-		SSCANF_Init(GetMaxPlayers(), INVALID_PLAYER_ID, MAX_PLAYER_NAME);
-		SSCANF_gInit = true;
-
-		// Check if there are any players that aren't initialized.
-		for (new i = 0; i < MAX_PLAYERS; i ++)
-		{
-			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
-			{
-				GetPlayerName(i, name, sizeof (name));
-				SSCANF_Join(i, name, bool:IsPlayerNPC(i));
-			}
-		}
-	}
 #endif
 
 // `SSCANF_BRACKETS` to avoid macro replacements.
