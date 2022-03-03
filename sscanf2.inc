@@ -100,13 +100,12 @@ static stock SSCANF_VERSION_BUILD =  4;
  * Returns:
  *
  * <code>
- *   0x05060017
+ *   0x050617
  * </code>
  *
- * Each section (between dots) is assigned a single byte except the last one,
- * which is always the lowest two bytes.  This implies a maximum of three
- * sections and two digits in two of the sections.  This scheme matches that of
- * the compiler, which encodes version <c>3.2.3664</c> as  <c>0x03023664</c>.
+ * Each section (between dots) is assigned a single byte ans the last section is
+ * always in the lowest byte.  This implies a maximum of four sections and two
+ * digits per section.
  *
  */
 static stock BCD(number)
