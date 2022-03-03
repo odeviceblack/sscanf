@@ -695,12 +695,25 @@ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 	#define SSCANF_PlayerCheck()
 #endif
 
-/**
- * <library>sscanf</library>
- * <remarks>
- * Generic initialisation code called from a range of different init publics.
- * </remarks>
- */
+///
+/// <library>sscanf</library>
+/// <remarks>
+/// Generic initialisation code called from a range of different init publics.
+/// </remarks>
+///
+/// <!--
+#if !defined __PawnBuild ///
+	forward SSCANF_RunInit(); ///
+	/// There's a bug in the old compiler with the pawndoc generation for
+	/// functions containing <c>state</c>.  This little trick starts an XML
+	/// comment at the end of the documentation <c>SSCANF_RunInit</c> and
+	/// immediately closes it again in a dedicated function
+	/// <c>SSCANF_RunInit0</c>, which is sorted next lexicographically.
+	/// -->
+	static stock SSCANF_RunInit0()
+	{
+	}
+#endif
 #if SSCANF_NPC
 	native SSCANF_RunInit();
 	#define SSCANF_RunInit()
