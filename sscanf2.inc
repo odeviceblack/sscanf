@@ -55,6 +55,39 @@
  *   summary="Extracts structured information from strings."
  *   license="Copyright (c) 2022 Alex &quot;Y_Less&quot; Cole.  Licensed under MPL 1.1"
  * >
+ * <remarks>
+ * This is the <em>sscanf</em> plugin, which provides the <c>sscanf</c> function
+ * to extract basic structured data from strings.  This is slightly different to
+ * regular expressions, but both have their place.  A regular expression gives
+ * you total control over the exact structure of data down to the character
+ * level; however, extracting structured data like numbers using it is tricky.
+ * Conversely this gives slightly higher-level <em>specifiers</em> which can
+ * easily extract data types, at the expense of fine-grained control.  To
+ * convert a string in to two numbers would look like:
+ *
+ * <code>
+ *     new num1, num2;                                                          <br />
+ *     sscanf("45 100", "ii", num1, num2);
+ * </code>
+ *
+ * <c>ii</c> is the specifier string, which here means "integer integer";
+ * stating that the input string should be two whole numbers in a row (which is
+ * is - <c>"45 100"</c>).  <c>num1</c> and <c>num2</c> are the destination
+ * variables to store the found numbers in (after conversion from strings).  You
+ * can check if the conversion failed by looking for a non-naught return value:
+ *
+ * <code>
+ *     new num1, num2;                                                          <br />
+ *     if (sscanf("hello 100", "ii", num1, num2))                               <br />
+ *     {                                                                        <br /><indent />
+ *         printf("The input was not two numbers.");                            <br />
+ *     }
+ * </code>
+ *
+ * This will fail because <c>"hello"</c> is not a whole number (or indeed any
+ * type of number at all).  For more information on using the function refer to
+ * the tutorials or the reference documentation in the attached readme.
+ * </remarks>
  * </library>
  */
 
