@@ -469,30 +469,33 @@ stock unformat(const data[], const format[], {Float, _}:...)
  * <remarks>
  * The fallback for the filename in <c>sscanf</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
- * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.  Appends <c>"unknown file"</c> in the
+ * plugin when line number <c>&lt; 0</c>.
  * </remarks>
  */
-stock const SSCANF_UNK_[] = "sscanf";   // Append "unknown file" in the plugin when line number < 0.
+stock const SSCANF_UNK_[] = "sscanf";
 
 /**
  * <library>sscanf</library>
  * <remarks>
  * The fallback for the filename in <c>unformat</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
- * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.  Appends <c>"unknown file"</c> in the
+ * plugin when line number <c>&lt; 0</c>.
  * </remarks>
  */
-stock const SSCANF_FOM_[] = "unformat"; // Append "unknown file" in the plugin when line number < 0.
+stock const SSCANF_FOM_[] = "unformat";
 
 /**
  * <library>sscanf</library>
  * <remarks>
  * The fallback for the filename in <c>extract</c> on the old compiler, which
  * doesn't have the inbuilt <c>__file</c> macro.  This is the "feature" enabled
- * by <c>SSCANF_NO_NICE_FEATURES</c>.
+ * by <c>SSCANF_NO_NICE_FEATURES</c>.  Appends <c>"unknown file"</c> in the
+ * plugin when line number <c>&lt; 0</c>.
  * </remarks>
  */
-stock const SSCANF_EXT_[] = "extract";  // Append "unknown file" in the plugin when line number < 0.
+stock const SSCANF_EXT_[] = "extract";
 
 /**
  * <library>sscanf</library>
