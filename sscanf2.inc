@@ -473,6 +473,18 @@ stock sscanf(const data[], const format[], {Float, _}:...)
 	return 0;
 }
 
+#if defined __PawnBuild
+	#define sscanf( SSCANF__(__file,__line,
+#else
+	// `-1` because the old compiler doesn't have `__line` so we can't know
+	// where this function was used.  Tell the plugin this.  Actually, we *can*
+	// know, if we look at the CIP and try extract the file/line information
+	// from any included debug information.  `SSCANF_UNK_` tells the plugin that
+	// this was called via `sscanf` not `unformat`, because they're actually the
+	// same function once compiled.
+	#define sscanf( SSCANF__(SSCANF_UNK_,-1,
+#endif
+
 /**
  * <library>sscanf</library>
  * <param name="data">The input string containing the data to parse out.</param>
@@ -490,10 +502,14 @@ stock unformat(const data[], const format[], {Float, _}:...)
 }
 
 #if defined __PawnBuild
-	#define sscanf( SSCANF__(__file,__line,
 	#define unformat( SSCANF__(__file,__line,
 #else
-	#define sscanf( SSCANF__(SSCANF_UNK_,-1,
+	// `-1` because the old compiler doesn't have `__line` so we can't know
+	// where this function was used.  Tell the plugin this.  Actually, we *can*
+	// know, if we look at the CIP and try extract the file/line information
+	// from any included debug information.  `SSCANF_FOM_` tells the plugin that
+	// this was called via `unformat` not `sscanf`, because they're actually the
+	// same function once compiled.
 	#define unformat( SSCANF__(SSCANF_FOM_,-1,
 #endif
 
