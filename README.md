@@ -149,19 +149,19 @@ https://github.com/Y-Less/sscanf/
 
 ## Use
 
-This behaves exactly as the old sscanf did, just MUCH faster and much more flexibly. To use it add:
+This behaves exactly as the old sscanf did, just MUCH faster and much more flexibly.  To use it add:
 
 ```pawn
 #include <sscanf2>
 ```
 
-To your modes and remove the old sscanf (the new include will detect the old version and throw an error if it is detected). On Windows add:
+To your modes and remove the old sscanf (the new include will detect the old version and throw an error if it is detected).  On Windows add:
 
 ```pawn
 plugins sscanf
 ```
 
-To `server.cfg`. On Linux add:
+To `server.cfg`.  On Linux add:
 
 ```pawn
 plugins sscanf.so
@@ -176,7 +176,7 @@ if (sscanf(params, "ui", giveplayerid, amount))
 }
 ```
 
-However it should be noted that sscanf can be used for any text processing you like. For example an ini processor could look like (don't worry about what the bits mean at this stage):
+However it should be noted that sscanf can be used for any text processing you like.  For example an ini processor could look like (don't worry about what the bits mean at this stage):
 
 ```pawn
 if (sscanf(szFileLine, "p<=>s[8]s[32]", szIniName, szIniValue))
@@ -216,7 +216,7 @@ The basic specifiers (the letters `u`, `i`, `s` etc. in the codes above) here.  
 
 ### Strings
 
-The specifier `s` is used, as before, for strings - but they are now more advanced. As before they support collection, so doing:
+The specifier `s` is used, as before, for strings - but they are now more advanced.  As before they support collection, so doing:
 
 ```pawn
 sscanf("hello 27", "si", str, val);
@@ -235,7 +235,7 @@ Doing:
 sscanf("hello there 27", "si", str, val);
 ```
 
-Will fail as `there` is not a number. However doing:
+Will fail as `there` is not a number.  However doing:
 
 ```pawn
 sscanf("hello there", "s", str);
@@ -247,7 +247,7 @@ Will give:
 hello there
 ```
 
-Because there is nothing after `s` in the specifier, the string gets everything. To stop this simply add a space:
+Because there is nothing after `s` in the specifier, the string gets everything.  To stop this simply add a space:
 
 ```pawn
 sscanf("hello there", "s ", str);
@@ -272,7 +272,7 @@ hello there
 27
 ```
 
-All these examples however will give warnings in the server as the new version has array sizes. The above code should be:
+All these examples however will give warnings in the server as the new version has array sizes.  The above code should be:
 
 ```pawn
 new
@@ -281,7 +281,7 @@ new
 sscanf("hello\\ there 27", "s[32]i", str, val);
 ```
 
-As you can see - the format specifier now contains the length of the target string, ensuring that you can never have your strings overflow and cause problems. This can be combined with the SA:MP compiler's stringizing:
+As you can see - the format specifier now contains the length of the target string, ensuring that you can never have your strings overflow and cause problems.  This can be combined with the SA:MP compiler's stringizing:
 
 ```pawn
 #define STR_SIZE 32
@@ -301,7 +301,7 @@ So when you change your string size you don't need to change your specifiers.
 
 ### Arrays
 
-One of the advanced new specifiers is `a`, which creates an array, obviously. The syntax is similar to that of strings and, as you will see later, the delimiter code:
+One of the advanced new specifiers is `a`, which creates an array, obviously.  The syntax is similar to that of strings and, as you will see later, the delimiter code:
 
 ```pawn
 new
@@ -309,7 +309,7 @@ new
 sscanf("1 2 3 4 5", "a<i>[5]", arr);
 ```
 
-The `a` specifier is immediately followed by a single type enclosed in angle brackets - this type can be any of the basic types listed above. It is the followed, as with strings now, by an array size. The code above will put the numbers 1 to 5 into the 5 indexes of the `arr` array variable.
+The `a` specifier is immediately followed by a single type enclosed in angle brackets - this type can be any of the basic types listed above.  It is the followed, as with strings now, by an array size.  The code above will put the numbers 1 to 5 into the 5 indexes of the `arr` array variable.
 
 Arrays can now also be combined with strings (see below), specifying the string size in the array type:
 
@@ -317,13 +317,13 @@ Arrays can now also be combined with strings (see below), specifying the string 
 a<s[10]>[12]
 ```
 
-This will produce an array of 12 strings, each up to 10 characters long (9 + NULL). Optional string arrays still follow the optional array syntax:
+This will produce an array of 12 strings, each up to 10 characters long (9 + NULL).  Optional string arrays still follow the optional array syntax:
 
 ```
 A<s[10]>(hello)[12]
 ```
 
-However, unlike numbers you can't specify a progression and have it fill up. This code:
+However, unlike numbers you can't specify a progression and have it fill up.  This code:
 
 ```
 A<i>(0, 1)[4]
@@ -353,17 +353,17 @@ As normal, you can add brackets in to the default string value with `\)`:
 A<s[10]>(hi (code\))[4]
 ```
 
-It should also be noted that there is NO length checking on default strings. If you do:
+It should also be noted that there is NO length checking on default strings.  If you do:
 
 ```
 A<s[10]>(This is longer than 10 characters)[4]
 ```
 
-You will probably just corrupt the PAWN stack. The length checking is to ensure no users enter malicious data; however, in this case it is up to the scripter to ensure that the data is correct as they are the only one affecting it and shouldn't be trying to crash their own server. Interestingly, arrays of strings actually also work with jagged arrays and arrays that have been shuffled by Slice's quicksort function (this isn't a side-effect, I specifically wrote them to do so).
+You will probably just corrupt the PAWN stack.  The length checking is to ensure no users enter malicious data; however, in this case it is up to the scripter to ensure that the data is correct as they are the only one affecting it and shouldn't be trying to crash their own server.  Interestingly, arrays of strings actually also work with jagged arrays and arrays that have been shuffled by Slice's quicksort function (this isn't a side-effect, I specifically wrote them to do so).
 
 ### Enums
 
-This is possibly the most powerful addition to sscanf ever. This gives you the ability to define the structure of an enum within your specifier string and read any data straight into it. The format takes after that of arrays, but with more types - and you can include strings in enums (but not other enums or arrays):
+This is possibly the most powerful addition to sscanf ever.  This gives you the ability to define the structure of an enum within your specifier string and read any data straight into it.  The format takes after that of arrays, but with more types - and you can include strings in enums (but not other enums or arrays):
 
 ```pawn
 enum
@@ -395,7 +395,7 @@ c - A character, corresponds with E_DATA_Z
 > - End of the enum specification
 ```
 
-Note that an enum doesn't require a size like arrays and strings - it's size is determined by the number and size of the types. Most, but not all, specifiers can be used inside enums (notably arrays and other enums can't be).
+Note that an enum doesn't require a size like arrays and strings - it's size is determined by the number and size of the types.  Most, but not all, specifiers can be used inside enums (notably arrays and other enums can't be).
 
 ### Provided Lengths
 
@@ -473,19 +473,19 @@ This allows you to pass variable lengths if you don't want to use all of a strin
 
 ### Quiet
 
-The two new specifiers `{` and `}` are used for what are known as `quiet` strings. These are strings which are read and checked, but not saved. For example:
+The two new specifiers `{` and `}` are used for what are known as `quiet` strings.  These are strings which are read and checked, but not saved.  For example:
 
 ```pawn
 sscanf("42 -100", "{i}i", var);
 ```
 
-Clearly there are two numbers and two `i`, but only one return variable. This is because the first `i` is quiet so is not saved, but affects the return value. The code above makes `var` `-100`. The code below will fail in an if check:
+Clearly there are two numbers and two `i`, but only one return variable.  This is because the first `i` is quiet so is not saved, but affects the return value.  The code above makes `var` `-100`.  The code below will fail in an if check:
 
 ```pawn
 sscanf("hi -100", "{i}i", var);
 ```
 
-Although the first integer is not saved it is still read - and `hi` is not an integer. Quiet zones can be as long as you like, even for the whole string if you only want to check values are right, not save them:
+Although the first integer is not saved it is still read - and `hi` is not an integer.  Quiet zones can be as long as you like, even for the whole string if you only want to check values are right, not save them:
 
 ```pawn
 sscanf("1 2 3", "i{ii}", var);
@@ -503,7 +503,7 @@ Quiet sections cannot contain other quiet sections, however they can include enu
 
 ### Searches
 
-Searches were in the last version of sscanf too, but I'm explaining them again anyway. Strings enclosed in single quotes (') are scanned for in the main string and the position moved on. Note that to search for a single quote you escape it as above using `\\`:
+Searches were in the last version of sscanf too, but I'm explaining them again anyway.  Strings enclosed in single quotes (') are scanned for in the main string and the position moved on.  Note that to search for a single quote you escape it as above using `\\`:
 
 ```pawn
 sscanf("10 11 woo 12", "i'woo'i", var0, var1);
@@ -522,7 +522,7 @@ You could achieve the same effect with:
 sscanf("10 11 woo 12", "i{is[1000]}i", var0, var1);
 ```
 
-But that wouldn't check that the string was `woo`. Also note the use of `1000` for the string size. Quiet strings must still have a length, but as they aren't saved anywhere you can make this number as large as you like to cover any eventuality. Enum specifications can include search strings.
+But that wouldn't check that the string was `woo`.  Also note the use of `1000` for the string size.  Quiet strings must still have a length, but as they aren't saved anywhere you can make this number as large as you like to cover any eventuality.  Enum specifications can include search strings.
 
 ### Enums
 
@@ -545,13 +545,13 @@ enum E
 }
 ```
 
-And you only wanted to update the first two and the last fields and leave all others untouched you could use that specifier above. This way sscanf knows how to skip over the memory, and how much memory to skip. Note that this doesn't read anything, so you could also combine this with quiet sections:
+And you only wanted to update the first two and the last fields and leave all others untouched you could use that specifier above.  This way sscanf knows how to skip over the memory, and how much memory to skip.  Note that this doesn't read anything, so you could also combine this with quiet sections:
 
 ```
 e<ii-i-i{ii}i>
 ```
 
-That will read two values and save them, skip over two memory locations, read two values and NOT save them, then read and save a last value. In this way you can have written down all the values for every slot in the enum, but have only used 3 of them. Note that this is the same with `E` - if you do:
+That will read two values and save them, skip over two memory locations, read two values and NOT save them, then read and save a last value.  In this way you can have written down all the values for every slot in the enum, but have only used 3 of them.  Note that this is the same with `E` - if you do:
 
 ```
 E<ii-i-ii>
@@ -565,7 +565,7 @@ E<ii-i-ii>(11, 22, 55)
 
 ### Delimiters
 
-The previous version of sscanf had `p` to change the symbol used to separate tokens. This specifier still exists but it has been formalised to match the array and enum syntax. What was previously:
+The previous version of sscanf had `p` to change the symbol used to separate tokens.  This specifier still exists but it has been formalised to match the array and enum syntax.  What was previously:
 
 ```pawn
 sscanf("1,2,3", "p,iii", var0, var1, var2);
@@ -577,27 +577,27 @@ Is now:
 sscanf("1,2,3", "p<,>iii", var0, var1, var2);
 ```
 
-The old version will still work, but it will give a warning. Enum specifications can include delimiters, and is the only time `<>`s are contained in other `<>`s:
+The old version will still work, but it will give a warning.  Enum specifications can include delimiters, and is the only time `<>`s are contained in other `<>`s:
 
 ```pawn
 sscanf("1 12.0 Bob,c", "e<ifp<,>s[32]c>", var);
 ```
 
-Note that the delimiter will remain in effect after the enum is complete. You can even use `>` as a specifier by doing `p<\>>` (or the older `p>`).
+Note that the delimiter will remain in effect after the enum is complete.  You can even use `>` as a specifier by doing `p<\>>` (or the older `p>`).
 
-When used with strings, the collection behaviour is overruled. Most specifiers are still space delimited, so for example this will work:
+When used with strings, the collection behaviour is overruled.  Most specifiers are still space delimited, so for example this will work:
 
 ```pawn
 sscanf("1 2 3", "p<;>iii", var0, var1, var2);
 ```
 
-Despite the fact that there are no `;`s. However, strings will ONLY use the specified delimiters, so:
+Despite the fact that there are no `;`s.  However, strings will ONLY use the specified delimiters, so:
 
 ```pawn
 sscanf("hello 1", "p<->s[32]i", str, var);
 ```
 
-Will NOT work - the variable `str` will contain `hello 1`. On the other hand, the example from earlier, slightly modified:
+Will NOT work - the variable `str` will contain `hello 1`.  On the other hand, the example from earlier, slightly modified:
 
 ```pawn
 sscanf("hello there>27", "p<>>s[32]i", str, var);
@@ -610,13 +610,13 @@ hello there
 27
 ```
 
-You can now have optional delimiters using `P` (upper case `p` to match other `optional` specifiers). These are optional in the sense that you specify multiple delimiters and any one of them can be used to end the next symbol:
+You can now have optional delimiters using `P` (upper case `p` to match other `optional` specifiers).  These are optional in the sense that you specify multiple delimiters and any one of them can be used to end the next symbol:
 
 ```pawn
 sscanf("(4, 5, 6, 7)", "P<(),>{s[2]}iiii", a, b, c, d);
 ```
 
-This uses a `quiet section` to ignore anything before the first `(`, and then uses multiple delimiters to end all the text. Example:
+This uses a `quiet section` to ignore anything before the first `(`, and then uses multiple delimiters to end all the text.  Example:
 
 ```pawn
 sscanf("42, 43; 44@", "P<,;@>a<i>[3]", arr);
@@ -624,19 +624,19 @@ sscanf("42, 43; 44@", "P<,;@>a<i>[3]", arr);
 
 ### Optional specifiers
 
-EVERY format specifier (that is, everything except `''`, `{}` and `p`) now has an optional equivalent - this is just their letter capitalised. In addition to optional specifiers, there are also now default values:
+EVERY format specifier (that is, everything except `''`, `{}` and `p`) now has an optional equivalent - this is just their letter capitalised.  In addition to optional specifiers, there are also now default values:
 
 ```pawn
 sscanf("", "I(12)", var);
 ```
 
-The `()`s (round brackets) contain the default value for the optional integer and, as the main string has no data, the value of `var` becomes `12`. Default values come before array sizes and after specifications, so an optional array would look like:
+The `()`s (round brackets) contain the default value for the optional integer and, as the main string has no data, the value of `var` becomes `12`.  Default values come before array sizes and after specifications, so an optional array would look like:
 
 ```pawn
 sscanf("1 2", "A<i>(3)[4]", arr);
 ```
 
-Note that the size of the array is `4` and the default value is `3`. There are also two values which are defined, so the final value of `arr` is:
+Note that the size of the array is `4` and the default value is `3`.  There are also two values which are defined, so the final value of `arr` is:
 
 ```
 1, 2, 3, 3
@@ -654,7 +654,7 @@ Will be:
 3, 6, 9, 12
 ```
 
-The difference between `3` and `6` is `3`, so the values increase by that every index. Note that it is not very clever, so:
+The difference between `3` and `6` is `3`, so the values increase by that every index.  Note that it is not very clever, so:
 
 ```pawn
 sscanf("", "A<i>(1,2,2)[4]", arr);
@@ -666,7 +666,7 @@ Will produce:
 1, 2, 2, 2
 ```
 
-The difference between `2` and `2` (the last 2 numbers in the default) is 0, so there will be no further increase. For `l` (logical) arrays, the value is always the same as the last value, as it is with `g` if the last value is one of the special values (INFINITY, NEG_INFINITY (same as -INFINITY), NAN or NAN_E). Note that:
+The difference between `2` and `2` (the last 2 numbers in the default) is 0, so there will be no further increase.  For `l` (logical) arrays, the value is always the same as the last value, as it is with `g` if the last value is one of the special values (INFINITY, NEG_INFINITY (same as -INFINITY), NAN or NAN_E).  Note that:
 
 ```pawn
 sscanf("", "a<I>(1,2,2)[4]", arr);
@@ -680,7 +680,7 @@ Enums can also be optional:
 sscanf("4", "E<ifs[32]c>(1, 12.0, Bob, c)", var);
 ```
 
-In that code all values except `4` will be default. Also, again, you can escape commas with `\\` in default enum strings. Some final examples:
+In that code all values except `4` will be default.  Also, again, you can escape commas with `\\` in default enum strings.  Some final examples:
 
 ```pawn
 sscanf("1", "I(2)I(3)I(4)", var0, var1, var2);
@@ -688,11 +688,11 @@ sscanf("", "O(045)H(0xF4)B(0b0100)U(Y_Less)", octnum, hexnum, binnum, user);
 sscanf("0xFF", "N(0b101)");
 ```
 
-That last example is of a specifier not too well described yet - the `number` specifier, which will work out the format of the number from the leading characters (0x, 0b, 0 or nothing). Also note that the second example has changed - see the next section.
+That last example is of a specifier not too well described yet - the `number` specifier, which will work out the format of the number from the leading characters (0x, 0b, 0 or nothing).  Also note that the second example has changed - see the next section.
 
 ### Users
 
-The `u`, `q`, and `r` specifiers search for a user by name or ID. The method of this search has changed in the latest versions of `sscanf`.
+The `u`, `q`, and `r` specifiers search for a user by name or ID.  The method of this search has changed in the latest versions of `sscanf`.
 
 Additionally `U`, `Q`, and `R` used to take a name or ID as their default value - this has since been changed to JUST a number, and sscanf will not try and determine if this number is online:
 
@@ -721,7 +721,7 @@ else if (id == INVALID_PLAYER_ID)
 
 See the section on options for more details.
 
-Users can now optionally return an ARRAY of users instead of just one. This array is just a list of matched IDs, followed by `INVALID_PLAYER_ID`. Given the following players:
+Users can now optionally return an ARRAY of users instead of just one.  This array is just a list of matched IDs, followed by `INVALID_PLAYER_ID`.  Given the following players:
 
 ```
 0) Y_Less
@@ -769,7 +769,7 @@ And searching without `MATCH_NAME_PARTIAL` will give:
 No matching players found.
 ```
 
-Basically, if an array of size `N` is passed, this code will return the first N-1 results. If there are less than `N` players whose name matches the given name then that many players will be returned and the next slot will be `INVALID_PLAYER_ID` to indicate the end of the list. On the other hand if there are MORE than `N - 1` players whose name matches the given pattern, then the last slot will be `cellmin` to indicate this fact.
+Basically, if an array of size `N` is passed, this code will return the first N-1 results.  If there are less than `N` players whose name matches the given name then that many players will be returned and the next slot will be `INVALID_PLAYER_ID` to indicate the end of the list.  On the other hand if there are MORE than `N - 1` players whose name matches the given pattern, then the last slot will be `cellmin` to indicate this fact.
 
 When combined with `U` and returning the default, the first slot is always exactly the default value (even if that's not a valid connected player) and the next slot is always `INVALID_PLAYER_ID`.
 
@@ -867,13 +867,13 @@ More invalid examples:
 
 ## Options
 
-The latest version of sscanf introduces several options that can be used to customise the way in which sscanf operates. There are two ways of setting these options - globally and locally:
+The latest version of sscanf introduces several options that can be used to customise the way in which sscanf operates.  There are two ways of setting these options - globally and locally:
 
 ```pawn
 SSCANF_Option(SSCANF_QUIET, 1);
 ```
 
-This sets the `SSCANF_QUIET` option globally. Every time `sscanf` is called the option (see below) will be in effect. Note that the use of `SSCANF_QUIET` instead of the string `"SSCANF_QUIET"` is entirely valid here - all the options are defined in the sscanf2 include already (but you can use the string if you want).
+This sets the `SSCANF_QUIET` option globally.  Every time `sscanf` is called the option (see below) will be in effect.  Note that the use of `SSCANF_QUIET` instead of the string `"SSCANF_QUIET"` is entirely valid here - all the options are defined in the sscanf2 include already (but you can use the string if you want).
 
 Alternatively you can use `?` to specify an option locally - i.e. only for the current sscanf call:
 
@@ -883,7 +883,7 @@ sscanf(params, "?<SSCANF_QUIET=1>si", str, num);
 sscanf(params, "si", str, num);
 ```
 
-`s` without a length is wrong, and the first and last `sscanf` calls will give an error in the console, but the second one won't as for just that one call prints have been disabled. The following code disables prints globally then enables them locally:
+`s` without a length is wrong, and the first and last `sscanf` calls will give an error in the console, but the second one won't as for just that one call prints have been disabled.  The following code disables prints globally then enables them locally:
 
 ```pawn
 SSCANF_Option(SSCANF_QUIET, 1);
@@ -912,15 +912,15 @@ The options are:
 
 ### OLD_DEFAULT_NAME:
 
-The behaviour of `U`, `Q`, and `R` have been changed to take any number as a default, instead of a connected player. Setting `OLD_DEFAULT_NAME` to `1` will revert to the old version.
+The behaviour of `U`, `Q`, and `R` have been changed to take any number as a default, instead of a connected player.  Setting `OLD_DEFAULT_NAME` to `1` will revert to the old version.
 
 ### MATCH_NAME_PARTIAL:
 
-Currently sscanf will search for players by name, and will ALWAYS search for player whose name STARTS with the specified string. If you have, say `[CLAN]Y_Less` connected and someone types `Y_Less`, sscanf will not find `[CLAN]Y_Less` because there name doesn't start with the specified name. This option, when set to 1, will search ANYWHERE in the player's name for the given string.
+Currently sscanf will search for players by name, and will ALWAYS search for player whose name STARTS with the specified string.  If someone types `Y_Less`, sscanf will not find say `[CLAN]Y_Less` because there name doesn't start with the specified text.  This option, when set to 1, will search ANYWHERE in the player's name for the given string.
 
 ### CELLMIN_ON_MATCHES:
 
-Whatever the value of `MATCH_NAME_PARTIAL`, the first found player will always be returned, so if you do a search for `_` on an RP server, you could get almost anyone. To detect this case, if more than one player will match the specified string then sscanf will return an ID of `cellmin` instead. This can be combined with `U` for a lot more power:
+Whatever the value of `MATCH_NAME_PARTIAL`, the first found player will always be returned, so if you do a search for `_` on an RP server, you could get almost anyone.  To detect this case, if more than one player will match the specified string then sscanf will return an ID of `cellmin` instead.  This can be combined with `U` for a lot more power:
 
 ```pawn
 sscanf(params, "?<CELLMIN_ON_MATCHES=1>U(-1)", id);
@@ -944,7 +944,7 @@ else
 
 ### SSCANF_QUIET:
 
-Don't print any errors to the console. REALLY not recommended unless you KNOW your code is stable and in production.
+Don't print any errors to the console.  REALLY not recommended unless you KNOW your code is stable and in production.
 
 ### OLD_DEFAULT_KUSTOM:
 
@@ -954,7 +954,7 @@ As with `U`, `K` used to require a valid identifier as the default and would par
 K<vehicle>(Veyron)
 ```
 
-Because that is not a valid vehicle name in GTA. The new version now JUST takes a number and returns that regardless:
+Because that is not a valid vehicle name in GTA.  The new version now JUST takes a number and returns that regardless:
 
 ```
 K<vehicle>(9999)
@@ -972,7 +972,7 @@ SSCANF_Option(SSCANF_ALPHA, 128);
 
 ### SSCANF_COLOUR_FORMS:
 
-There are multiple valid colour input formats, which you can enable or disable here.  The parameter is a bitmap for all the following values:
+There are multiple valid colour input formats, which you can enable or disable here.  The parameter is a bit map (flags) for all the following values:
 
 * `1` - `#RGB`
 * `2` - `#RRGGBB`
@@ -997,6 +997,8 @@ SSCANF_Option(SSCANF_COLOUR_FORMS, 96);
 Default values (those specified between `()`s for `M`) ignore this setting - they can always use any form.
 
 ### SSCANF_ARGB:
+
+Specify whether the returned colour is `ARGB` or `RGBA`:
 
 ```pawn
 SSCANF_Option(SSCANF_ARGB, 1); // Set 3- and 6-digit colour outputs to `AARRGGBB`.
@@ -1170,7 +1172,7 @@ new a, string:b[32], Float:c;
 unformat(params, "is[32]f", a, b, c);
 ```
 
-Basically it just simplifies sscanf a little bit (IMHO). I like new operators and syntax, hence this, examples:
+Basically it just simplifies sscanf a little bit (IMHO).  I like new operators and syntax, hence this, examples:
 
 ```pawn
 // An int and a float.
@@ -1191,7 +1193,7 @@ As I say, the syntax is extendable, so to add hex numbers you would do:
 #define hex_EXTRW:%0##%1,%2|||%3[%7]|||%4,%5) EXTRY:%0##%1a<h>[*],%2,(%7),%3|||%4|||%5)
 ```
 
-That will add the tag `hex` to the system. Yes, the lines look complicated (because they are), but the ONLY things you need to change are the name before the underscore and the letter near the middle (`H`, `h` and `a<h>` in the examples above for `optional`, `required` and `required array` (no optional arrays yet besides strings)).
+That will add the tag `hex` to the system.  Yes, the lines look complicated (because they are), but the ONLY things you need to change are the name before the underscore and the letter near the middle (`H`, `h` and `a<h>` in the examples above for `optional`, `required` and `required array` (no optional arrays yet besides strings)).
 
 New examples (with `hex` added):
 
@@ -1204,7 +1206,7 @@ extract params -> new a[32], player:b[32];
 extract params -> new Float:f[11], string:s[12] = "optional", hex:end = 0xFF;
 ```
 
-The code is actually surprisingly simple (I developed another new technique to simplify my `tag` macros and it paid off big style here). By default `Float`, `string`, `player` and `_` (i.e. no tag) are supported, and their individual letter definitions take up the majority of the code as demonstrated with the `hex` addition above. Note that `string:` is now used extensively in my code to differentiate from tagless arrays in cases like this, it is removed automatically but `player:` and `hex:` are not so you may wish to add:
+The code is actually surprisingly simple (I developed another new technique to simplify my `tag` macros and it paid off big style here).  By default `Float`, `string`, `player` and `_` (i.e. no tag) are supported, and their individual letter definitions take up the majority of the code as demonstrated with the `hex` addition above.  Note that `string:` is now used extensively in my code to differentiate from tagless arrays in cases like this, it is removed automatically but `player:` and `hex:` are not so you may wish to add:
 
 ```pawn
 #define player:
@@ -1225,7 +1227,7 @@ In to:
 if (unformat(params, "ii", a, b))
 ```
 
-You MUST put the `else` on the same line as `extract` for it to be detected, but then you can use normal single or multi-line statements. This is to cover common command use cases, you can even leave things on the same line:
+You MUST put the `else` on the same line as `extract` for it to be detected, but then you can use normal single or multi-line statements.  This is to cover common command use cases, you can even leave things on the same line:
 
 ```pawn
 else return SendClientMessage(playerid, 0xFF0000AA, "Usage: /cmd <whatever>");
@@ -1244,30 +1246,30 @@ new a, string:b[32], Float:c;
 unformat(params, "P<|>is[32]f", a, b, c);
 ```
 
-Note that for technical reasons you can use `<->` (because it looks like the arrow after the `extract` keyword). You also can't use `<;>`, `<,>`, or `<)>` because of a bug with `#`, but you can use any other character (most notably `<|>`, as is popular with SQL scripts). I'm thinking of adding enums and existing variables (currently you HAVE to declare new variables), but not right now.
+Note that for technical reasons you can use `<->` (because it looks like the arrow after the `extract` keyword).  You also can't use `<;>`, `<,>`, or `<)>` because of a bug with `#`, but you can use any other character (most notably `<|>`, as is popular with SQL scripts).  I'm thinking of adding enums and existing variables (currently you HAVE to declare new variables), but not right now.
 
 ## Errors/Warnings
 
 ### MSVRC100.dll not found
 
-If you get this error, DO NOT just download the dll from a random website. This is part of the `Microsoft Visual Studio Redistributable Package`. This is required for many programs, but they often come with it. Download it here:
+If you get this error, DO NOT just download the dll from a random website.  This is part of the `Microsoft Visual Studio Redistributable Package`.  This is required for many programs, but they often come with it.  Download it here:
 
 http://www.microsoft.com/download/en...s.aspx?id=5555
 
 ### sscanf error: System not initialised
 
-If you get this error, you need to make sure that you have recompiled ALL your scripts using the LATEST version of `sscanf2.inc`. Older versions didn't really require this as they only had two natives - `sscanf` and `unformat`, the new version has some other functions - you don't need to worry about them, but you must use `sscanf2.inc` so that they are correctly called. If you think you have done this and STILL get the error then try again - make sure you are using the correct version of PAWNO for example.
+If you get this error, you need to make sure that you have recompiled ALL your scripts using the LATEST version of `sscanf2.inc`.  Older versions didn't really require this as they only had two natives - `sscanf` and `unformat`, the new version has some other functions - you don't need to worry about them, but you must use `sscanf2.inc` so that they are correctly called.  If you think you have done this and STILL get the error then try again - make sure you are using the correct version of PAWNO for example.
 
 ### sscanf warning: String buffer overflow.
 
-This error comes up when people try and put too much data in to a string. For example:
+This error comes up when people try and put too much data in to a string.  For example:
 
 ```pawn
 new str[10];
 sscanf("Hello there, how are you?", "s[10]", str);
 ```
 
-That code will try and put the string `Hello there, how are you?` in to the variable called `str`. However, `str` is only 10 cells big and can thus only hold the string `Hello ther` (with a NULL terminator). In this case, the rest of the data is ignored - which could be good or bad:
+That code will try and put the string `Hello there, how are you?` in to the variable called `str`.  However, `str` is only 10 cells big and can thus only hold the string `Hello ther` (with a NULL terminator).  In this case, the rest of the data is ignored - which could be good or bad:
 
 ```pawn
 new str[10], num;
@@ -1286,7 +1288,7 @@ A specifier such as:
 a<I(5)>[10]
 ```
 
-Has been written - here indicating an array of optional integers all with the default value `5`. Instead you should use:
+Has been written - here indicating an array of optional integers all with the default value `5`.  Instead you should use:
 
 ```
 A<i>(5)[10]
@@ -1437,7 +1439,7 @@ Alternatively a custom delimiter of:
 p<
 ```
 
-Was found with no matching `>` after one character. Instead use:
+Was found with no matching `>` after one character.  Instead use:
 
 ```
 p<,>
@@ -1528,7 +1530,7 @@ This is caused by specifiers such as:
 {fe<i}x>
 ```
 
-Where the quiet section is started before the enum, but finishes part way through it rather than after it. This can be emulated by:
+Where the quiet section is started before the enum, but finishes part way through it rather than after it.  This can be emulated by:
 
 ```
 {f}e<{i}x>
@@ -1561,7 +1563,7 @@ i'hello
 
 ### sscanf warning: sscanf specifiers do not require '%' before them.
 
-`format` uses code such as `%d`, sscanf only needs `d`, and confusingly the C equivalent function (also called `sscanf`) DOES require `%`. Sorry.
+`format` uses code such as `%d`, sscanf only needs `d`, and confusingly the C equivalent function (also called `sscanf`) DOES require `%`.  Sorry.
 
 ### sscanf error: Insufficient default values.
 
@@ -1571,7 +1573,7 @@ Default values for arrays can be partially specified and the remainder will be i
 A<i>(0, 1)[10]
 ```
 
-That specifier will default to the numbers `0` to `9`. However, because enums have a mixture of types, all the default values for `E` must ALWAYS be specified:
+That specifier will default to the numbers `0` to `9`.  However, because enums have a mixture of types, all the default values for `E` must ALWAYS be specified:
 
 ```
 E<iiff>(0, 1, 0.0, 1.0)
@@ -1599,7 +1601,7 @@ An option was specified with no value:
 
 ### sscanf error: Unknown option name.
 
-The given option was not recognised. Check spelling and case:
+The given option was not recognised.  Check spelling and case:
 
 ```
 ?<NOT_A_VALID_NAME=1>
@@ -1607,7 +1609,7 @@ The given option was not recognised. Check spelling and case:
 
 ### sscanf warning: Could not find function SSCANF:?.
 
-A `k` specifier has been used, but the corresponding function could not be found. If you think it is there check the spelling matches exactly - including the case.
+A `k` specifier has been used, but the corresponding function could not be found.  If you think it is there check the spelling matches exactly - including the case.
 
 ### sscanf error: SSCANF_Init has incorrect parameters.
 ### sscanf error: SSCANF_Join has incorrect parameters.
@@ -1707,11 +1709,11 @@ sscanf(const input, const specifier, ...)
 
 The contents of this file are subject to the Mozilla Public License Version
 1.1 (the "License"); you may not use this file except in compliance with
-the License. You may obtain a copy of the License at
+the License.  You may obtain a copy of the License at
 http://www.mozilla.org/MPL/
 
 Software distributed under the License is distributed on an "AS IS" basis,
-WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+WITHOUT WARRANTY OF ANY KIND, either express or implied.  See the License
 for the specific language governing rights and limitations under the
 License.
 
@@ -1719,7 +1721,7 @@ The Original Code is the sscanf 2.0 SA:MP plugin.
 
 The Initial Developer of the Original Code is Alex "Y_Less" Cole.
 Portions created by the Initial Developer are Copyright (c) 2022
-the Initial Developer. All Rights Reserved.
+the Initial Developer.  All Rights Reserved.
 
 ### Contributor(s):
 

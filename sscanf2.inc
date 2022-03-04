@@ -501,7 +501,9 @@ stock const SSCANF_EXT_[] = "extract";
  * <library>sscanf</library>
  * <remarks>
  * The <c>SSCANF_QUIET</c> option as a constant string so you can get compile-
- * time spell checking on the name.
+ * time spell checking on the name.  Don't print any errors to the console.
+ * <em>Really</em> not recommended unless you <em>know</em> your code is stable
+ * and in production.
  * </remarks>
  */
 stock const SSCANF_QUIET[] = "SSCANF_QUIET";
@@ -510,7 +512,10 @@ stock const SSCANF_QUIET[] = "SSCANF_QUIET";
  * <library>sscanf</library>
  * <remarks>
  * The <c>OLD_DEFAULT_NAME</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  The behaviour of <c>U</c>, <c>Q</c>
+ * and <c>R</c> have been changed to take any number as a default, instead of a
+ * connected player.  Setting <c>OLD_DEFAULT_NAME</c> to <c>1</c> will revert to
+ * the old version.
  * </remarks>
  */
 stock const OLD_DEFAULT_NAME[] = "OLD_DEFAULT_NAME";
@@ -519,7 +524,12 @@ stock const OLD_DEFAULT_NAME[] = "OLD_DEFAULT_NAME";
  * <library>sscanf</library>
  * <remarks>
  * The <c>MATCH_NAME_PARTIAL</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  Currently sscanf will search for
+ * players by name, and will <em>always</em> search for player whose name
+ * <em>starts</em> with the specified string.  If someone types <c>Y_Less</c>,
+ * sscanf will not find say <c>[CLAN]Y_Less</c> because there name doesn't start
+ * with the specified text.  This option, when set to <c>1</c>, will search
+ * <em>anywhere</em> in the player's name for the given string.
  * </remarks>
  */
 stock const MATCH_NAME_PARTIAL[] = "MATCH_NAME_PARTIAL";
@@ -528,7 +538,32 @@ stock const MATCH_NAME_PARTIAL[] = "MATCH_NAME_PARTIAL";
  * <library>sscanf</library>
  * <remarks>
  * The <c>CELLMIN_ON_MATCHES</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  Whatever the value of
+ * <c>MATCH_NAME_PARTIAL</c>, the first found player will always be returned,
+ * so if you do a search for <c>_</c> on an RP server, you could get almost
+ * anyone.  To detect this case, if more than one player will match the
+ * specified string then <em>sscanf</em> will return an ID of <c>cellmin</c>
+ * instead.  This can be combined with <c>U</c> for a lot more power:
+ * 
+ * <code>
+ *     sscanf(params, "?&lt;CELLMIN_ON_MATCHES=1&gt;U(-1)", id);                <br />
+ *     if (id == -1)                                                            <br />
+ *     {                                                                        <br /><indent />
+ *         // No player was entered.                                            <br />
+ *     }                                                                        <br />
+ *     else if (id == cellmin)                                                  <br />
+ *     {                                                                        <br /><indent />
+ *         // Multiple matches found                                            <br />
+ *     }                                                                        <br />
+ *     else if (id == INVALID_PLAYER_ID)                                        <br />
+ *     {                                                                        <br /><indent />
+ *         // Entered player is not connected.                                  <br />
+ *     }                                                                        <br />
+ *     else                                                                     <br />
+ *     {                                                                        <br /><indent />
+ *         // Found just one player.                                            <br />
+ *     }
+ * </code>
  * </remarks>
  */
 stock const CELLMIN_ON_MATCHES[] = "CELLMIN_ON_MATCHES";
@@ -537,7 +572,22 @@ stock const CELLMIN_ON_MATCHES[] = "CELLMIN_ON_MATCHES";
  * <library>sscanf</library>
  * <remarks>
  * The <c>OLD_DEFAULT_KUSTOM</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  As with <c>U</c>, <c>K</c> used to
+ * require a valid identifier as the default and would parse it using the
+ * specified callback, so this would <em>not</em> work:
+ * 
+ * <code>
+ *     K&lt;vehicle&gt;(Veyron)
+ * </code>
+ *
+ * Because that is not a valid vehicle name in GTA.  The new version now just
+ * takes a number and returns that regardless:
+ * 
+ * <code>
+ *     K&lt;vehicle&gt;(999)
+ * </code>
+ *
+ * This setting reverts to the old behaviour.
  * </remarks>
  */
 stock const OLD_DEFAULT_KUSTOM[] = "OLD_DEFAULT_KUSTOM";
@@ -546,7 +596,8 @@ stock const OLD_DEFAULT_KUSTOM[] = "OLD_DEFAULT_KUSTOM";
  * <library>sscanf</library>
  * <remarks>
  * The <c>OLD_DEFAULT_CUSTOM</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  This is the same as
+ * <c>OLD_DEFAULT_KUSTOM</c>, but with an alternate spelling.
  * </remarks>
  */
 stock const OLD_DEFAULT_CUSTOM[] = "OLD_DEFAULT_CUSTOM";
@@ -555,7 +606,34 @@ stock const OLD_DEFAULT_CUSTOM[] = "OLD_DEFAULT_CUSTOM";
  * <library>sscanf</library>
  * <remarks>
  * The <c>SSCANF_COLOUR_FORMS</c> option as a constant string so you can get
- * compile-time spell checking on the name.
+ * compile-time spell checking on the name.  There are multiple valid colour
+ * input formats, which you can enable or disable here.  The parameter is a
+ * bit map (flags) for all the following values:
+ *
+ * <ul>
+ * <li><c>1</c> - <c>#RGB</c></li>
+ * <li><c>2</c> - <c>#RRGGBB</c></li>
+ * <li><c>4</c> - <c>0xRRGGBB</c></li>
+ * <li><c>8</c> - <c>RRGGBB</c></li>
+ * <li><c>16</c> - <c>{RRGGBB}</c></li>
+ * <li><c>32</c> - <c>0xRRGGBBAA</c></li>
+ * <li><c>64</c> - <c>RRGGBBAA</c></li>
+ * </ul>
+ *
+ * So to ONLY accept SA:MP `SendClientMessage` colours use:
+ *
+ * <code>
+ *     SSCANF_Option(SSCANF_COLOUR_FORMS, 16);
+ * </code>
+ *
+ * To only accept 8-digit values use:
+ *
+ * <code>
+ *     SSCANF_Option(SSCANF_COLOUR_FORMS, 96);
+ * </code>
+ *
+ * Default values (those specified between <c>()</c>s for <c>M</c>) ignore this
+ * setting - they can always use any form.
  * </remarks>
  */
 stock const SSCANF_COLOUR_FORMS[] = "SSCANF_COLOUR_FORMS";
@@ -564,7 +642,14 @@ stock const SSCANF_COLOUR_FORMS[] = "SSCANF_COLOUR_FORMS";
  * <library>sscanf</library>
  * <remarks>
  * The <c>SSCANF_ALPHA</c> option as a constant string so you can get compile-
- * time spell checking on the name.
+ * time spell checking on the name.  Specify the default alpha value for colours
+ * (<c>m</c>) which don't manually specify an alpha channel.  The alpha values
+ * are specified as a <em>decimal</em> number, <em>not</em> a <em>hex</em>
+ * number, so setting an alpha of <c>0x80</c> would be:
+ *
+ * <code>
+ *     SSCANF_Option(SSCANF_ALPHA, 128);
+ * </code>
  * </remarks>
  */
 stock const SSCANF_ALPHA[] = "SSCANF_ALPHA";
@@ -573,7 +658,13 @@ stock const SSCANF_ALPHA[] = "SSCANF_ALPHA";
  * <library>sscanf</library>
  * <remarks>
  * The <c>SSCANF_ARGB</c> option as a constant string so you can get compile-
- * time spell checking on the name.
+ * time spell checking on the name.  Specify whether the returned colour is
+ * <c>ARGB</c> or <c>RGBA</c>:
+ *
+ * <code>
+ *     SSCANF_Option(SSCANF_ARGB, 1); // Set 3- and 6-digit colour outputs to `AARRGGBB`. <br />
+ *     SSCANF_Option(SSCANF_ARGB, 0); // Set 3- and 6-digit colour outputs to `RRGGBBAA` (default).
+ * </code>
  * </remarks>
  */
 stock const SSCANF_ARGB[] = "SSCANF_ARGB";
