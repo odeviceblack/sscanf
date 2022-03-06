@@ -288,7 +288,8 @@ As you can see - the format specifier now contains the length of the target stri
 new
     str[STR_SIZE],
     val;
-sscanf("hello\\ there 27", "s[" #STR_SIZE "]i", str, val);
+sscanf("hello\\ there 27", "s
+#STR_SIZE "]i", str, val);
 ```
 
 Or better yet, you can now use `[*]` to pass a string length as an additional parameter (see "Provided Lengths" below).
@@ -413,7 +414,7 @@ This code will work:
 sscanf(params, "s["#LEN"]", str);
 ```
 
-But this code won't even compile:
+But this code won't even compile due to a compiler issue stringifying brackets before version 3.10.11.
 
 ```pawn
 #define LEN (32)
