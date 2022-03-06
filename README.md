@@ -9,7 +9,7 @@ new num1, num2;
 sscanf("45 100", "ii", num1, num2);
 ```
 
-`ii` is the specifier string, which here means "integer integer"; stating that the input string should be two whole numbers in a row (which is is - `"45 100"`).  `num1` and `num2` are the destination variables to store the found numbers in (after conversion from strings).  You can check if the conversion failed by looking for a non-naught return value:
+`ii` is the specifier string, which here means "integer integer"; stating that the input string should be two whole numbers in a row (which is - `"45 100"`).  `num1` and `num2` are the destination variables to store the found numbers in (after conversion from strings).  You can check if the conversion failed by looking for a non-naught return value:
 
 ```pawn
 new num1, num2;
