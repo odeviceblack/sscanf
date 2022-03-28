@@ -70,7 +70,7 @@ NUDE int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr)
 	_asm jmp dword ptr [eax+PLUGIN_AMX_EXPORT_Allot*4];
 }
 
-NUDE int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
+NUDE int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, const cell *params)
 {
 	_asm mov eax, pAMXFunctions;
 	_asm jmp dword ptr [eax+PLUGIN_AMX_EXPORT_Callback*4];
@@ -344,7 +344,7 @@ int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr)
 	return fn(amx, cells, amx_addr, phys_addr);
 }
 
-typedef int  AMXAPI (*amx_Callback_t)(AMX *amx, cell index, cell *result, cell *params);
+typedef int  AMXAPI (*amx_Callback_t)(AMX *amx, cell index, cell *result, const cell *params);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
 {
 	amx_Callback_t fn = ((amx_Callback_t*)pAMXFunctions)[PLUGIN_AMX_EXPORT_Callback];

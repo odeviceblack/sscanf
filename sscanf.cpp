@@ -121,7 +121,7 @@ static void *
 		NULL,                       // PLUGIN_AMX_EXPORT_UTF8Put
 };
 
-extern void *
+extern "C" void *
 	pAMXFunctions;
 
 extern unsigned int
