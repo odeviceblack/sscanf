@@ -1648,7 +1648,7 @@ To fix this, just include `<sscanf2>` before you use `sscanf`.
 ## `error 004: function "sscanf" is not implemented`
 ## `error 004: function "sscanf" is not implemented - include <sscanf2> first.`
 
-These are the same error, the only difference being which compiler you use.  Obviously the newer compiler gives the more useful (second) error which tells you how to solve this problem.  Similar to [the previous error](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion) this happens when `sscanf` is used before being included, but in a slightly different way:
+These are the same error, the only difference being compilers and settings.  Obviously the more useful (second) error which tells you how to solve this problem.  Similar to [the previous error](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion) this happens when `sscanf` is used before being included, but in a slightly different way:
 
 ```pawn
 #include <a_samp>
@@ -1670,6 +1670,14 @@ This code tries to be slightly clever, but fails.  The correct way to check for 
 	#error You need sscanf
 #endif
 ```
+
+There is a third version of this error which looks like:
+
+```
+error 004: function "sscanf" is not implemented <library>sscanf</library>      <remarks>  The main entry point.  See the readme for vast amounts of information on how  to call this function and all the details on what it does.  This is a macro  that calls <c>SSCANF__</c> and passes the current file and line number as  well for improved error messages.  </remarks> 
+```
+
+For more information on why, see [this compiler issue](https://github.com/pawn-lang/compiler/issues/705).
 
 ## Future Plans
 
