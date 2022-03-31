@@ -114,6 +114,9 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 11.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
     * 11.36 [sscanf error: SSCANF_SetPlayerName has incorrect parameters.](#sscanf-error-sscanf_setplayername-has-incorrect-parameters)
     * 11.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
+    * 11.38 [fatal error 111: user error: sscanf already defined, or used before inclusion.](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+    * 11.39 [error 004: function "sscanf" is not implemented](#error-004-function-sscanf-is-not-implemented)
+    * 11.40 [error 004: function "sscanf" is not implemented - include <sscanf2> first.](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
 * 12 [Future Plans](#future-plans)
     * 12.1 [Reserved Specifiers](#reserved-specifiers)
     * 12.2 [Alternates](#alternates)
@@ -1620,6 +1623,53 @@ A `k` specifier has been used, but the corresponding function could not be found
 
 You edited something in the sscanf2 include - undo it or redownload it.
 
+## `fatal error 111: user error: sscanf already defined, or used before inclusion.`
+
+There are two ways to trigger this:  The first is to have another copy of `sscanf` defined before you include the file.  This used to be the only known way to trigger this error, so the error said:
+
+> `sscanf (possibly the PAWN version) already defined.`
+
+However, there is a second way to trigger it - using `sscanf` before including it.  This used to be possible, but isn't any more as `sscanf` is now a macro that inserts additional data in to the call.  So this will fail:
+
+```pawn
+#include <a_samp>
+
+main()
+{
+	sscanf("hi", "hi");sscanf (possibly the PAWN version) already defined.
+}
+
+#include <sscanf2>
+```
+
+To fix this, just include `<sscanf2>` before you use `sscanf`.
+
+## `error 004: function "sscanf" is not implemented`
+## `error 004: function "sscanf" is not implemented - include <sscanf2> first.`
+
+These are the same error, the only difference being which compiler you use.  Obviously the newer compiler gives the more useful (second) error which tells you how to solve this problem.  Similar to [the previous error](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion) this happens when `sscanf` is used before being included, but in a slightly different way:
+
+```pawn
+#include <a_samp>
+
+main()
+{
+	#if defined sscanf
+		sscanf("hi", "hi");
+	#endif
+}
+
+#include <sscanf2>
+```
+
+This code tries to be slightly clever, but fails.  The correct way to check for sscanf inclusion is:
+
+```pawn
+#if !defined _INC_SSCANF
+	#error You need sscanf
+#endif
+```
+
 ## Future Plans
 
 ### Reserved Specifiers
@@ -1640,7 +1690,7 @@ jtvwy
 * `y` is for "YID" - the YSI user ID.  Don't use YSI?  Tough.
 * `v` I figure is for something to do with varargs, similar to `a` but for extra parameters.
 * `j` no idea yet.
-* `w` is the most important one to reserve - it is for extended specifiers.  Since there are so few left it is important to establish future compatibility.  Thus `w` is a prefix that indicates that the following specifier has an alternate meaning.  So `i` is "integer" but `wi` is something else entirely (don't know what yet).  This scheme does recurse endlessly so `wwi` and `wwwwwi` are also different.  In this way we will never run out and can start adding support for more obscure items like iterators and jagged arrays (the original idea for `j`).
+* `w` is the most important one to reserve - it is for extended specifiers.  Since there are so few left it is important to establish future compatibility.  Thus `w` is a prefix that indicates that the following specifier has an alternate meaning.  So `i` is "integer" but `wi` is something else entirely (don't know what yet).  This scheme does recurse endlessly so `wwi` and `wwwwwi` are also different.  In this way we will never run out and can start adding support for more obscure items like iterators and jagged arrays (the original idea for `j`).  There's also a suggestion for this as `words` - `w<5>` for five words, but I think that makes sense as an extension to `s`.
 
 ### Alternates
 

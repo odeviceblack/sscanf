@@ -181,10 +181,7 @@ static stock SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION
  *
  * </remarks>
  */
-static stock BCD(number)
-{
-	return number;
-}
+forward BCD(number);
 
 #define BCD(%0) (_:MORE_BCD:NO_MORE_BCD:%0.$0)
 #define MORE_BCD:NO_MORE_BCD:%0.%1$%2) MORE_BCD:NO_MORE_BCD:%1$(%2) << 8 | DO_BCD(%0))
@@ -222,11 +219,11 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 #define sscanf_%0\32; sscanf_
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
-// The check for `SSCANF_Option` ensures that this is the first compiler pass
-// and thus the check for `sscanf` only finds earlier definitions not our
-// later fake definition made purely for documentation purposes.
-#if defined sscanf && !defined SSCANF_Option
-	#error sscanf (possibly the PAWN version) already defined.
+// The check for `SSCANF_GetClosestString` ensures that this is the first
+// compiler pass and thus the check for `sscanf` only finds earlier definitions
+// not our later fake definition made purely for documentation purposes.
+#if defined sscanf && !defined SSCANF_GetClosestString
+	#error sscanf already defined, or used before inclusion.
 #endif
 
 /**
@@ -391,10 +388,7 @@ native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
  * value.
  * </remarks>
  */
-static stock SSCANF_Option(const name[], value = -1)
-{
-	return value;
-}
+forward SSCANF_Option(const name[], value = -1);
 
 #define SSCANF_Option SSCANF_GetOption__
 #define SSCANF_GetOption__(%0,%1) SSCANF_SetOption__(%0,%1)
@@ -478,10 +472,8 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  * well for improved error messages.
  * </remarks>
  */
-stock sscanf(const data[], const format[], {Float, _}:...)
-{
-	return 0;
-}
+#pragma deprecated - include <sscanf2> first.
+forward sscanf(const data[], const format[], {Float, _}:...);
 
 #if defined __PawnBuild
 	#define sscanf( SSCANF__(__file,__line,
@@ -506,10 +498,7 @@ stock sscanf(const data[], const format[], {Float, _}:...)
  * number as well for improved error messages.
  * </remarks>
  */
-stock unformat(const data[], const format[], {Float, _}:...)
-{
-	return 0;
-}
+forward unformat(const data[], const format[], {Float, _}:...);
 
 #if defined __PawnBuild
 	#define unformat( SSCANF__(__file,__line,
