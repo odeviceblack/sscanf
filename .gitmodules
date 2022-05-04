@@ -4,3 +4,6 @@
 [submodule "robin-hood-hashing"]
 	path = robin-hood-hashing
 	url = git@github.com:martinus/robin-hood-hashing.git
+[submodule "glm"]
+	path = glm
+	url = git@github.com:g-truc/glm.git
