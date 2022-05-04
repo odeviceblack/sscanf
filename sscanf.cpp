@@ -52,6 +52,7 @@
 #include "enum.h"
 
 #include "SDK/plugincommon.h"
+#include "open.mp/include/sdk.hpp"
 
 #define DEFER_STRINGISE(n) #n
 #define STRINGISE(n) DEFER_STRINGISE(n)
@@ -1947,7 +1948,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("\n");
 	logprintf(" ===============================\n");
 	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  " SSCANF_VERSION "        \n");
+	logprintf("        Version:  " SSCANF_VERSION " (SA:MP)\n");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
 	logprintf(" ===============================\n");
 
@@ -1979,7 +1980,7 @@ int NpcInit(AMX * amx)
 	logprintf("\n");
 	logprintf(" ===============================\n");
 	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  " SSCANF_VERSION " (NPC)  \n");
+	logprintf("        Version:  " SSCANF_VERSION " (NPC)\n");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
 	logprintf(" ===============================\n");
 
@@ -2044,5 +2045,113 @@ PLUGIN_EXPORT int PLUGIN_CALL amx_amxsscanf2Cleanup(AMX * amx)
 {
 	// NPC plugin init functions.  Relies on the plugin name.
 	return NpcCleanup(amx);
+}
+
+class SScanFComponent;
+
+SScanFComponent *
+	sscanfComponent = nullptr;
+
+// TODO: Subscribe to player events.
+class SScanFComponent final : public IComponent, public PawnEventHandler
+{
+private:
+	ICore * core = nullptr;
+	IPawnComponent * pawnComponent;
+
+public:
+	// I hate using lower-case letters in HEX.  But I had to differentiate between `a` and `A1`, the
+	// former being `A` and the latter being `N` (if you squint REALLY hard).  Granted not as hard
+	// as you have to squint to see `7` as `X`...
+	PROVIDE_UID(0xA1e7'C01e'55caA1f'2);
+
+	StringView componentName() const override
+	{
+		return "sscanf";
+	}
+
+	SemanticVersion componentVersion() const override
+	{
+		return SemanticVersion(0, 0, 1, 0);
+	}
+
+	void onLoad(ICore * c) override
+	{
+
+		core = c;
+		core->logLn(LogLevelLogLevel:Message, "");
+		core->logLn(LogLevelLogLevel:Message, " ===============================");
+		core->logLn(LogLevelLogLevel:Message, "     sscanf component loaded.   ");
+		core->logLn(LogLevelLogLevel:Message, "        Version:  " SSCANF_VERSION " (open.mp)");
+		core->logLn(LogLevelLogLevel:Message, "   (c) 2022 Alex \"Y_Less\" Cole  ");
+		core->logLn(LogLevelLogLevel:Message, " ===============================");
+	}
+
+	void onInit(IComponentList * components) override
+	{
+		pawnComponent = components->queryComponent<IPawnComponent>();
+
+		if (pawnComponent == nullptr)
+		{
+			StringView name = componentName();
+			core->logLn(
+				LogLevel::Error,
+				"Error loading component %.*s: Pawn component not loaded",
+				name.length(),
+				name.data());
+			return;
+		}
+
+		pAMXFunctions = (void *)&pawnComponent->getAmxFunctions();
+		pawnComponent->getEventDispatcher().addEventHandler(this);
+	}
+
+	void onReady() override
+	{
+	}
+
+	void onAmxLoad(void * amx) override
+	{
+		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
+		amx_Register((AMX *)amx, sscanfNatives, -1);
+	}
+
+	void onAmxUnload(void * amx) override
+	{
+	}
+
+	void onFree(IComponent * component) override
+	{
+		if (component == pawnComponent)
+		{
+			pawnComponent = nullptr;
+			pAMXFunctions = nullptr;
+		}
+	}
+
+	void free() override
+	{
+		if (pawnComponent != nullptr)
+		{
+			pawnComponent->getEventDispatcher().removeEventHandler(this);
+		}
+		core->logLn(LogLevelLogLevel:Message, ("");
+		core->logLn(LogLevelLogLevel:Message, (" ===============================");
+		core->logLn(LogLevelLogLevel:Message, ("    sscanf component unloaded.  ");
+		core->logLn(LogLevelLogLevel:Message, (" ===============================");
+
+		delete this;
+	}
+
+	void reset() override
+	{
+		// Nothing to reset for now.
+	}
+};
+
+COMPONENT_ENTRY_POINT()
+{
+	sscanfComponent = new SScanFComponent();
+	return sscanfComponent;
 }
 
