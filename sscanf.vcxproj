@@ -53,7 +53,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;_DEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;GLM_FORCE_SSE2;GLM_FORCE_QUAT_DATA_WXYZ;NOMINMAX;nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD;span_CONFIG_SELECT_SPAN=span_SPAN_NONSTD;_DEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -81,7 +81,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;NDEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_STDINT_H;WIN32;GLM_FORCE_SSE2;GLM_FORCE_QUAT_DATA_WXYZ;NOMINMAX;nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD;span_CONFIG_SELECT_SPAN=span_SPAN_NONSTD;NDEBUG;_WINDOWS;_USRDLL;SSCANF_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Strict</FloatingPointModel>
