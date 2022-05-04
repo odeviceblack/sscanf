@@ -1830,13 +1830,19 @@ static cell AMX_NATIVE_CALL
 	return ret;
 }
 
+static cell AMX_NATIVE_CALL
+	n_SSCANF_NOP(AMX * amx, cell const * params)
+{
+	return 1;
+}
+
 //----------------------------------------------------------
 // The AmxLoad() function gets called when a new gamemode or
 // filterscript gets loaded with the server. In here we register
 // the native functions we like to add to the scripts.
 
 AMX_NATIVE_INFO
-	sscanfNatives[] =
+	sscanfSAMPNatives[] =
 		{
 			{"sscanf", n_old_sscanf},
 			{"SSCANF__", n_sscanf},
@@ -1844,6 +1850,21 @@ AMX_NATIVE_INFO
 			{"SSCANF_Join", n_SSCANF_Join},
 			{"SSCANF_Leave", n_SSCANF_Leave},
 			{"SSCANF_IsConnected", n_SSCANF_IsConnected},
+			{"SSCANF_Option", n_SSCANF_Option},
+			{"SSCANF_Version", n_SSCANF_Version},
+			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
+			{0,        0}
+		};
+
+AMX_NATIVE_INFO
+	sscanfOMPNatives[] =
+		{
+			{"sscanf", n_old_sscanf},
+			{"SSCANF__", n_sscanf},
+			{"SSCANF_Init", n_SSCANF_NOP},
+			{"SSCANF_Join", n_SSCANF_NOP},
+			{"SSCANF_Leave", n_SSCANF_NOP},
+			{"SSCANF_IsConnected", n_SSCANF_NOP},
 			{"SSCANF_Option", n_SSCANF_Option},
 			{"SSCANF_Version", n_SSCANF_Version},
 			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
@@ -1907,7 +1928,7 @@ int Init(AMX * amx)
 			break;
 		}
 	}
-	return amx_Register(amx, sscanfNatives, -1);
+	return amx_Register(amx, sscanfSAMPNatives, -1);
 }
 
 //----------------------------------------------------------
@@ -2127,7 +2148,7 @@ public:
 	void onAmxLoad(void * amx) override
 	{
 		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
-		amx_Register((AMX *)amx, sscanfNatives, -1);
+		amx_Register((AMX *)amx, sscanfOMPNatives, -1);
 	}
 
 	void onAmxUnload(void * amx) override
