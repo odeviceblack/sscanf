@@ -10,3 +10,6 @@
 [submodule "string-view-lite"]
 	path = string-view-lite
 	url = git@github.com:martinmoene/string-view-lite.git
+[submodule "span-lite"]
+	path = span-lite
+	url = git@github.com:martinmoene/span-lite.git
