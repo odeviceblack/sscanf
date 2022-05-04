@@ -1599,13 +1599,11 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 	return ret;
 }
 
-//#if SSCANF_QUIET
 void
 	qlog(char * str, ...)
 {
 	// Do nothing
 }
-//#endif
 
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Init(AMX * amx, cell const * params)
@@ -1946,12 +1944,12 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
 	real_logprintf = logprintf;
 	
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  " SSCANF_VERSION " (SA:MP)\n");
-	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
-	logprintf(" ===============================\n");
+	logprintf("");
+	logprintf(" ===============================");
+	logprintf("      sscanf plugin loaded.     ");
+	logprintf("        Version:  " SSCANF_VERSION " (SA:MP)");
+	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+	logprintf(" ===============================");
 
 	#if SSCANF_QUIET
 		logprintf = qlog;
@@ -1966,10 +1964,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 PLUGIN_EXPORT void PLUGIN_CALL
 	Unload()
 {
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("     sscanf plugin unloaded.    \n");
-	logprintf(" ===============================\n");
+	logprintf("");
+	logprintf(" ===============================");
+	logprintf("     sscanf plugin unloaded.    ");
+	logprintf(" ===============================");
 }
 
 int NpcInit(AMX * amx)
@@ -1978,12 +1976,12 @@ int NpcInit(AMX * amx)
 	logprintf = qlog;
 	real_logprintf = qlog;
 	
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("      sscanf plugin loaded.     \n");
-	logprintf("        Version:  " SSCANF_VERSION " (NPC)\n");
-	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  \n");
-	logprintf(" ===============================\n");
+	logprintf("");
+	logprintf(" ===============================");
+	logprintf("      sscanf plugin loaded.     ");
+	logprintf("        Version:  " SSCANF_VERSION " (NPC)");
+	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+	logprintf(" ===============================");
 
 	return Init(amx);
 }
@@ -1992,10 +1990,10 @@ int NpcCleanup(AMX * amx)
 {
 	int ret = Cleanup(amx);
 
-	logprintf("\n");
-	logprintf(" ===============================\n");
-	logprintf("     sscanf plugin unloaded.    \n");
-	logprintf(" ===============================\n");
+	logprintf("");
+	logprintf(" ===============================");
+	logprintf("     sscanf plugin unloaded.    ");
+	logprintf(" ===============================");
 
 	return ret;
 }
@@ -2057,8 +2055,21 @@ SScanFComponent *
 class SScanFComponent final : public IComponent, public PawnEventHandler
 {
 private:
-	ICore * core = nullptr;
+	static ICore * core;
 	IPawnComponent * pawnComponent;
+
+	static void openmplog(char * format, ...)
+	{
+		// Convert from `logprintf` to `core->logLn`.
+		va_list params;
+		char string[128];
+
+		va_start(params, format);
+		vsprintf(string, format, params);
+		va_end(params);
+
+		core->logLn(LogLevel::Message, string);
+	}
 
 public:
 	// I hate using lower-case letters in HEX.  But I had to differentiate between `a` and `A1`, the
@@ -2080,12 +2091,14 @@ public:
 	{
 
 		core = c;
-		core->logLn(LogLevel::Message, "");
-		core->logLn(LogLevel::Message, " ===============================");
-		core->logLn(LogLevel::Message, "     sscanf component loaded.   ");
-		core->logLn(LogLevel::Message, "        Version:  " SSCANF_VERSION " (open.mp)");
-		core->logLn(LogLevel::Message, "   (c) 2022 Alex \"Y_Less\" Cole  ");
-		core->logLn(LogLevel::Message, " ===============================");
+		logprintf = SScanFComponent::openmplog;
+		real_logprintf = logprintf;
+		logprintf("");
+		logprintf(" ===============================");
+		logprintf("     sscanf component loaded.   ");
+		logprintf("        Version:  " SSCANF_VERSION " (open.mp)");
+		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+		logprintf(" ===============================");
 	}
 
 	void onInit(IComponentList * components) override
@@ -2136,10 +2149,10 @@ public:
 		{
 			pawnComponent->getEventDispatcher().removeEventHandler(this);
 		}
-		core->logLn(LogLevel::Message, ("");
-		core->logLn(LogLevel::Message, (" ===============================");
-		core->logLn(LogLevel::Message, ("    sscanf component unloaded.  ");
-		core->logLn(LogLevel::Message, (" ===============================");
+		logprintf("");
+		logprintf(" ===============================");
+		logprintf("    sscanf component unloaded.  ");
+		logprintf(" ===============================");
 
 		delete this;
 	}
@@ -2149,6 +2162,8 @@ public:
 		// Nothing to reset for now.
 	}
 };
+
+ICore * SScanFComponent::core = nullptr;
 
 COMPONENT_ENTRY_POINT()
 {
