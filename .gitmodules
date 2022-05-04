@@ -1,3 +1,6 @@
 [submodule "open.mp"]
 	path = open.mp
 	url = git@github.com:openmultiplayer/open.mp-sdk
+[submodule "robin-hood-hashing"]
+	path = robin-hood-hashing
+	url = git@github.com:martinus/robin-hood-hashing.git
