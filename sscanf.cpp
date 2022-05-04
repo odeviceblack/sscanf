@@ -52,7 +52,8 @@
 #include "enum.h"
 
 #include "SDK/plugincommon.h"
-#include "open.mp/include/sdk.hpp"
+#include <sdk.hpp>
+#include <Server/Components/Pawn/pawn.hpp>
 
 #define DEFER_STRINGISE(n) #n
 #define STRINGISE(n) DEFER_STRINGISE(n)
@@ -2079,12 +2080,12 @@ public:
 	{
 
 		core = c;
-		core->logLn(LogLevelLogLevel:Message, "");
-		core->logLn(LogLevelLogLevel:Message, " ===============================");
-		core->logLn(LogLevelLogLevel:Message, "     sscanf component loaded.   ");
-		core->logLn(LogLevelLogLevel:Message, "        Version:  " SSCANF_VERSION " (open.mp)");
-		core->logLn(LogLevelLogLevel:Message, "   (c) 2022 Alex \"Y_Less\" Cole  ");
-		core->logLn(LogLevelLogLevel:Message, " ===============================");
+		core->logLn(LogLevel::Message, "");
+		core->logLn(LogLevel::Message, " ===============================");
+		core->logLn(LogLevel::Message, "     sscanf component loaded.   ");
+		core->logLn(LogLevel::Message, "        Version:  " SSCANF_VERSION " (open.mp)");
+		core->logLn(LogLevel::Message, "   (c) 2022 Alex \"Y_Less\" Cole  ");
+		core->logLn(LogLevel::Message, " ===============================");
 	}
 
 	void onInit(IComponentList * components) override
@@ -2135,10 +2136,10 @@ public:
 		{
 			pawnComponent->getEventDispatcher().removeEventHandler(this);
 		}
-		core->logLn(LogLevelLogLevel:Message, ("");
-		core->logLn(LogLevelLogLevel:Message, (" ===============================");
-		core->logLn(LogLevelLogLevel:Message, ("    sscanf component unloaded.  ");
-		core->logLn(LogLevelLogLevel:Message, (" ===============================");
+		core->logLn(LogLevel::Message, ("");
+		core->logLn(LogLevel::Message, (" ===============================");
+		core->logLn(LogLevel::Message, ("    sscanf component unloaded.  ");
+		core->logLn(LogLevel::Message, (" ===============================");
 
 		delete this;
 	}
