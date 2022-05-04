@@ -1947,7 +1947,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("");
 	logprintf(" ===============================");
 	logprintf("      sscanf plugin loaded.     ");
-	logprintf("        Version:  " SSCANF_VERSION " (SA:MP)");
+	logprintf("     Version:  " SSCANF_VERSION " (SA:MP)");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
 
@@ -1979,7 +1979,7 @@ int NpcInit(AMX * amx)
 	logprintf("");
 	logprintf(" ===============================");
 	logprintf("      sscanf plugin loaded.     ");
-	logprintf("        Version:  " SSCANF_VERSION " (NPC)");
+	logprintf("       Version:  " SSCANF_VERSION " (NPC)");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
 
@@ -2096,7 +2096,7 @@ public:
 		logprintf("");
 		logprintf(" ===============================");
 		logprintf("     sscanf component loaded.   ");
-		logprintf("        Version:  " SSCANF_VERSION " (open.mp)");
+		logprintf("    Version:  " SSCANF_VERSION " (open.mp)");
 		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 		logprintf(" ===============================");
 	}
