@@ -1999,8 +1999,8 @@ int NpcInit(AMX * amx)
 	
 	logprintf("");
 	logprintf(" ===============================");
-	logprintf("      sscanf plugin loaded.     ");
-	logprintf("       Version:  " SSCANF_VERSION " (NPC)");
+	logprintf("      sscanf library loaded.    ");
+	logprintf("      Version:  " SSCANF_VERSION " (NPC)");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
 
@@ -2013,7 +2013,7 @@ int NpcCleanup(AMX * amx)
 
 	logprintf("");
 	logprintf(" ===============================");
-	logprintf("     sscanf plugin unloaded.    ");
+	logprintf("     sscanf library unloaded.   ");
 	logprintf(" ===============================");
 
 	return ret;
