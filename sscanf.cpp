@@ -2123,6 +2123,39 @@ public:
 		logprintf("         Version: " SSCANF_VERSION "");
 		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 		logprintf(" ===============================");
+
+		g_iTrueMax = *core->getConfig().getInt("max_players");
+		g_iInvalid = INVALID_PLAYER_ID;
+		g_iMaxPlayerName = MAX_PLAYER_NAME;
+		g_szPlayerNames = new char[g_iTrueMax * g_iMaxPlayerName];
+		g_iConnected = new int[g_iTrueMax];
+		memset(g_iConnected, 0, sizeof(int) * g_iTrueMax);
+		g_iNPC = new int[g_iTrueMax];
+	}
+
+	// This should be `onPlayerConnect`, but the SDK repo is out of date.
+	void onConnect(IPlayer & player) override
+	{
+		int
+			playerid = player.getID();
+		g_iConnected[playerid] = 1;
+		StringView name = player.getName();
+		unsigned int
+			len = name.length();
+		if (len >= g_iMaxPlayerName)
+		{
+			len = g_iMaxPlayerName - 1;
+		}
+		strncpy(g_szPlayerNames + (g_iMaxPlayerName * playerid), name.data(), len);
+		g_iNPC[playerid] = player.isBot();
+	}
+	
+	// This should be `onPlayerDisconnect`, but the SDK repo is out of date.
+	void onDisconnect(IPlayer & player, PeerDisconnectReason reason) override
+	{
+		int
+			playerid = player.getID();
+		g_iConnected[playerid] = 0;
 	}
 
 	void onInit(IComponentList * components) override
@@ -2177,6 +2210,9 @@ public:
 		{
 			players->getEventDispatcher().removeEventHandler(this);
 		}
+		// Deinitialise the system.
+		g_iTrueMax = 0;
+
 		logprintf("");
 		logprintf(" ===============================");
 		logprintf("    sscanf component unloaded.  ");
