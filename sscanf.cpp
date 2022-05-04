@@ -73,9 +73,6 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
-char const *
-	gLoadType = nullptr;
-
 // These are the pointers to all the functions currently used by sscanf.  If
 // more are added, this table will need to be updated.
 static void *
@@ -1504,8 +1501,6 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_sscanf(AMX * amx, cell const * params)
 {
-	logprintf("sscanf called");
-	logprintf(gLoadType);
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
@@ -1976,7 +1971,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("         Version: " SSCANF_VERSION "");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
-	gLoadType = "plugin";
 
 	#if SSCANF_QUIET
 		logprintf = qlog;
@@ -2009,7 +2003,6 @@ int NpcInit(AMX * amx)
 	logprintf("         Version: " SSCANF_VERSION "");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
-	gLoadType = "library";
 
 	return Init(amx);
 }
@@ -2123,13 +2116,13 @@ public:
 		players->getEventDispatcher().addEventHandler(this);
 		logprintf = SScanFComponent::openmplog;
 		real_logprintf = logprintf;
+
 		logprintf("");
 		logprintf(" ===============================");
 		logprintf("     sscanf component loaded.   ");
 		logprintf("         Version: " SSCANF_VERSION "");
 		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 		logprintf(" ===============================");
-		gLoadType = "component";
 	}
 
 	void onInit(IComponentList * components) override
