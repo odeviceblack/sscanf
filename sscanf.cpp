@@ -73,6 +73,9 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
+char const *
+	gLoadType = nullptr;
+
 // These are the pointers to all the functions currently used by sscanf.  If
 // more are added, this table will need to be updated.
 static void *
@@ -1501,6 +1504,8 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_sscanf(AMX * amx, cell const * params)
 {
+	logprintf("sscanf called");
+	logprintf(gLoadType);
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
@@ -1600,7 +1605,7 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 }
 
 void
-	qlog(char * str, ...)
+	qlog(char const * str, ...)
 {
 	// Do nothing
 }
@@ -1971,6 +1976,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf("         Version: " SSCANF_VERSION "");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
+	gLoadType = "plugin";
 
 	#if SSCANF_QUIET
 		logprintf = qlog;
@@ -2003,6 +2009,7 @@ int NpcInit(AMX * amx)
 	logprintf("         Version: " SSCANF_VERSION "");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 	logprintf(" ===============================");
+	gLoadType = "library";
 
 	return Init(amx);
 }
@@ -2073,13 +2080,14 @@ SScanFComponent *
 	sscanfComponent = nullptr;
 
 // TODO: Subscribe to player events.
-class SScanFComponent final : public IComponent, public PawnEventHandler
+class SScanFComponent final : public IComponent, public PawnEventHandler, public PlayerEventHandler
 {
 private:
 	static ICore * core;
-	IPawnComponent * pawnComponent;
+	IPlayerPool * players = nullptr;
+	IPawnComponent * pawnComponent = nullptr;
 
-	static void openmplog(char * format, ...)
+	static void openmplog(char const * format, ...)
 	{
 		// Convert from `logprintf` to `core->logLn`.
 		va_list params;
@@ -2110,8 +2118,9 @@ public:
 
 	void onLoad(ICore * c) override
 	{
-
 		core = c;
+		players = &core->getPlayers();
+		players->getEventDispatcher().addEventHandler(this);
 		logprintf = SScanFComponent::openmplog;
 		real_logprintf = logprintf;
 		logprintf("");
@@ -2120,25 +2129,23 @@ public:
 		logprintf("         Version: " SSCANF_VERSION "");
 		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
 		logprintf(" ===============================");
+		gLoadType = "component";
 	}
 
 	void onInit(IComponentList * components) override
 	{
 		pawnComponent = components->queryComponent<IPawnComponent>();
 
-		if (pawnComponent == nullptr)
+		if (pawnComponent)
+		{
+			pAMXFunctions = (void *)&pawnComponent->getAmxFunctions();
+			pawnComponent->getEventDispatcher().addEventHandler(this, EventPriority_FairlyHigh);
+		}
+		else
 		{
 			StringView name = componentName();
-			core->logLn(
-				LogLevel::Error,
-				"Error loading component %.*s: Pawn component not loaded",
-				name.length(),
-				name.data());
-			return;
+			core->logLn(LogLevel::Error, "Error loading component %.*s: Pawn component not loaded", name.length(), name.data());
 		}
-
-		pAMXFunctions = (void *)&pawnComponent->getAmxFunctions();
-		pawnComponent->getEventDispatcher().addEventHandler(this);
 	}
 
 	void onReady() override
@@ -2147,12 +2154,14 @@ public:
 
 	void onAmxLoad(void * amx) override
 	{
+		logprintf("onAmxLoad");
 		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
 		amx_Register((AMX *)amx, sscanfOMPNatives, -1);
 	}
 
 	void onAmxUnload(void * amx) override
 	{
+		logprintf("onAmxUnload");
 	}
 
 	void onFree(IComponent * component) override
@@ -2166,9 +2175,14 @@ public:
 
 	void free() override
 	{
-		if (pawnComponent != nullptr)
+		// Could also be done in the destructor.
+		if (pawnComponent)
 		{
 			pawnComponent->getEventDispatcher().removeEventHandler(this);
+		}
+		if (players)
+		{
+			players->getEventDispatcher().removeEventHandler(this);
 		}
 		logprintf("");
 		logprintf(" ===============================");

@@ -45,7 +45,7 @@
 #include <stdint.h>
 
 typedef
-	void (* logprintf_t)(char *, ...);
+	void (* logprintf_t)(char const *, ...);
 
 typedef
 	char * (* GetServer_t)();

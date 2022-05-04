@@ -52,7 +52,7 @@ extern logprintf_t
 	real_logprintf;
 
 void
-	qlog(char *, ...);
+	qlog(char const *, ...);
 
 // Options:
 //  
