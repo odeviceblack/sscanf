@@ -2180,14 +2180,12 @@ public:
 
 	void onAmxLoad(void * amx) override
 	{
-		logprintf("onAmxLoad");
 		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
 		amx_Register((AMX *)amx, sscanfOMPNatives, -1);
 	}
 
 	void onAmxUnload(void * amx) override
 	{
-		logprintf("onAmxUnload");
 	}
 
 	void onFree(IComponent * component) override
