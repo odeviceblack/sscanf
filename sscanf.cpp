@@ -1748,6 +1748,11 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_SetPlayerName(AMX * amx, cell const * params)
 {
+	if (g_iTrueMax == 0)
+	{
+		logprintf("sscanf error: System not initialised.");
+		return 0;
+	}
 	// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin
 	// level.  This allows us to intercept name changes.
 	//cell
@@ -2101,14 +2106,18 @@ public:
 	static cell AMX_NATIVE_CALL
 		n_OMP_SetPlayerName(AMX * amx, cell const * params)
 	{
-		// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin
-		// level.  This allows us to intercept name changes.
-		//cell
-		//	result;
-		//amx_Callback(amx, 0, &result, params);
+		if (g_iTrueMax == 0)
+		{
+			logprintf("sscanf error: System not initialised.");
+			return 0;
+		}
 		if (params[0] != 2 * sizeof(cell))
 		{
 			logprintf("sscanf error: SSCANF_SetPlayerName has incorrect parameters.");
+			return 0;
+		}
+		if (players == nullptr)
+		{
 			return 0;
 		}
 		cell *
