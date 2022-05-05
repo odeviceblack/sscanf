@@ -1,4 +1,4 @@
-# sscanf 2.11.5
+# sscanf 2.12.1
 
 ## Introduction
 
@@ -140,6 +140,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
     * 14.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
     * 14.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
+    * 14.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
 
 ## NPC modes
 
@@ -1873,4 +1874,8 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.11.5 - 31/03/2022
 
 * Improve some errors caused by using `sscanf` before including it.
+
+### sscanf 2.12.1 - 05/05/2022
+
+* Integrate open.mp component support.
 
