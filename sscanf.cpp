@@ -1967,10 +1967,15 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	
 	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 	logprintf("      sscanf plugin loaded.     ");
+	logprintf("");
 	logprintf("         Version: " SSCANF_VERSION "");
+	logprintf("");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 
 	#if SSCANF_QUIET
 		logprintf = qlog;
@@ -1987,8 +1992,11 @@ PLUGIN_EXPORT void PLUGIN_CALL
 {
 	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 	logprintf("     sscanf plugin unloaded.    ");
+	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 }
 
 int NpcInit(AMX * amx)
@@ -1999,10 +2007,15 @@ int NpcInit(AMX * amx)
 	
 	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 	logprintf("      sscanf library loaded.    ");
+	logprintf("");
 	logprintf("         Version: " SSCANF_VERSION "");
+	logprintf("");
 	logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 
 	return Init(amx);
 }
@@ -2013,8 +2026,11 @@ int NpcCleanup(AMX * amx)
 
 	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 	logprintf("     sscanf library unloaded.   ");
+	logprintf("");
 	logprintf(" ===============================");
+	logprintf("");
 
 	return ret;
 }
@@ -2119,10 +2135,15 @@ public:
 
 		logprintf("");
 		logprintf(" ===============================");
+		logprintf("");
 		logprintf("     sscanf component loaded.   ");
+		logprintf("");
 		logprintf("         Version: " SSCANF_VERSION "");
+		logprintf("");
 		logprintf("   (c) 2022 Alex \"Y_Less\" Cole  ");
+		logprintf("");
 		logprintf(" ===============================");
+		logprintf("");
 
 		g_iTrueMax = *core->getConfig().getInt("max_players");
 		g_iInvalid = INVALID_PLAYER_ID;
@@ -2213,8 +2234,11 @@ public:
 
 		logprintf("");
 		logprintf(" ===============================");
+		logprintf("");
 		logprintf("    sscanf component unloaded.  ");
+		logprintf("");
 		logprintf(" ===============================");
+		logprintf("");
 
 		delete this;
 	}
