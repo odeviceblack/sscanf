@@ -1621,7 +1621,7 @@ static cell AMX_NATIVE_CALL
 	}
 	g_iTrueMax = (int)params[1];
 	g_iInvalid = (int)params[2];
-	g_iMaxPlayerName = (int)params[3];
+	g_iMaxPlayerName = (int)params[3] + 1;
 	g_szPlayerNames = new char [g_iTrueMax * g_iMaxPlayerName];
 	g_iConnected = new int [g_iTrueMax];
 	// FINALLY fixed this bug - I didn't know "new []" didn't initialise...
@@ -2147,7 +2147,7 @@ public:
 
 		g_iTrueMax = *core->getConfig().getInt("max_players");
 		g_iInvalid = INVALID_PLAYER_ID;
-		g_iMaxPlayerName = MAX_PLAYER_NAME;
+		g_iMaxPlayerName = MAX_PLAYER_NAME + 1;
 		g_szPlayerNames = new char[g_iTrueMax * g_iMaxPlayerName];
 		g_iConnected = new int[g_iTrueMax];
 		memset(g_iConnected, 0, sizeof(int) * g_iTrueMax);
