@@ -119,8 +119,31 @@
 	#define SSCANF_NPC (0)
 #endif
 
-#if !defined __PawnBuild && !defined SSCANF_NO_NICE_FEATURES
-	#error sscanf likes the community compiler.  Use `#define SSCANF_NO_NICE_FEATURES` to ignore this.
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * Was sscanf built for an open.mp mode or a SA:MP mode?
+ * </remarks>
+ */
+#if defined __OPEN_MP_VERSION
+	static stock SSCANF_OPEN_MP = 1;
+	#define SSCANF_OPEN_MP (1)
+#else
+	static stock SSCANF_OPEN_MP = 0;
+	#define SSCANF_OPEN_MP (0)
+#endif
+
+#define SSCANF_STATIC__
+#if defined __PawnBuild
+	#if __PawnBuild == 1
+		// `const static` support.
+		#undef SSCANF_STATIC__
+		#define SSCANF_STATIC__ static
+	#endif
+#else
+	#if !defined SSCANF_NO_NICE_FEATURES
+		#error sscanf utilises community compiler features.  Use `#define SSCANF_NO_NICE_FEATURES` to do without.
+	#endif
 #endif
 
 /**
@@ -138,8 +161,8 @@ static stock SSCANF_VERSION_MAJOR =  2;
  * The sscanf minor version number.
  * </remarks>
  */
-static stock SSCANF_VERSION_MINOR = 11;
-#define SSCANF_VERSION_MINOR 11
+static stock SSCANF_VERSION_MINOR = 12;
+#define SSCANF_VERSION_MINOR 12
 
 /**
  * <library>sscanf</library>
@@ -147,8 +170,8 @@ static stock SSCANF_VERSION_MINOR = 11;
  * The sscanf build number.
  * </remarks>
  */
-static stock SSCANF_VERSION_BUILD =  5;
-#define SSCANF_VERSION_BUILD  5
+static stock SSCANF_VERSION_BUILD =  1;
+#define SSCANF_VERSION_BUILD  1
 
 /**
  * <library>sscanf</library>
@@ -264,7 +287,11 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Initialise the plugin with real server information.
  * </remarks>
  */
-native SSCANF_Init(players, invalid, len);
+#if SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_Init = 0;
+#else
+	native SSCANF_Init(players, invalid, len);
+#endif
 
 /**
  * <library>sscanf</library>
@@ -275,7 +302,11 @@ native SSCANF_Init(players, invalid, len);
  * Called when a player joins to inform the plugin of the connection.
  * </remarks>
  */
-native SSCANF_Join(playerid, const name[], bool:npc);
+#if SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_Join = 0;
+#else
+	native SSCANF_Join(playerid, const name[], bool:npc);
+#endif
 
 /**
  * <library>sscanf</library>
@@ -284,7 +315,11 @@ native SSCANF_Join(playerid, const name[], bool:npc);
  * Called when a player leaves to inform the plugin of the disconnection.
  * </remarks>
  */
-native SSCANF_Leave(playerid);
+#if SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_Leave = 0;
+#else
+	native SSCANF_Leave(playerid);
+#endif
 
 /**
  * <library>sscanf</library>
@@ -294,7 +329,11 @@ native SSCANF_Leave(playerid);
  * to re-add players.
  * </remarks>
  */
-native bool:SSCANF_IsConnected(playerid);
+#if SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_IsConnected = 0;
+#else
+	native bool:SSCANF_IsConnected(playerid);
+#endif
 
 /**
  * <library>sscanf</library>
@@ -498,6 +537,7 @@ forward sscanf(const data[], const format[], {Float, _}:...);
  * number as well for improved error messages.
  * </remarks>
  */
+#pragma deprecated - include <sscanf2> first.
 forward unformat(const data[], const format[], {Float, _}:...);
 
 #if defined __PawnBuild
@@ -754,10 +794,17 @@ CHAIN_HOOK(SSCANF)
  * are known to the compiler.
  * </remarks>
  */
-static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
-static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
+#if SSCANF_OPEN_MP
+	const SSCANF_STATIC__ _SSCANF_IncludeStates = 0;
+	#define _SSCANF_IncludeStates
+#else
+	static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
+	static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
+#endif
 
-forward SSCANF_PlayerCheck();
+#if SSCANF_NPC && !defined SSCANF_NO_PLAYERS
+	forward SSCANF_PlayerCheck();
+#endif
 
 /**
  * <library>sscanf</library>
@@ -838,14 +885,14 @@ static stock SSCANF_RunInit()
 	#define OnNPCModeInit(%0) CHAIN_PUBLIC:SSCANF_OnNPCModeInit(%0)
 	CHAIN_FORWARD:SSCANF_OnNPCModeInit() = 1;
 #else
-	native SSCANF_OnNPCModeInit();
-	#define SSCANF_OnNPCModeInit()
+	const SSCANF_STATIC__ SSCANF_OnNPCModeInit = 0;
+	#define SSCANF_OnNPCModeInit
 #endif
 
 /**
  * <library>sscanf</library>
  * <remarks>
- * NPC modes have no "OnPlayerConnect callback, so we need to simulate one.
+ * NPC modes have no <c>OnPlayerConnect</c> callback, so we need to simulate one.
  * </remarks>
  */
 #if SSCANF_NPC && !defined SSCANF_NO_PLAYERS
@@ -874,8 +921,8 @@ static stock SSCANF_RunInit()
 		}
 	}
 #else
-	native SSCANF_PlayerCheck();
-	#define SSCANF_PlayerCheck()
+	const SSCANF_STATIC__ SSCANF_PlayerCheck = 0;
+	#define SSCANF_PlayerCheck
 #endif
 
 // `SSCANF_BRACKETS` to avoid macro replacements.
@@ -889,9 +936,9 @@ forward OnScriptInit SSCANF_BRACKETS;
  * Called for earlier initialisation by YSI.
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnScriptInit();
-	#define SSCANF_OnScriptInit()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnScriptInit = 0;
+	#define SSCANF_OnScriptInit
 #else
 	public OnScriptInit()
 	{
@@ -919,9 +966,9 @@ forward OnScriptInit SSCANF_BRACKETS;
  * then calls the "real" OnFilterScriptInit (using the new ALS 2 hook method).
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnFilterScriptInit();
-	#define SSCANF_OnFilterScriptInit()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnFilterScriptInit = 0;
+	#define SSCANF_OnFilterScriptInit
 #else
 	public OnFilterScriptInit()
 	{
@@ -950,9 +997,9 @@ forward OnScriptInit SSCANF_BRACKETS;
  * case.
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnGameModeInit();
-	#define SSCANF_OnGameModeInit()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnGameModeInit = 0;
+	#define SSCANF_OnGameModeInit
 #else
 	public OnGameModeInit()
 	{
@@ -981,9 +1028,9 @@ forward OnCachedInit();
  * Called when the script starts if it is (legacy) YSI cached mode.
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnCachedInit();
-	#define SSCANF_OnCachedInit()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnCachedInit = 0;
+	#define SSCANF_OnCachedInit
 #else
 	public OnCachedInit()
 	{
@@ -1010,9 +1057,9 @@ forward OnCachedInit();
  * internally.
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnPlayerConnect();
-	#define SSCANF_OnPlayerConnect()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnPlayerConnect = 0;
+	#define SSCANF_OnPlayerConnect
 #else
 	public OnPlayerConnect(playerid)
 	{
@@ -1039,9 +1086,9 @@ forward OnCachedInit();
  * Called when a player disconnects, or when a script is ended.
  * </remarks>
  */
-#if SSCANF_NPC
-	native SSCANF_OnPlayerDisconnect();
-	#define SSCANF_OnPlayerDisconnect()
+#if SSCANF_NPC || SSCANF_OPEN_MP
+	const SSCANF_STATIC__ SSCANF_OnPlayerDisconnect = 0;
+	#define SSCANF_OnPlayerDisconnect
 #else
 	public OnPlayerDisconnect(playerid, reason)
 	{
