@@ -1760,7 +1760,7 @@ static cell AMX_NATIVE_CALL
 	//amx_Callback(amx, 0, &result, params);
 	if (params[0] != 2 * sizeof (cell))
 	{
-		logprintf("sscanf error: SSCANF_SetPlayerName has incorrect parameters.");
+		logprintf("sscanf error: SetPlayerName has incorrect parameters.");
 		return 0;
 	}
 	cell return_val = SetPlayerName(amx, params);
@@ -2113,7 +2113,7 @@ public:
 		}
 		if (params[0] != 2 * sizeof(cell))
 		{
-			logprintf("sscanf error: SSCANF_SetPlayerName has incorrect parameters.");
+			logprintf("sscanf error: SetPlayerName has incorrect parameters.");
 			return 0;
 		}
 		if (players == nullptr)
@@ -2147,6 +2147,9 @@ public:
 		case EPlayerNameStatus::Invalid:
 			return -1;
 		case EPlayerNameStatus::Taken:
+			return 0;
+		default:
+			logprintf("sscanf warning: Unknown `player->setName()` return.");
 			return 0;
 		}
 	}
