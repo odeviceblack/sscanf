@@ -25,126 +25,126 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
 
 * 1 [Introduction](#introduction)
 * 2 [Contents](#contents)
-* 3 [NPC modes](#npc-modes)
-* 4 [Downloads](#downloads)
-* 5 [Use](#use)
-* 6 [Specifiers](#specifiers)
-    * 6.1 [Strings](#strings)
-    * 6.2 [Packed Strings](#packed-strings)
-    * 6.3 [Arrays](#arrays)
-    * 6.4 [Enums](#enums)
-    * 6.5 [Provided Lengths](#provided-lengths)
-    * 6.6 [Quiet](#quiet)
-    * 6.7 [Searches](#searches)
-    * 6.8 [Enums](#enums)
-    * 6.9 [Delimiters](#delimiters)
-    * 6.10 [Optional specifiers](#optional-specifiers)
-    * 6.11 [Users](#users)
-    * 6.12 [Custom (kustom) specifiers](#custom-(kustom)-specifiers)
-    * 6.13 [Colours](#colours)
-        * 6.13.1 [3 digits](#3-digits)
-        * 6.13.2 [6 digits](#6-digits)
-        * 6.13.3 [8 digits](#8-digits)
-* 7 [Options](#options)
-    * 7.1 [OLD_DEFAULT_NAME:](#old_default_name)
-    * 7.2 [MATCH_NAME_PARTIAL:](#match_name_partial)
-    * 7.3 [CELLMIN_ON_MATCHES:](#cellmin_on_matches)
-    * 7.4 [SSCANF_QUIET:](#sscanf_quiet)
-    * 7.5 [OLD_DEFAULT_KUSTOM:](#old_default_kustom)
-    * 7.6 [SSCANF_ALPHA:](#sscanf_alpha)
-    * 7.7 [SSCANF_COLOUR_FORMS:](#sscanf_colour_forms)
-    * 7.8 [SSCANF_ARGB:](#sscanf_argb)
-* 8 [All Specifiers](#all-specifiers)
-* 9 [Full API](#full-api)
-    * 9.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
-    * 9.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
-    * 9.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
-    * 9.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
-    * 9.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
-    * 9.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
-    * 9.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
-    * 9.8 [`SSCANF_Version();`](#sscanf_version)
-    * 9.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
-    * 9.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
-    * 9.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
-    * 9.12 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
-    * 9.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
-    * 9.14 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
-    * 9.15 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
-    * 9.16 [`SSCANF_VERSION`](#sscanf_version-1)
-    * 9.17 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
-    * 9.18 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
-    * 9.19 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
-* 10 [`extract`](#extract)
-* 11 [Errors/Warnings](#errorswarnings)
-    * 11.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
-    * 11.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
-    * 11.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
-    * 11.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
-    * 11.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
-    * 11.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
-    * 11.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
-    * 11.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
-    * 11.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
-    * 11.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
-    * 11.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
-    * 11.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
-    * 11.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
-    * 11.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
-    * 11.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
-    * 11.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
-    * 11.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
-    * 11.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
-    * 11.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
-    * 11.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
-    * 11.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
-    * 11.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
-    * 11.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
-    * 11.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
-    * 11.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
-    * 11.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
-    * 11.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
-    * 11.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
-    * 11.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
-    * 11.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
-    * 11.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
-    * 11.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
-    * 11.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
-    * 11.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
-    * 11.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
-    * 11.36 [sscanf error: SSCANF_SetPlayerName has incorrect parameters.](#sscanf-error-sscanf_setplayername-has-incorrect-parameters)
-    * 11.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-    * 11.38 [fatal error 111: user error: sscanf already defined, or used before inclusion.](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-    * 11.39 [error 004: function "sscanf" is not implemented](#error-004-function-sscanf-is-not-implemented)
-    * 11.40 [error 004: function "sscanf" is not implemented - include <sscanf2> first.](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
-* 12 [Future Plans](#future-plans)
-    * 12.1 [Reserved Specifiers](#reserved-specifiers)
-    * 12.2 [Alternates](#alternates)
-    * 12.3 [Enums And Arrays](#enums-and-arrays)
-    * 12.4 [Compilation](#compilation)
-* 13 [License](#license)
-    * 13.1 [Version: MPL 1.1](#version-mpl-11)
-    * 13.2 [Contributor(s):](#contributors)
-    * 13.3 [Special Thanks to:](#special-thanks-to)
-* 14 [Changelog](#changelog)
-    * 14.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
-    * 14.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
-    * 14.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
-    * 14.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
-    * 14.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
-    * 14.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
-    * 14.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
-    * 14.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
-    * 14.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
-    * 14.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
-    * 14.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
-    * 14.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
-    * 14.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
-    * 14.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
-
-## NPC modes
-
-To use sscanf in an NPC mode save the plugin as `amxsscanf.dll` or `amxsscanf.so` in the same directory as `samp-npc(.exe)` (i.e. the server root).  This allows NPC modes to automatically find and load the library.  The only tiny differences between this sscanf and the normal sscanf are that there are no prints; and `u`, `r`, and `q` don't know if a user is a bot or not thus just assume they are all players.
+* 3 [Downloads](#downloads)
+* 4 [Use](#use)
+	* 4.1 [Scripting](#scripting)
+	* 4.2 [open.mp](#openmp)
+	* 4.3 [SA:MP Windows](#samp-windows)
+	* 4.4 [SA:MP Linux](#samp-linux)
+	* 4.5 [NPC Modes](#npc-modes)
+* 5 [Specifiers](#specifiers)
+    * 5.1 [Strings](#strings)
+    * 5.2 [Packed Strings](#packed-strings)
+    * 5.3 [Arrays](#arrays)
+    * 5.4 [Enums](#enums)
+    * 5.5 [Provided Lengths](#provided-lengths)
+    * 5.6 [Quiet](#quiet)
+    * 5.7 [Searches](#searches)
+    * 5.8 [Enums](#enums)
+    * 5.9 [Delimiters](#delimiters)
+    * 5.10 [Optional specifiers](#optional-specifiers)
+    * 5.11 [Users](#users)
+    * 5.12 [Custom (kustom) specifiers](#custom-(kustom)-specifiers)
+    * 5.13 [Colours](#colours)
+        * 5.13.1 [3 digits](#3-digits)
+        * 5.13.2 [6 digits](#6-digits)
+        * 5.13.3 [8 digits](#8-digits)
+* 6 [Options](#options)
+    * 6.1 [OLD_DEFAULT_NAME:](#old_default_name)
+    * 6.2 [MATCH_NAME_PARTIAL:](#match_name_partial)
+    * 6.3 [CELLMIN_ON_MATCHES:](#cellmin_on_matches)
+    * 6.4 [SSCANF_QUIET:](#sscanf_quiet)
+    * 6.5 [OLD_DEFAULT_KUSTOM:](#old_default_kustom)
+    * 6.6 [SSCANF_ALPHA:](#sscanf_alpha)
+    * 6.7 [SSCANF_COLOUR_FORMS:](#sscanf_colour_forms)
+    * 6.8 [SSCANF_ARGB:](#sscanf_argb)
+* 7 [All Specifiers](#all-specifiers)
+* 8 [Full API](#full-api)
+    * 8.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
+    * 8.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
+    * 8.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
+    * 8.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
+    * 8.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
+    * 8.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
+    * 8.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
+    * 8.8 [`SSCANF_Version();`](#sscanf_version)
+    * 8.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
+    * 8.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
+    * 8.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
+    * 8.12 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
+    * 8.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
+    * 8.14 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
+    * 8.15 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
+    * 8.16 [`SSCANF_VERSION`](#sscanf_version-1)
+    * 8.17 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
+    * 8.18 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
+    * 8.19 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
+* 9 [`extract`](#extract)
+* 10 [Errors/Warnings](#errorswarnings)
+    * 10.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
+    * 10.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
+    * 10.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
+    * 10.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
+    * 10.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
+    * 10.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
+    * 10.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
+    * 10.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
+    * 10.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
+    * 10.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
+    * 10.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
+    * 10.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
+    * 10.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
+    * 10.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
+    * 10.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
+    * 10.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
+    * 10.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
+    * 10.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
+    * 10.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
+    * 10.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
+    * 10.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
+    * 10.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
+    * 10.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
+    * 10.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
+    * 10.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
+    * 10.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
+    * 10.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
+    * 10.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
+    * 10.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
+    * 10.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
+    * 10.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
+    * 10.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
+    * 10.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
+    * 10.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
+    * 10.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
+    * 10.36 [sscanf error: SSCANF_SetPlayerName has incorrect parameters.](#sscanf-error-sscanf_setplayername-has-incorrect-parameters)
+    * 10.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
+    * 10.38 [fatal error 111: user error: sscanf already defined, or used before inclusion.](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+    * 10.39 [error 004: function "sscanf" is not implemented](#error-004-function-sscanf-is-not-implemented)
+    * 10.40 [error 004: function "sscanf" is not implemented - include <sscanf2> first.](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+* 11 [Future Plans](#future-plans)
+    * 11.1 [Reserved Specifiers](#reserved-specifiers)
+    * 11.2 [Alternates](#alternates)
+    * 11.3 [Enums And Arrays](#enums-and-arrays)
+    * 11.4 [Compilation](#compilation)
+* 12 [License](#license)
+    * 12.1 [Version: MPL 1.1](#version-mpl-11)
+    * 12.2 [Contributor(s):](#contributors)
+    * 12.3 [Special Thanks to:](#special-thanks-to)
+* 13 [Changelog](#changelog)
+    * 13.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
+    * 13.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
+    * 13.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
+    * 13.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
+    * 13.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
+    * 13.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
+    * 13.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
+    * 13.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
+    * 13.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
+    * 13.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
+    * 13.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
+    * 13.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
+    * 13.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
+    * 13.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
 
 ## Downloads
 
@@ -154,23 +154,15 @@ https://github.com/Y-Less/sscanf/
 
 ## Use
 
+### Scripting
+
 This behaves exactly as the old sscanf did, just MUCH faster and much more flexibly.  To use it add:
 
 ```pawn
 #include <sscanf2>
 ```
 
-To your modes and remove the old sscanf (the new include will detect the old version and throw an error if it is detected).  On Windows add:
-
-```pawn
-plugins sscanf
-```
-
-To `server.cfg`.  On Linux add:
-
-```pawn
-plugins sscanf.so
-```
+To your modes and remove the old sscanf (the new include will detect the old version and throw an error if it is detected).
 
 The basic code looks like:
 
@@ -198,6 +190,60 @@ if (unformat(params, "ui", giveplayerid, amount))
     return SendClientMessage(playerid, 0xFF0000AA, "Usage: /givecash <playerid/name> <amount>");
 }
 ```
+
+### open.mp
+
+The `sscanf` binary (`sscanf.dll` on Windows, or `sscanf.so` on Linux) works as both a legacy (SA:MP) plugin or an *open.mp* component.  The recommended method is to use it as a component - just place the file in the `components` directory in the server root and *open.mp* will load it automatically.
+
+If you wish to use it as a legacy plugin for some reason (there is no need if you are on version `2.12.1` or higher) place it in the `plugins` directory in the open.mp server root and either follow the *SA:MP*-specific instructions for `server.cfg` on your platform or add `"sscanf"` to `"pawn.legacy_plugins"` in `config.json`:
+
+```json
+{
+	"pawn":
+	{
+        "legacy_plugins":
+		[
+			"sscanf"
+		]
+	}
+}
+```
+
+### SA:MP Windows
+
+Add `sscanf` to the start of the `plugins` line in `server.cfg`.  For example:
+
+```
+plugins sscanf streamer crashdetect
+```
+
+If there isn't a `plugins` line already, add one:
+
+```pawn
+plugins sscanf
+```
+
+You must also place `sscanf.dll` in the `plugins` subdirectory of the server.  If there isn't a `plugins` directory, create one.
+
+### SA:MP Linux
+
+Add `sscanf.so` to the start of the `plugins` line in `server.cfg`.  For example:
+
+```
+plugins sscanf.so streamer.so crashdetect.so
+```
+
+If there isn't a `plugins` line already, add one:
+
+```pawn
+plugins sscanf.so
+```
+
+You must also place `sscanf.so` in the `plugins` subdirectory of the server.  If there isn't a `plugins` directory, create one.
+
+### NPC modes
+
+To use sscanf in an NPC mode save the plugin as `amxsscanf.dll` (on Windows) or `amxsscanf.so` (on Linux) in the same directory as `samp-npc(.exe)` (i.e. the server root).  This allows NPC modes to automatically find and load the library.  The only tiny differences between this sscanf and the normal sscanf are that there are no prints; and `u`, `r`, and `q` don't know if a user is a bot or not thus just assume they are all players.
 
 ## Specifiers
 
