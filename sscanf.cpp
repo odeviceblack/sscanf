@@ -1856,20 +1856,8 @@ AMX_NATIVE_INFO
 			{0,        0}
 		};
 
-AMX_NATIVE_INFO
-	sscanfOMPNatives[] =
-		{
-			{"sscanf", n_old_sscanf},
-			{"SSCANF__", n_sscanf},
-			{"SSCANF_Init", n_SSCANF_NOP},
-			{"SSCANF_Join", n_SSCANF_NOP},
-			{"SSCANF_Leave", n_SSCANF_NOP},
-			{"SSCANF_IsConnected", n_SSCANF_NOP},
-			{"SSCANF_Option", n_SSCANF_Option},
-			{"SSCANF_Version", n_SSCANF_Version},
-			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
-			{0,        0}
-		};
+extern AMX_NATIVE_INFO
+	sscanfOMPNatives[];
 
 // From "amx.c", part of the PAWN language runtime:
 // http://code.google.com/p/pawnscript/source/browse/trunk/amx/amx.c
@@ -2093,7 +2081,7 @@ class SScanFComponent final : public IComponent, public PawnEventHandler, public
 {
 private:
 	static ICore * core;
-	IPlayerPool * players = nullptr;
+	static IPlayerPool * players;
 	IPawnComponent * pawnComponent = nullptr;
 
 	static void openmplog(char const * format, ...)
@@ -2110,6 +2098,50 @@ private:
 	}
 
 public:
+	static cell AMX_NATIVE_CALL
+		n_OMP_SetPlayerName(AMX * amx, cell const * params)
+	{
+		// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin
+		// level.  This allows us to intercept name changes.
+		//cell
+		//	result;
+		//amx_Callback(amx, 0, &result, params);
+		if (params[0] != 2 * sizeof(cell))
+		{
+			logprintf("sscanf error: SSCANF_SetPlayerName has incorrect parameters.");
+			return 0;
+		}
+		cell *
+			str;
+		int
+			playerid = params[1],
+			len;
+		auto player = players->get(playerid);
+		if (player == nullptr)
+		{
+			return 0;
+		}
+		char
+			name[MAX_PLAYER_NAME + 1];
+		amx_GetAddr(amx, params[2], &str);
+		amx_StrLen(str, &len);
+		if ((unsigned int)len >= g_iMaxPlayerName)
+		{
+			len = (int)g_iMaxPlayerName - 1;
+		}
+		amx_GetString(name, str, 0, len + 1);
+		switch (player->setName(name))
+		{
+		case EPlayerNameStatus::Updated:
+			strcpy(g_szPlayerNames + (g_iMaxPlayerName * playerid), name);
+			return 1;
+		case EPlayerNameStatus::Invalid:
+			return -1;
+		case EPlayerNameStatus::Taken:
+			return 0;
+		}
+	}
+
 	// I hate using lower-case letters in HEX.  But I had to differentiate between `a` and `A1`, the
 	// former being `A` and the latter being `N` (if you squint REALLY hard).  Granted not as hard
 	// as you have to squint to see `7` as `X`...
@@ -2250,10 +2282,28 @@ public:
 };
 
 ICore * SScanFComponent::core = nullptr;
+IPlayerPool * SScanFComponent::players = nullptr;
 
 COMPONENT_ENTRY_POINT()
 {
 	sscanfComponent = new SScanFComponent();
 	return sscanfComponent;
 }
+
+AMX_NATIVE_INFO
+	sscanfOMPNatives[] =
+{
+	{"sscanf", n_old_sscanf},
+	{"SSCANF__", n_sscanf},
+	{"SSCANF_Init", n_SSCANF_NOP},
+	{"SSCANF_Join", n_SSCANF_NOP},
+	{"SSCANF_Leave", n_SSCANF_NOP},
+	{"SSCANF_IsConnected", n_SSCANF_NOP},
+	{"SSCANF_Option", n_SSCANF_Option},
+	{"SSCANF_Version", n_SSCANF_Version},
+	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
+	// Components take precedence, so this will override the default version.
+	{"SetPlayerName", SScanFComponent::n_OMP_SetPlayerName},
+	{0,        0}
+};
 
