@@ -116,11 +116,18 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 10.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
     * 10.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
     * 10.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
-    * 10.36 [sscanf error: SSCANF_SetPlayerName has incorrect parameters.](#sscanf-error-sscanf_setplayername-has-incorrect-parameters)
-    * 10.37 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-    * 10.38 [fatal error 111: user error: sscanf already defined, or used before inclusion.](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-    * 10.39 [error 004: function "sscanf" is not implemented](#error-004-function-sscanf-is-not-implemented)
-    * 10.40 [error 004: function "sscanf" is not implemented - include <sscanf2> first.](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+    * 10.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
+	* 10.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
+	* 10.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
+	* 10.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
+	* 10.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
+	* 10.41 [sscanf error: System not initialised.](#sscanf-error-system-not-initialised)
+	* 10.42 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+	* 10.43 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
+	* 10.44 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+	* 10.45 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
+	* 10.46 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setName-return)
+	* 10.47 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
 * 11 [Future Plans](#future-plans)
     * 11.1 [Reserved Specifiers](#reserved-specifiers)
     * 11.2 [Alternates](#alternates)
@@ -1666,12 +1673,27 @@ A `k` specifier has been used, but the corresponding function could not be found
 ### sscanf error: SSCANF_Init has incorrect parameters.
 ### sscanf error: SSCANF_Join has incorrect parameters.
 ### sscanf error: SSCANF_Leave has incorrect parameters.
-### sscanf error: SSCANF_SetPlayerName has incorrect parameters.
 ### sscanf error: SSCANF_IsConnected has incorrect parameters.
+### sscanf error: SSCANF_Version has incorrect parameters.
+### sscanf error: SSCANF_Option has incorrect parameters.
 
 You edited something in the sscanf2 include - undo it or redownload it.
 
-## `fatal error 111: user error: sscanf already defined, or used before inclusion.`
+### sscanf error: SetPlayerName has incorrect parameters.
+
+You somehow managed to call `SetPlayerName` without passing all the parameters.  This can only happen by redefining the native declaration itself, so undo any edits to it.
+
+### sscanf error: Missing required parameters.
+
+`sscanf` itself was called without sufficient parameters.  I.e. the input and specifier strings are missing.  This can also happen when you edit the include itself to mess with the file/line macros.
+
+### sscanf error: System not initialised.
+
+``SSCANF_Init` was never called.  This function is called automaticslly by various hooks in the include, so this mainly happens when this file is not included correcly.
+
+You somehow managed to call `SetPlayerName` without passing all the parameters.  This can only happen by redefining the native declaration itself, so undo any edits to it.
+
+### `fatal error 111: user error: sscanf already defined, or used before inclusion.`
 
 There are two ways to trigger this:  The first is to have another copy of `sscanf` defined before you include the file.  This used to be the only known way to trigger this error, so the error said:
 
@@ -1692,8 +1714,8 @@ main()
 
 To fix this, just include `<sscanf2>` before you use `sscanf`.
 
-## `error 004: function "sscanf" is not implemented`
-## `error 004: function "sscanf" is not implemented - include <sscanf2> first.`
+### `error 004: function "sscanf" is not implemented`
+### `error 004: function "sscanf" is not implemented - include <sscanf2> first.`
 
 These are the same error, the only difference being compilers and settings.  Obviously the more useful (second) error which tells you how to solve this problem.  Similar to [the previous error](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion) this happens when `sscanf` is used before being included, but in a slightly different way:
 
@@ -1725,6 +1747,18 @@ error 004: function "sscanf" is not implemented <library>sscanf</library>      <
 ```
 
 For more information on why, see [this compiler issue](https://github.com/pawn-lang/compiler/issues/705).
+
+### sscanf error: Pawn component not loaded.
+
+When loading sscanf as a component on open.mp the Pawn component is also required.  Ensure `pawn.dll` or `pawn.so` is in the `components/` directory.
+
+### sscanf warning: Unknown `player->setName()` return.
+
+The open.mp sscanf component was probably built against an old version of the SDK.  Check for an updated version at https://www.github.com/Y-Less/sscanf/.
+
+### sscanf error: This script was built with the component version of the include.
+
+When compiling a script with the open.mp official includes the sscanf2 include file compiles different code, which assumes that the natives will be loaded as a component.  This error comes when the natives are loaded as a plugin instead, as certain features like `SSCANF_Init` are no longer required in the component case.  Move `sscanf.dll` or `sscanf.so` from the `plugins/` directory to the `components/` directory and remove the legacy plugin name from `plugins` (in server.cfg) or `pawn.legacy_plugins` (in config.json).
 
 ## Future Plans
 
