@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.12.1
+ *  sscanf 2.11.5
  *
  *  Version: MPL 1.1
  *
@@ -103,6 +103,19 @@
 
 /// <p/>
 
+#define SSCANF_STATIC__
+#if defined __PawnBuild
+	#if __PawnBuild == 1
+		// `const static` support.
+		#undef SSCANF_STATIC__
+		#define SSCANF_STATIC__ static
+	#endif
+#else
+	#if !defined SSCANF_NO_NICE_FEATURES
+		#error sscanf utilises community compiler features.  Use `#define SSCANF_NO_NICE_FEATURES` to do without.
+	#endif
+#endif
+
 /**
  * <library>sscanf</library>
  * <remarks>
@@ -126,24 +139,11 @@
  * </remarks>
  */
 #if defined __OPEN_MP_VERSION
-	static stock SSCANF_OPEN_MP = 1;
-	#define SSCANF_OPEN_MP (1)
+	public const SSCANF_OPEN_MP = 1;
+	#pragma unused SSCANF_OPEN_MP
 #else
-	static stock SSCANF_OPEN_MP = 0;
-	#define SSCANF_OPEN_MP (0)
-#endif
-
-#define SSCANF_STATIC__
-#if defined __PawnBuild
-	#if __PawnBuild == 1
-		// `const static` support.
-		#undef SSCANF_STATIC__
-		#define SSCANF_STATIC__ static
-	#endif
-#else
-	#if !defined SSCANF_NO_NICE_FEATURES
-		#error sscanf utilises community compiler features.  Use `#define SSCANF_NO_NICE_FEATURES` to do without.
-	#endif
+	const SSCANF_STATIC__ SSCANF_OPEN_MP__ = 0;
+	#define SSCANF_OPEN_MP__
 #endif
 
 /**
@@ -287,7 +287,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Initialise the plugin with real server information.
  * </remarks>
  */
-#if SSCANF_OPEN_MP
+#if defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_Init = 0;
 #else
 	native SSCANF_Init(players, invalid, len);
@@ -302,7 +302,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Called when a player joins to inform the plugin of the connection.
  * </remarks>
  */
-#if SSCANF_OPEN_MP
+#if defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_Join = 0;
 #else
 	native SSCANF_Join(playerid, const name[], bool:npc);
@@ -315,7 +315,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Called when a player leaves to inform the plugin of the disconnection.
  * </remarks>
  */
-#if SSCANF_OPEN_MP
+#if defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_Leave = 0;
 #else
 	native SSCANF_Leave(playerid);
@@ -329,7 +329,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * to re-add players.
  * </remarks>
  */
-#if SSCANF_OPEN_MP
+#if defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_IsConnected = 0;
 #else
 	native bool:SSCANF_IsConnected(playerid);
@@ -527,6 +527,7 @@ forward sscanf(const data[], const format[], {Float, _}:...);
 #endif
 
 /**
+ * - include <sscanf2> first.
  * <library>sscanf</library>
  * <param name="data">The input string containing the data to parse out.</param>
  * <param name="format">The format description of what the input data should contain.</param>
@@ -794,7 +795,7 @@ CHAIN_HOOK(SSCANF)
  * are known to the compiler.
  * </remarks>
  */
-#if SSCANF_OPEN_MP
+#if defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ _SSCANF_IncludeStates = 0;
 	#define _SSCANF_IncludeStates
 #else

@@ -1899,6 +1899,11 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 
 int Init(AMX * amx) 
 {
+	cell addr;
+	if (amx_FindPubVar(amx, "SSCANF_OPEN_MP__", &addr) == AMX_ERR_NONE)
+	{
+		logprintf("sscanf error: This script was built with the component version of the include.");
+	}
 	int
 		num,
 		idx;
@@ -2235,7 +2240,7 @@ public:
 		else
 		{
 			StringView name = componentName();
-			core->logLn(LogLevel::Error, "Error loading component %.*s: Pawn component not loaded", name.length(), name.data());
+			core->logLn(LogLevel::Error, "sscanf error: Pawn component not loaded.");
 		}
 	}
 
