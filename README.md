@@ -121,13 +121,12 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
 	* 10.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
 	* 10.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
 	* 10.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
-	* 10.41 [sscanf error: System not initialised.](#sscanf-error-system-not-initialised)
-	* 10.42 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-	* 10.43 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
-	* 10.44 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
-	* 10.45 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
-	* 10.46 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setName-return)
-	* 10.47 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
+	* 10.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+	* 10.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
+	* 10.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+	* 10.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
+	* 10.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setName-return)
+	* 10.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
 * 11 [Future Plans](#future-plans)
     * 11.1 [Reserved Specifiers](#reserved-specifiers)
     * 11.2 [Alternates](#alternates)
@@ -1686,10 +1685,6 @@ You somehow managed to call `SetPlayerName` without passing all the parameters. 
 ### sscanf error: Missing required parameters.
 
 `sscanf` itself was called without sufficient parameters.  I.e. the input and specifier strings are missing.  This can also happen when you edit the include itself to mess with the file/line macros.
-
-### sscanf error: System not initialised.
-
-``SSCANF_Init` was never called.  This function is called automaticslly by various hooks in the include, so this mainly happens when this file is not included correcly.
 
 You somehow managed to call `SetPlayerName` without passing all the parameters.  This can only happen by redefining the native declaration itself, so undo any edits to it.
 
