@@ -937,7 +937,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * Called for earlier initialisation by YSI.
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnScriptInit = 0;
 	#define SSCANF_OnScriptInit
 #else
@@ -967,7 +967,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * then calls the "real" OnFilterScriptInit (using the new ALS 2 hook method).
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnFilterScriptInit = 0;
 	#define SSCANF_OnFilterScriptInit
 #else
@@ -998,7 +998,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * case.
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnGameModeInit = 0;
 	#define SSCANF_OnGameModeInit
 #else
@@ -1029,7 +1029,7 @@ forward OnCachedInit();
  * Called when the script starts if it is (legacy) YSI cached mode.
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnCachedInit = 0;
 	#define SSCANF_OnCachedInit
 #else
@@ -1058,7 +1058,7 @@ forward OnCachedInit();
  * internally.
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnPlayerConnect = 0;
 	#define SSCANF_OnPlayerConnect
 #else
@@ -1087,7 +1087,7 @@ forward OnCachedInit();
  * Called when a player disconnects, or when a script is ended.
  * </remarks>
  */
-#if SSCANF_NPC || SSCANF_OPEN_MP
+#if SSCANF_NPC || defined SSCANF_OPEN_MP
 	const SSCANF_STATIC__ SSCANF_OnPlayerDisconnect = 0;
 	#define SSCANF_OnPlayerDisconnect
 #else
