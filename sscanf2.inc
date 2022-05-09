@@ -843,7 +843,7 @@ static stock SSCANF_RunInit()
 			// Will be run once per frame.
 			SSCANF_SetTimer("SSCANF_PlayerCheck", 0, true);
 		#endif
-	#else
+	#elseif !defined SSCANF_OPEN_MP
 		state _ALS : _ALS_go;
 		new
 			name[MAX_PLAYER_NAME + 1];
@@ -852,7 +852,7 @@ static stock SSCANF_RunInit()
 		SSCANF_gInit = true;
 
 		// Check if there are any players that aren't initialized.
-		for (new i = 0; i < MAX_PLAYERS; i ++)
+		for (new i = 0; i != MAX_PLAYERS; ++i)
 		{
 			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
 			{
