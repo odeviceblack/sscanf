@@ -135,20 +135,6 @@
 /**
  * <library>sscanf</library>
  * <remarks>
- * Was sscanf built for an open.mp mode or a SA:MP mode?
- * </remarks>
- */
-#if defined __OPEN_MP_VERSION
-	public const SSCANF_OPEN_MP = 1;
-	#pragma unused SSCANF_OPEN_MP
-#else
-	const SSCANF_STATIC__ SSCANF_OPEN_MP__ = 0;
-	#define SSCANF_OPEN_MP__
-#endif
-
-/**
- * <library>sscanf</library>
- * <remarks>
  * The sscanf major version number.
  * </remarks>
  */
@@ -287,11 +273,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Initialise the plugin with real server information.
  * </remarks>
  */
-#if defined SSCANF_OPEN_MP
-	const SSCANF_STATIC__ SSCANF_Init = 0;
-#else
-	native SSCANF_Init(players, invalid, len);
-#endif
+native SSCANF_Init(players, invalid, len);
 
 /**
  * <library>sscanf</library>
@@ -302,11 +284,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Called when a player joins to inform the plugin of the connection.
  * </remarks>
  */
-#if defined SSCANF_OPEN_MP
-	const SSCANF_STATIC__ SSCANF_Join = 0;
-#else
-	native SSCANF_Join(playerid, const name[], bool:npc);
-#endif
+native SSCANF_Join(playerid, const name[], bool:npc);
 
 /**
  * <library>sscanf</library>
@@ -315,11 +293,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Called when a player leaves to inform the plugin of the disconnection.
  * </remarks>
  */
-#if defined SSCANF_OPEN_MP
-	const SSCANF_STATIC__ SSCANF_Leave = 0;
-#else
-	native SSCANF_Leave(playerid);
-#endif
+native SSCANF_Leave(playerid);
 
 /**
  * <library>sscanf</library>
@@ -329,11 +303,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * to re-add players.
  * </remarks>
  */
-#if defined SSCANF_OPEN_MP
-	const SSCANF_STATIC__ SSCANF_IsConnected = 0;
-#else
-	native bool:SSCANF_IsConnected(playerid);
-#endif
+native bool:SSCANF_IsConnected(playerid);
 
 /**
  * <library>sscanf</library>
@@ -767,7 +737,7 @@ stock const SSCANF_ARGB[] = "SSCANF_ARGB";
  * gets called first.
  * </remarks>
  */
-static stock bool:SSCANF_gInit = false;
+static stock SSCANF_gInit = 0;
 
 // Pre-hook data.
 #if !defined CHAIN_ORDER
@@ -795,13 +765,8 @@ CHAIN_HOOK(SSCANF)
  * are known to the compiler.
  * </remarks>
  */
-#if defined SSCANF_OPEN_MP
-	const SSCANF_STATIC__ _SSCANF_IncludeStates = 0;
-	#define _SSCANF_IncludeStates
-#else
-	static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
-	static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
-#endif
+static stock _SSCANF_IncludeStates() <_ALS : _ALS_x0, _ALS : _ALS_x1, _ALS : _ALS_x2, _ALS : _ALS_x3> {}
+static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 
 #if SSCANF_NPC && !defined SSCANF_NO_PLAYERS
 	forward SSCANF_PlayerCheck();
@@ -843,23 +808,27 @@ static stock SSCANF_RunInit()
 			// Will be run once per frame.
 			SSCANF_SetTimer("SSCANF_PlayerCheck", 0, true);
 		#endif
-	#elseif !defined SSCANF_OPEN_MP
+	#else
 		state _ALS : _ALS_go;
-		new
-			name[MAX_PLAYER_NAME + 1];
 
-		SSCANF_Init(GetMaxPlayers(), INVALID_PLAYER_ID, MAX_PLAYER_NAME);
-		SSCANF_gInit = true;
-
-		// Check if there are any players that aren't initialized.
-		for (new i = 0; i != MAX_PLAYERS; ++i)
+		if ((SSCANF_gInit = SSCANF_Init(GetMaxPlayers(), INVALID_PLAYER_ID, MAX_PLAYER_NAME)) == 1)
 		{
-			if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
+			// SA:MP plugin.
+			new
+				name[MAX_PLAYER_NAME + 1];
+
+			// Check if there are any players that aren't initialized.
+			for (new i = 0; i != MAX_PLAYERS; ++i)
 			{
-				GetPlayerName(i, name, sizeof (name));
-				SSCANF_Join(i, name, bool:IsPlayerNPC(i));
+				if (IsPlayerConnected(i) && !SSCANF_IsConnected(i))
+				{
+					GetPlayerName(i, name, sizeof (name));
+					SSCANF_Join(i, name, bool:IsPlayerNPC(i));
+				}
 			}
 		}
+		// If the return is `0` we can try again later.  If it is `-1` the
+		// native code is an open.mp component.
 	#endif
 }
 
@@ -937,7 +906,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * Called for earlier initialisation by YSI.
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnScriptInit = 0;
 	#define SSCANF_OnScriptInit
 #else
@@ -967,7 +936,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * then calls the "real" OnFilterScriptInit (using the new ALS 2 hook method).
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnFilterScriptInit = 0;
 	#define SSCANF_OnFilterScriptInit
 #else
@@ -998,7 +967,7 @@ forward OnScriptInit SSCANF_BRACKETS;
  * case.
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnGameModeInit = 0;
 	#define SSCANF_OnGameModeInit
 #else
@@ -1029,7 +998,7 @@ forward OnCachedInit();
  * Called when the script starts if it is (legacy) YSI cached mode.
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnCachedInit = 0;
 	#define SSCANF_OnCachedInit
 #else
@@ -1058,16 +1027,19 @@ forward OnCachedInit();
  * internally.
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnPlayerConnect = 0;
 	#define SSCANF_OnPlayerConnect
 #else
 	public OnPlayerConnect(playerid)
 	{
-		new
-			name[MAX_PLAYER_NAME + 1];
-		GetPlayerName(playerid, name, sizeof(name));
-		SSCANF_Join(playerid, name, bool:IsPlayerNPC(playerid));
+		if (SSCANF_gInit == 1)
+		{
+			new
+				name[MAX_PLAYER_NAME + 1];
+			GetPlayerName(playerid, name, sizeof(name));
+			SSCANF_Join(playerid, name, bool:IsPlayerNPC(playerid));
+		}
 		SSCANF_OnPlayerConnect(playerid);
 		return 1;
 	}
@@ -1087,14 +1059,17 @@ forward OnCachedInit();
  * Called when a player disconnects, or when a script is ended.
  * </remarks>
  */
-#if SSCANF_NPC || defined SSCANF_OPEN_MP
+#if SSCANF_NPC
 	const SSCANF_STATIC__ SSCANF_OnPlayerDisconnect = 0;
 	#define SSCANF_OnPlayerDisconnect
 #else
 	public OnPlayerDisconnect(playerid, reason)
 	{
 		SSCANF_OnPlayerDisconnect(playerid, reason);
-		SSCANF_Leave(playerid);
+		if (SSCANF_gInit == 1)
+		{
+			SSCANF_Leave(playerid);
+		}
 		return 1;
 	}
 

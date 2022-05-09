@@ -1900,10 +1900,6 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 int Init(AMX * amx) 
 {
 	cell addr;
-	if (amx_FindPubVar(amx, "SSCANF_OPEN_MP__", &addr) == AMX_ERR_NONE)
-	{
-		logprintf("sscanf error: This script was built with the component version of the include.");
-	}
 	int
 		num,
 		idx;
@@ -2109,6 +2105,19 @@ private:
 
 public:
 	static cell AMX_NATIVE_CALL
+		n_OMP_Init(AMX * amx, cell const * params)
+	{
+		if (params[0] != 3 * sizeof (cell))
+		{
+			logprintf("sscanf error: SSCANF_Init has incorrect parameters.");
+			g_iTrueMax = 0;
+			return 0;
+		}
+		// Special `open.mp` return value.
+		return -1;
+	}
+
+	static cell AMX_NATIVE_CALL
 		n_OMP_SetPlayerName(AMX * amx, cell const * params)
 	{
 		if (g_iTrueMax == 0)
@@ -2312,7 +2321,7 @@ AMX_NATIVE_INFO
 {
 	{"sscanf", n_old_sscanf},
 	{"SSCANF__", n_sscanf},
-	{"SSCANF_Init", n_SSCANF_NOP},
+	{"SSCANF_Init", SScanFComponent::n_OMP_Init},
 	{"SSCANF_Join", n_SSCANF_NOP},
 	{"SSCANF_Leave", n_SSCANF_NOP},
 	{"SSCANF_IsConnected", n_SSCANF_NOP},
