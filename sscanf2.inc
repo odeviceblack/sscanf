@@ -1173,15 +1173,15 @@ forward OnCachedInit();
  * otherwise again <c>-1</c> is returned.
  * </remarks>
  */
-stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
+stock SSCANF_GetClosestString(const input[], const candidates[][], Float:threshold = 0.0, count = sizeof (candidates))
 {
 	new
 		closest = cellmin,
-		distance;
+		Float:distance;
 	while (count--)
 	{
-		distance = SSCANF_Levenshtein(input, candidates[count]);
-		if (distance < threshold)
+		distance = BiGramSimmilarity(input, candidates[count]);
+		if (distance >= threshold)
 		{
 			closest = count,
 			threshold = distance;
@@ -1209,7 +1209,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * function checks for this.
  * </remarks>
  */
-stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
+stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.0, count = sizeof (candidates), check = sizeof (results))
 {
 	assert(count == check);
 	new closest = SSCANF_GetClosestString(input, candidates, threshold, count);
