@@ -322,6 +322,23 @@ native SSCANF_Levenshtein(const string1[], const string2[]);
 
 /**
  * <library>sscanf</library>
+ * <param name="string1">The first string to compare.</param>
+ * <param name="string2">The second string to compare.</param>
+ * <remarks>
+ * This works out the similarity between two strings.  The Levenshtein distance
+ * often produces results that seem weird to people, for example by that measure
+ * <c>NRG</c> is closer to <c>TUG</c> than <c>NRG-400</c>.  Instead this
+ * function compares all pairs of letters between the two strings to work out
+ * what percentage of each string is in the other string, then multiplies the
+ * results to get the final similarity.  This algorithm produces much more human
+ * sane results, and can handle things like <c>ls police<c> matching
+ * <c>Police Car (LSPD)</c>.  It ignores all punctuation and case as well.
+ * </remarks>
+ */
+native Float:SSCANF_BigramCompare(const string1[], const string2[]);
+
+/**
+ * <library>sscanf</library>
  * <param name="name">The sscanf option to look up.  For example <c>SSCANF_COLOUR_FORMS</c>.</param>
  * <remarks>
  * The old API used <c>SSCANF_Option</c> to both get and set parse options,
@@ -1180,7 +1197,7 @@ stock SSCANF_GetBigramString(const input[], const candidates[][], Float:threshol
 		Float:distance;
 	while (count--)
 	{
-		distance = BiGramSimmilarity(input, candidates[count]);
+		distance = SSCANF_BigramCompare(input, candidates[count]);
 		if (distance >= threshold)
 		{
 			closest = count,
