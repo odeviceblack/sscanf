@@ -1173,7 +1173,7 @@ forward OnCachedInit();
  * otherwise again <c>-1</c> is returned.
  * </remarks>
  */
-stock SSCANF_GetClosestString(const input[], const candidates[][], Float:threshold = 0.0, count = sizeof (candidates))
+stock SSCANF_GetBigramString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates))
 {
 	new
 		closest = cellmin,
@@ -1209,7 +1209,72 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], Float:thresho
  * function checks for this.
  * </remarks>
  */
-stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.0, count = sizeof (candidates), check = sizeof (results))
+stock SSCANF_GetBigramValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results))
+{
+	assert(count == check);
+	new closest = SSCANF_GetBigramString(input, candidates, threshold, count);
+	if (closest == cellmin)
+	{
+		return fail;
+	}
+	return results[closest];
+}
+
+/**
+ * <library>sscanf</library>
+ * <param name="input">The first string to compare.</param>
+ * <param name="candidates">A list of other strings to compare against.</param>
+ * <param name="threshold">How similar the strings must be to be considered a match.</param>
+ * <param name="count">The number of candidates.</param>
+ * <remarks>
+ * Takes an input string and an array of string possibilities (candidates) and
+ * returns the index of the string closest to the input string.  If no valid
+ * match is found, <c>-1</c> is returned.  Note that this will always return the
+ * closest, even if the closest is not that close; which is why an optional
+ * <c>threshold</c> parameter is available.  When this parameter is provided the
+ * closest match must be closer in Levenshtein distance than the threshold,
+ * otherwise again <c>-1</c> is returned.
+ * </remarks>
+ */
+#pragma deprecated Use `SSCANF_GetBigramString` for more human results.
+stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
+{
+	new
+		closest = cellmin,
+		distance;
+	while (count--)
+	{
+		distance = SSCANF_Levenshtein(input, candidates[count]);
+		if (distance < threshold)
+		{
+			closest = count,
+			threshold = distance;
+		}
+	}
+	return closest;
+}
+
+/**
+ * <library>sscanf</library>
+ * <param name="input">The first string to compare.</param>
+ * <param name="candidates">A list of other strings to compare against.</param>
+ * <param name="results">The values to return when the corresponding candidate (by index) is the closest match.</param>
+ * <param name="fail">The value to return when there is no good match.</param>
+ * <param name="threshold">How similar the strings must be to be considered a match.</param>
+ * <param name="count">The number of candidates (must match <c>check</c>).</param>
+ * <param name="check">The number of results (must match <c>count</c>).</param>
+ * <remarks>
+ * Similar to <c>SSCANF_GetClosestString</c> in that it searches the
+ * <c>candidates</c> array for the string most closely matching the <c>input</c>
+ * and bounded by <c>threshold</c>.  But instead of returning the index this
+ * function returns the value in the second <c>results</c> array at that index;
+ * and instead of returning <c>-1</c> on failure it returns the value of
+ * <c>fail</c>.  The two arrays must match in size and an <c>assert</c> in the
+ * function checks for this.
+ * </remarks>
+ */
+#pragma deprecated Use `SSCANF_GetBigramValue` for more human results.
+stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
 {
 	assert(count == check);
 	new closest = SSCANF_GetClosestString(input, candidates, threshold, count);
@@ -1302,7 +1367,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 		}
 		else
 		{
-			return SSCANF_GetClosestValue(string, candidates, results, -1);
+			return SSCANF_GetBigramValue(string, candidates, results, -1);
 		}
 		return -1;
 	}
@@ -1564,7 +1629,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 		}
 		else
 		{
-			return SSCANF_GetClosestValue(string, candidates, results, -1);
+			return SSCANF_GetBigramValue(string, candidates, results, -1);
 		}
 		return -1;
 	}
