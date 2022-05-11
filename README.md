@@ -71,14 +71,17 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 8.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
     * 8.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
     * 8.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
-    * 8.12 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
-    * 8.13 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
-    * 8.14 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
-    * 8.15 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
-    * 8.16 [`SSCANF_VERSION`](#sscanf_version-1)
-    * 8.17 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
-    * 8.18 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
-    * 8.19 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
+    * 8.12 [`Float:SSCANF_TextSimilarity(const string1[], const string2[]);`](#floatsscanf_textsimilarityconst-string1-const-string2)
+    * 8.13 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
+    * 8.14 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
+    * 8.15 [`SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`](#sscanf_getsimilarstringconst-input-const-candidates-floatthreshold--0111111-count--sizeof-candidates)
+    * 8.16 [`SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getsimilarvalueconst-input-const-candidates-const-results-fail--cellmin-floatthreshold--0111111-count--sizeof-candidates-check--sizeof-results)
+    * 8.17 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
+    * 8.18 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
+    * 8.19 [`SSCANF_VERSION`](#sscanf_version-1)
+    * 8.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
+    * 8.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
+    * 8.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
 * 9 [`extract`](#extract)
 * 10 [Errors/Warnings](#errorswarnings)
     * 10.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
@@ -1165,13 +1168,25 @@ Get the SSCANF plugin version as BCD explicitly (no overloaded `SSCANF_Version` 
 
 Computes the [Levenshtein Distance](https://en.wikipedia.org/wiki/Levenshtein_distance) between the two input strings.  Useful in `k` callback functions to determine if the entered string is close to a possible string.
 
+### `Float:SSCANF_TextSimilarity(const string1[], const string2[]);`
+
+This works out the similarity between two strings.  The Levenshtein distance often produces results that seem weird to people, for example by that measure `NRG` is closer to `TUG` than `NRG-400`.  Instead this function uses various other (unfixed) algorithms; currently comparing all pairs of letters between the two strings to work out what percentage of each string is in the other string, then multiplying the results to get the final similarity.  This algorithm produces much more human sane results, and can handle things like `ls police` matching`Police Car (LSPD)`.  It ignores all punctuation and case as well.
+
 ### `SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`
 
-Takes an input string and an array of string possibilities (candidates) and returns the index of the string closest to the input string.  If no valid match is found, `-1` is returned.  Note that this will always return the closest, even if the closest is not that close; which is why an optional `threshold` parameter is available.  When this parameter is provided the closest match must be closer in Levenshtein distance than the threshold, otherwise again `-1` is returned.
+Takes an input string and an array of string possibilities (candidates) and returns the index of the string closest to the input string.  If no valid match is found, `-1` is returned.  Note that this will always return the closest, even if the closest is not that close; which is why an optional `threshold` parameter is available.  When this parameter is provided the closest match must be closer in Levenshtein distance than the threshold, otherwise again `-1` is returned.  Deprecated in favour of `SSCANF_GetSimilarString`.
 
 ### `SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`
 
-Similar to [`SSCANF_GetClosestString`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates) in that it searches the `candidates` array for the string most closely matching the `input` and bounded by `threshold`.  But instead of returning the index this function returns the value in the second `results` array at that index; and instead of returning `-1` on failure it returns the value of `fail`.  The two arrays must match in size and an `assert` in the function checks for this.
+Similar to [`SSCANF_GetClosestString`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates) in that it searches the `candidates` array for the string most closely matching the `input` and bounded by `threshold`.  But instead of returning the index this function returns the value in the second `results` array at that index; and instead of returning `-1` on failure it returns the value of `fail`.  The two arrays must match in size and an `assert` in the function checks for this.  Deprecated in favour of `SSCANF_GetSimilarValue`.
+
+### `SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`
+
+Like `SSCANF_GetClosestString`, but using a more human-friendly text comparison function.
+
+### `SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`
+
+Like `SSCANF_GetClosestValue`, but using a more human-friendly text comparison function.
 
 ### `SSCANF_VERSION_STRING`
 
