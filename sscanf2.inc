@@ -335,7 +335,7 @@ native SSCANF_Levenshtein(const string1[], const string2[]);
  * <c>Police Car (LSPD)</c>.  It ignores all punctuation and case as well.
  * </remarks>
  */
-native Float:SSCANF_BigramCompare(const string1[], const string2[]);
+native Float:SSCANF_TextSimilarity(const string1[], const string2[]);
 
 /**
  * <library>sscanf</library>
@@ -1190,14 +1190,14 @@ forward OnCachedInit();
  * otherwise again <c>-1</c> is returned.
  * </remarks>
  */
-stock SSCANF_GetBigramString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates))
+stock SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates))
 {
 	new
 		closest = cellmin,
 		Float:distance;
 	while (count--)
 	{
-		distance = SSCANF_BigramCompare(input, candidates[count]);
+		distance = SSCANF_TextSimilarity(input, candidates[count]);
 		if (distance >= threshold)
 		{
 			closest = count,
@@ -1226,10 +1226,10 @@ stock SSCANF_GetBigramString(const input[], const candidates[][], Float:threshol
  * function checks for this.
  * </remarks>
  */
-stock SSCANF_GetBigramValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results))
+stock SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results))
 {
 	assert(count == check);
-	new closest = SSCANF_GetBigramString(input, candidates, threshold, count);
+	new closest = SSCANF_GetSimilarString(input, candidates, threshold, count);
 	if (closest == cellmin)
 	{
 		return fail;
@@ -1253,7 +1253,7 @@ stock SSCANF_GetBigramValue(const input[], const candidates[][], const results[]
  * otherwise again <c>-1</c> is returned.
  * </remarks>
  */
-#pragma deprecated Use `SSCANF_GetBigramString` for more human results.
+#pragma deprecated Use `SSCANF_GetSimilarString` for more human results.
 stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
 	new
@@ -1290,7 +1290,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * function checks for this.
  * </remarks>
  */
-#pragma deprecated Use `SSCANF_GetBigramValue` for more human results.
+#pragma deprecated Use `SSCANF_GetSimilarValue` for more human results.
 stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
 {
 	assert(count == check);
@@ -1384,7 +1384,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 		}
 		else
 		{
-			return SSCANF_GetBigramValue(string, candidates, results, -1);
+			return SSCANF_GetSimilarValue(string, candidates, results, -1);
 		}
 		return -1;
 	}
@@ -1646,7 +1646,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 		}
 		else
 		{
-			return SSCANF_GetBigramValue(string, candidates, results, -1);
+			return SSCANF_GetSimilarValue(string, candidates, results, -1);
 		}
 		return -1;
 	}
