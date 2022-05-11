@@ -1,4 +1,4 @@
-# sscanf 2.12.1
+# sscanf 2.12.2
 
 ## Introduction
 
@@ -151,6 +151,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
     * 13.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
     * 13.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
+    * 13.12 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
 
 ## Downloads
 
@@ -201,7 +202,7 @@ if (unformat(params, "ui", giveplayerid, amount))
 
 The `sscanf` binary (`sscanf.dll` on Windows, or `sscanf.so` on Linux) works as both a legacy (SA:MP) plugin or an *open.mp* component.  The recommended method is to use it as a component - just place the file in the `components` directory in the server root and *open.mp* will load it automatically.
 
-If you wish to use it as a legacy plugin for some reason (there is no need if you are on version `2.12.1` or higher) place it in the `plugins` directory in the open.mp server root and either follow the *SA:MP*-specific instructions for `server.cfg` on your platform or add `"sscanf"` to `"pawn.legacy_plugins"` in `config.json`:
+If you wish to use it as a legacy plugin for some reason (there is no need if you are on version `2.12.2` or higher) place it in the `plugins` directory in the open.mp server root and either follow the *SA:MP*-specific instructions for `server.cfg` on your platform or add `"sscanf"` to `"pawn.legacy_plugins"` in `config.json`:
 
 ```json
 {
@@ -1953,4 +1954,8 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.12.1 - 05/05/2022
 
 * Integrate open.mp component support.
+
+### sscanf 2.12.2 - 11/05/2022
+
+* Switch to a different (semi made-up) word similarity function.
 
