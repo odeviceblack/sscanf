@@ -1998,7 +1998,6 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 
 int Init(AMX * amx) 
 {
-	cell addr;
 	int
 		num,
 		idx;
