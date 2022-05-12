@@ -211,7 +211,7 @@ If you wish to use it as a legacy plugin for some reason (there is no need if yo
 {
 	"pawn":
 	{
-        "legacy_plugins":
+		"legacy_plugins":
 		[
 			"sscanf"
 		]
