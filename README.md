@@ -1973,4 +1973,9 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.12.2 - 11/05/2022
 
 * Switch to a different (semi made-up) word similarity function.
+* Added `SSCANF_TextSimilarity` for best string candidate processing.
+* Added `SSCANF_GetSimilarString` for best string candidate processing.
+* Added `SSCANF_GetSimilarValue` for best string candidate processing.
+* Use `OnPlayerNameChange` in the open.mp component code version.
+* Switch `SSCANF_Levenshtein` internally to use direct AMX access.
 
