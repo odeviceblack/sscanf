@@ -1838,6 +1838,102 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
+	n_SSCANF_TextSimilarity(AMX * amx, cell const * params)
+{
+	if (params[0] != 2 * sizeof(cell))
+	{
+		logprintf("sscanf error: SSCANF_TextSimilarity has incorrect parameters.");
+		return 0x7FFFFFFF;
+	}
+	// Get the two strings to compare.
+	cell
+		* string1,
+		* string2;
+	amx_GetAddr(amx, params[1], &string1);
+	amx_GetAddr(amx, params[2], &string2);
+	char matrix[36 * 36];
+	memset(matrix, 0, 36 * 36);
+	int
+		pair = 0,
+		ch,
+		unique1 = 0,
+		unique2 = 0,
+		ngrams1 = -1,
+		ngrams2 = -1;
+	for (int i = 0; (ch = *string1++); ++i)
+	{
+		// This code only looks at numbers and letters, and ignores case.
+		if ('0' <= ch && ch <= '9')
+		{
+			pair = (pair / 36) | ((ch - '0') * 36);
+		}
+		else if ('a' <= ch && ch <= 'z')
+		{
+			pair = (pair / 36) | ((ch - ('a' - 10)) * 36);
+		}
+		else if ('A' <= ch && ch <= 'Z')
+		{
+			pair = (pair / 36) | ((ch - ('A' - 10)) * 36);
+		}
+		else
+		{
+			// Not a character we are interested in.
+			continue;
+		}
+		if (++ngrams1)
+		{
+			// Got at least TWO characters.
+			++matrix[pair];
+			++unique1;
+		}
+	}
+	for (int i = 0; (ch = *string2++); ++i)
+	{
+		// This code only looks at numbers and letters, and ignores case.
+		if ('0' <= ch && ch <= '9')
+		{
+			pair = (pair / 36) | ((ch - '0') * 36);
+		}
+		else if ('a' <= ch && ch <= 'z')
+		{
+			pair = (pair / 36) | ((ch - ('a' - 10)) * 36);
+		}
+		else if ('A' <= ch && ch <= 'Z')
+		{
+			pair = (pair / 36) | ((ch - ('A' - 10)) * 36);
+		}
+		else
+		{
+			// Not a character we are interested in.
+			continue;
+		}
+		// The original version had positive numbers as pairs in `string1` but
+		// not `string2`, and vice-versa, but I already optimised it.
+		if (!++ngrams2)
+		{
+		}
+		else if (matrix[pair])
+		{
+			--matrix[pair];
+			--unique1;
+		}
+		else
+		{
+			++unique2;
+		}
+	}
+	if (ngrams1 < 1 || ngrams2 < 1)
+	{
+		// There just aren't enough letters to compare.
+		return 0;
+	}
+	// Normalise the number of matching pairs and multiply.
+	float
+		result = (1.0f - ((float)unique1 / (float)ngrams1)) * (1.0f - ((float)unique2 / (float)ngrams2));
+	return amx_ftoc(result);
+}
+
+static cell AMX_NATIVE_CALL
 	n_SSCANF_NOP(AMX * amx, cell const * params)
 {
 	return 1;
@@ -1860,6 +1956,7 @@ AMX_NATIVE_INFO
 			{"SSCANF_Option", n_SSCANF_Option},
 			{"SSCANF_Version", n_SSCANF_Version},
 			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
+			{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
 			{0, 0}
 		};
 
@@ -2290,6 +2387,7 @@ AMX_NATIVE_INFO
 	{"SSCANF_Option", n_SSCANF_Option},
 	{"SSCANF_Version", n_SSCANF_Version},
 	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
+	{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
 	{0, 0}
 };
 
