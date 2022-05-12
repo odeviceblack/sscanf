@@ -1785,14 +1785,16 @@ static cell AMX_NATIVE_CALL
 		return -1;
 	}
 	// Get the two strings to compare.
-	char
+	cell
 		* string1,
 		* string2;
 	int
 		len1,
 		len2;
-	LENGTH_STR_PARAM(amx, params[1], string1, len1);
-	LENGTH_STR_PARAM(amx, params[2], string2, len2);
+	amx_GetAddr(amx, params[1], &string1);
+	amx_StrLen(string1, &len1);
+	amx_GetAddr(amx, params[2], &string2);
+	amx_StrLen(string2, &len2);
 	if (len1 == 0)
 	{
 		return len2;
@@ -1858,7 +1860,7 @@ AMX_NATIVE_INFO
 			{"SSCANF_Option", n_SSCANF_Option},
 			{"SSCANF_Version", n_SSCANF_Version},
 			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
-			{0,        0}
+			{0, 0}
 		};
 
 extern AMX_NATIVE_INFO
@@ -2288,6 +2290,6 @@ AMX_NATIVE_INFO
 	{"SSCANF_Option", n_SSCANF_Option},
 	{"SSCANF_Version", n_SSCANF_Version},
 	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
-	{0,        0}
+	{0, 0}
 };
 
