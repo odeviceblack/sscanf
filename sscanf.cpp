@@ -2103,6 +2103,20 @@ private:
 		core->logLn(LogLevel::Message, string);
 	}
 
+	void SaveName(IPlayer& player)
+	{
+		StringView name = player.getName();
+		unsigned int
+			playerid = player.getID(),
+			len = name.length();
+		if (len >= g_iMaxPlayerName)
+		{
+			len = g_iMaxPlayerName - 1;
+		}
+		strncpy(g_szPlayerNames + (g_iMaxPlayerName * playerid), name.data(), len);
+		*(g_szPlayerNames + (g_iMaxPlayerName * playerid) + len) = '\0';
+	}
+
 public:
 	static cell AMX_NATIVE_CALL
 		n_OMP_Init(AMX * amx, cell const * params)
@@ -2117,55 +2131,10 @@ public:
 		return -1;
 	}
 
-	static cell AMX_NATIVE_CALL
-		n_OMP_SetPlayerName(AMX * amx, cell const * params)
+	// This should be `onPlayerNameChange`, but the SDK repo is out of date.
+	void onNameChange(IPlayer& player, StringView oldName) override
 	{
-		if (g_iTrueMax == 0)
-		{
-			logprintf("sscanf error: System not initialised.");
-			return 0;
-		}
-		if (params[0] != 2 * sizeof(cell))
-		{
-			logprintf("sscanf error: SetPlayerName has incorrect parameters.");
-			return 0;
-		}
-		if (players == nullptr)
-		{
-			return 0;
-		}
-		cell *
-			str;
-		int
-			playerid = params[1],
-			len;
-		auto player = players->get(playerid);
-		if (player == nullptr)
-		{
-			return 0;
-		}
-		char
-			name[MAX_PLAYER_NAME + 1];
-		amx_GetAddr(amx, params[2], &str);
-		amx_StrLen(str, &len);
-		if ((unsigned int)len >= g_iMaxPlayerName)
-		{
-			len = (int)g_iMaxPlayerName - 1;
-		}
-		amx_GetString(name, str, 0, len + 1);
-		switch (player->setName(name))
-		{
-		case EPlayerNameStatus::Updated:
-			strcpy(g_szPlayerNames + (g_iMaxPlayerName * playerid), name);
-			return 1;
-		case EPlayerNameStatus::Invalid:
-			return -1;
-		case EPlayerNameStatus::Taken:
-			return 0;
-		default:
-			logprintf("sscanf warning: Unknown `player->setName()` return.");
-			return 0;
-		}
+		SaveName(player);
 	}
 
 	// I hate using lower-case letters in HEX.  But I had to differentiate between `a` and `A1`, the
@@ -2218,23 +2187,14 @@ public:
 		int
 			playerid = player.getID();
 		g_iConnected[playerid] = 1;
-		StringView name = player.getName();
-		unsigned int
-			len = name.length();
-		if (len >= g_iMaxPlayerName)
-		{
-			len = g_iMaxPlayerName - 1;
-		}
-		strncpy(g_szPlayerNames + (g_iMaxPlayerName * playerid), name.data(), len);
 		g_iNPC[playerid] = player.isBot();
+		SaveName(player);
 	}
 	
 	// This should be `onPlayerDisconnect`, but the SDK repo is out of date.
 	void onDisconnect(IPlayer & player, PeerDisconnectReason reason) override
 	{
-		int
-			playerid = player.getID();
-		g_iConnected[playerid] = 0;
+		g_iConnected[player.getID()] = 0;
 	}
 
 	void onInit(IComponentList * components) override
@@ -2328,8 +2288,6 @@ AMX_NATIVE_INFO
 	{"SSCANF_Option", n_SSCANF_Option},
 	{"SSCANF_Version", n_SSCANF_Version},
 	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
-	// Components take precedence, so this will override the default version.
-	{"SetPlayerName", SScanFComponent::n_OMP_SetPlayerName},
 	{0,        0}
 };
 
