@@ -154,7 +154,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
     * 13.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
     * 13.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
-    * 13.12 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
+    * 13.13 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
 
 ## Downloads
 
