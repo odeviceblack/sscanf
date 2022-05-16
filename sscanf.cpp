@@ -42,6 +42,7 @@
 
 #include <malloc.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "sscanf.h"
 #include "args.h"
