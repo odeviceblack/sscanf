@@ -343,7 +343,7 @@ void
 		{
 			if (*(name + 21) == '=')
 			{
-				gNameSimilarity = atof(name + 22);
+				gNameSimilarity = (float)atof(name + 22);
 				if (gNameSimilarity < 0.0f || gNameSimilarity > 1.0f)
 				{
 					// Invalid value.
