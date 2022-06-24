@@ -372,7 +372,8 @@ bool
 		*ret = g_iInvalid;
 		int
 			* conn = GetConnected(),
-			len = end - string;
+			len = end - string,
+			best = 1000;
 		val = start;
 		conn += start;
 		char
@@ -380,7 +381,7 @@ bool
 			* name = GetNames();
 		name += start * g_iMaxPlayerName;
 		*end = '\0';
-		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
 		{
 		case SSCANF_OPTIONS_NONE:
 			// Original.
@@ -388,6 +389,7 @@ bool
 			{
 				if (*conn++ && !strincmp(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				name += g_iMaxPlayerName;
@@ -400,13 +402,49 @@ bool
 			{
 				if (*conn++ && strstrin(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				name += g_iMaxPlayerName;
 				++val;
 			}
 			break;
+		case MATCH_NAME_BEST:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && !strincmp(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && strstrin(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		case CELLMIN_ON_MATCHES:
+		case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -414,7 +452,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -424,6 +462,7 @@ bool
 			}
 			break;
 		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Both.
 			while (val < g_iTrueMax)
 			{
@@ -431,7 +470,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -444,10 +483,6 @@ bool
 		*end = tmp;
 	}
 	*input = end;
-	if (val != g_iTrueMax)
-	{
-		*ret = val;
-	}
 	return true;
 }
 
@@ -480,7 +515,8 @@ bool
 		int
 			* conn = GetConnected(),
 			* npc = GetNPCs(),
-			len = end - string;
+			len = end - string,
+			best = 1000;
 		val = start;
 		conn += start;
 		npc += start;
@@ -490,7 +526,7 @@ bool
 			* name = GetNames();
 		// Make the input string shorter for comparison.
 		*end = '\0';
-		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
 		{
 		case SSCANF_OPTIONS_NONE:
 			// Original.
@@ -498,6 +534,7 @@ bool
 			{
 				if (*conn && *npc && !strincmp(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				++conn;
@@ -512,6 +549,7 @@ bool
 			{
 				if (*conn && *npc && strstrin(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				++conn;
@@ -520,7 +558,46 @@ bool
 				++val;
 			}
 			break;
+		case MATCH_NAME_BEST:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && !strincmp(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && strstrin(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		case CELLMIN_ON_MATCHES:
+		case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -528,7 +605,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -540,6 +617,7 @@ bool
 			}
 			break;
 		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Both.
 			// Loop through all the players and check that they're
 			// connected, an NPC, and that their name is correct.
@@ -549,7 +627,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -567,12 +645,6 @@ bool
 	}
 	// Save the pointer to the end of the name.
 	*input = end;
-	// Optimised from the PAWN version.  If it gets to here without having
-	// found a valid player then 'val' will be g_iTrueMax.
-	if (val != g_iTrueMax)
-	{
-		*ret = val;
-	}
 	return true;
 }
 
@@ -596,7 +668,8 @@ bool
 		int
 			* conn = GetConnected(),
 			* npc = GetNPCs(),
-			len = end - string;
+			len = end - string,
+			best = 1000;
 		val = start;
 		conn += start;
 		npc += start;
@@ -604,7 +677,7 @@ bool
 			tmp = *end,
 			* name = GetNames();
 		*end = '\0';
-		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
 		{
 		case SSCANF_OPTIONS_NONE:
 			// Original.
@@ -612,6 +685,7 @@ bool
 			{
 				if (*conn && !*npc && !strincmp(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				++conn;
@@ -626,6 +700,7 @@ bool
 			{
 				if (*conn && !*npc && strstrin(name, string, len))
 				{
+					*ret = val;
 					break;
 				}
 				++conn;
@@ -634,7 +709,46 @@ bool
 				++val;
 			}
 			break;
+		case MATCH_NAME_BEST:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && !strincmp(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && strstrin(name, string, len))
+				{
+					int diff = strlen(name) - len;
+					if (diff < best)
+					{
+						*ret = val;
+						best = diff;
+					}
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		case CELLMIN_ON_MATCHES:
+		case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -642,7 +756,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -654,6 +768,7 @@ bool
 			}
 			break;
 		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
 			// Both.
 			// Loop through all the players and check that they're
 			// connected, an NPC, and that their name is correct.
@@ -663,7 +778,7 @@ bool
 				{
 					if (*ret != g_iInvalid)
 					{
-						val = 0x80000000;
+						*ret = 0x80000000;
 						break;
 					}
 					*ret = val;
@@ -680,10 +795,6 @@ bool
 		*end = tmp;
 	}
 	*input = end;
-	if (val != g_iTrueMax)
-	{
-		*ret = val;
-	}
 	return true;
 }
 
