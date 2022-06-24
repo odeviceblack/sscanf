@@ -1081,7 +1081,7 @@ Use the same text similarity metrics as in kustom matchers to find the best name
 sscanf("Y_Luss", "?<MATCH_NAME_SIMILARITY=0.3>u", id);
 ```
 
-Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.  When set (i.e. not `-1`) this option overrides `MATCH_NAME_BEST`, but works well with all the other name matching options.  This is the only float option, and so needs a tag override to read:
+Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.  When set (i.e. not `-1`) this option overrides `MATCH_NAME_PARTIAL`, but works well with all the other name matching options.  This is the only float option, and so needs a tag override to read:
 
 ```pawn
 new Float:similarity = Float:SSCANF_Option(MATCH_NAME_SIMILARITY);
