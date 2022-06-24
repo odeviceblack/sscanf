@@ -61,7 +61,7 @@ int
 	gForms = -1;
 
 float
-	gNameSimilarity = 1.0f;
+	gNameSimilarity = -1.0f;
 
 // Options:
 //  

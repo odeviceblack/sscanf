@@ -1659,7 +1659,7 @@ static cell AMX_NATIVE_CALL
 	cell playerid;
 
 	playerid = params[1];
-	if (playerid < 0 || playerid >= g_iTrueMax)
+	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
 		return 0;
 	}
@@ -1680,7 +1680,7 @@ static cell AMX_NATIVE_CALL
 	}
 	cell
 		playerid = params[1];
-	if (playerid < 0 || playerid >= g_iTrueMax)
+	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
 		return 0;
 	}
@@ -1700,7 +1700,7 @@ static cell AMX_NATIVE_CALL
 	}
 	int
 		playerid = params[1];
-	if (playerid < 0 || playerid >= g_iTrueMax)
+	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
 		return 0;
 	}

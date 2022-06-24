@@ -386,7 +386,7 @@ bool
 			* name = GetNames();
 		name += start * g_iMaxPlayerName;
 		*end = '\0';
-		if (gNameSimilarity == -1)
+		if (gNameSimilarity == -1.0f)
 		{
 			int
 				best = 1000;
@@ -604,7 +604,7 @@ bool
 			* name = GetNames();
 		// Make the input string shorter for comparison.
 		*end = '\0';
-		if (gNameSimilarity == -1)
+		if (gNameSimilarity == -1.0f)
 		{
 			int
 				best = 1000;
@@ -825,7 +825,7 @@ bool
 			tmp = *end,
 			* name = GetNames();
 		*end = '\0';
-		if (gNameSimilarity == -1)
+		if (gNameSimilarity == -1.0f)
 		{
 			int
 				best = 1000;
