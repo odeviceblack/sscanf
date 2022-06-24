@@ -377,7 +377,7 @@ native SSCANF_GetOption__(const name[]) = SSCANF_Option;
  * value.  Instead the new API has explicit <c>Get</c> and <c>Set</c> functions.
  * </remarks>
  */
-native SSCANF_SetOption(const name[], value) = SSCANF_Option;
+native SSCANF_SetOption(const name[], {_, Float}:value) = SSCANF_Option;
 
 /**
  * <library>sscanf</library>
@@ -393,7 +393,7 @@ native SSCANF_SetOption(const name[], value) = SSCANF_Option;
  * to <c>Get__</c> and <c>Set__</c> functions.
  * </remarks>
  */
-native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
+native SSCANF_SetOption__(const name[], {_, Float}:value) = SSCANF_Option;
 
 /**
  * <library>sscanf</library>
@@ -414,7 +414,7 @@ native SSCANF_SetOption__(const name[], value) = SSCANF_Option;
  * value.
  * </remarks>
  */
-forward SSCANF_Option(const name[], value = -1);
+forward SSCANF_Option(const name[], {_, Float}:value = -1);
 
 #define SSCANF_Option SSCANF_GetOption__
 #define SSCANF_GetOption__(%0,%1) SSCANF_SetOption__(%0,%1)
