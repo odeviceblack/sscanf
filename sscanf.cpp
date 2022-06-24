@@ -1659,7 +1659,10 @@ static cell AMX_NATIVE_CALL
 	cell playerid;
 
 	playerid = params[1];
-
+	if (playerid < 0 || playerid >= g_iTrueMax)
+	{
+		return 0;
+	}
 	if (g_iConnected[playerid] != 0)
 	{
 		return 1;
@@ -1677,6 +1680,10 @@ static cell AMX_NATIVE_CALL
 	}
 	cell
 		playerid = params[1];
+	if (playerid < 0 || playerid >= g_iTrueMax)
+	{
+		return 0;
+	}
 	++g_iConnected[playerid];
 	DoName(amx, playerid, params[2]);
 	g_iNPC[playerid] = params[3];
@@ -1691,8 +1698,14 @@ static cell AMX_NATIVE_CALL
 		logprintf("sscanf error: SSCANF_Leave has incorrect parameters.");
 		return 0;
 	}
+	int
+		playerid = params[1];
+	if (playerid < 0 || playerid >= g_iTrueMax)
+	{
+		return 0;
+	}
 	// To be correct for multiple scripts with loads and unloads (unloadfs).
-	--g_iConnected[params[1]];
+	--g_iConnected[playerid];
 	return 1;
 }
 
