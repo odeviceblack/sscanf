@@ -2231,7 +2231,7 @@ public:
 	}
 
 	// This should be `onPlayerNameChange`, but the SDK repo is out of date.
-	void onNameChange(IPlayer& player, StringView oldName) override
+	void onPlayerNameChange(IPlayer& player, StringView oldName) override
 	{
 		SaveName(player);
 	}
@@ -2281,7 +2281,7 @@ public:
 	}
 
 	// This should be `onPlayerConnect`, but the SDK repo is out of date.
-	void onConnect(IPlayer & player) override
+	void onPlayerConnect(IPlayer & player) override
 	{
 		int
 			playerid = player.getID();
@@ -2291,7 +2291,7 @@ public:
 	}
 	
 	// This should be `onPlayerDisconnect`, but the SDK repo is out of date.
-	void onDisconnect(IPlayer & player, PeerDisconnectReason reason) override
+	void onPlayerDisconnect(IPlayer & player, PeerDisconnectReason reason) override
 	{
 		g_iConnected[player.getID()] = 0;
 	}
