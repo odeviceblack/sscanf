@@ -58,6 +58,8 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 6.6 [SSCANF_ALPHA:](#sscanf_alpha)
     * 6.7 [SSCANF_COLOUR_FORMS:](#sscanf_colour_forms)
     * 6.8 [SSCANF_ARGB:](#sscanf_argb)
+    * 6.9 [MATCH_NAME_BEST:](#match_name_best)
+    * 6.10 [MATCH_NAME_SIMILARITY:](#match_name_similarity)
 * 7 [All Specifiers](#all-specifiers)
 * 8 [Full API](#full-api)
     * 8.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
@@ -1079,7 +1081,11 @@ Use the same text similarity metrics as in kustom matchers to find the best name
 sscanf("Y_Luss", "?<MATCH_NAME_SIMILARITY=0.3>u", id);
 ```
 
-Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.
+Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.  When set (i.e. not `-1`) this option overrides `MATCH_NAME_BEST`, but works well with all the other name matching options.  This is the only float option, and so needs a tag override to read:
+
+```pawn
+new Float:similarity = Float:SSCANF_Option(MATCH_NAME_SIMILARITY);
+```
 
 ## All specifiers
 

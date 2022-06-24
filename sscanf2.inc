@@ -748,6 +748,41 @@ stock const SSCANF_ARGB[] = "SSCANF_ARGB";
 /**
  * <library>sscanf</library>
  * <remarks>
+ * The <c>MATCH_NAME_BEST</c> option as a constant string so you can get compile-
+ * time spell checking on the name.  Specify whether <c>u</c> etc keep searching
+ * for better matching players after finding one:
+ *
+ * <code>
+ *     SSCANF_Option(MATCH_NAME_BEST, 1); // Enable scanning for the best name match not the first. <br />
+ *     SSCANF_Option(MATCH_NAME_BEST, 0); // Enable scanning for the first name match not the best (default).
+ * </code>
+ * </remarks>
+ */
+stock const MATCH_NAME_BEST[] = "MATCH_NAME_BEST";
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * The <c>MATCH_NAME_SIMILARITY</c> option as a constant string so you can get
+ * compile-time spell checking on the name.  Specify whether <c>u</c> etc should
+ * use the ngrams-based similarity algorithm when searching for players matching
+ * a given name.  I.e. enable or disable fuzzy name matching.  It will return
+ * the best match found, but depending on the threshold that may still be very
+ * different to what was typed.
+ *
+ * <code>
+ *     SSCANF_Option(MATCH_NAME_SIMILARITY, 0.0); // Will find all names, regardless of input. <br />
+ *     SSCANF_Option(MATCH_NAME_SIMILARITY, 1.0); // Will find exact matches only. <br />
+ *     SSCANF_Option(MATCH_NAME_SIMILARITY, 0.5); // Will find names somewhat similar to the input. <br />
+ *     SSCANF_Option(MATCH_NAME_SIMILARITY, -1.0); // Disable fuzzy name matching.
+ * </code>
+ * </remarks>
+ */
+stock const MATCH_NAME_SIMILARITY[] = "MATCH_NAME_SIMILARITY";
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
  * Has sscanf been initialised at least once already in this script?  Avoids the
  * need to define <c>FILTERSCRIPT</c> by including <c>OnFilterScriptInit</c>
  * and <c>OnGameModeInit</c> (plus <c>OnNPCModeInit</c>) and seeing which one
