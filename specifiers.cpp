@@ -372,8 +372,9 @@ bool
 		*ret = g_iInvalid;
 		int
 			* conn = GetConnected(),
-			len = end - string,
-			best = 1000;
+			len = end - string;
+		float
+			best = 1000.0f;
 		val = start;
 		conn += start;
 		char
@@ -415,7 +416,7 @@ bool
 			{
 				if (*conn++ && !strincmp(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
@@ -432,7 +433,7 @@ bool
 			{
 				if (*conn++ && strstrin(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
@@ -515,8 +516,9 @@ bool
 		int
 			* conn = GetConnected(),
 			* npc = GetNPCs(),
-			len = end - string,
-			best = 1000;
+			len = end - string;
+		float
+			best = 1000.0f;
 		val = start;
 		conn += start;
 		npc += start;
@@ -564,7 +566,7 @@ bool
 			{
 				if (*conn && *npc && !strincmp(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
@@ -583,7 +585,7 @@ bool
 			{
 				if (*conn && *npc && strstrin(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
@@ -668,8 +670,9 @@ bool
 		int
 			* conn = GetConnected(),
 			* npc = GetNPCs(),
-			len = end - string,
-			best = 1000;
+			len = end - string;
+		float
+			best = 1000.0f;
 		val = start;
 		conn += start;
 		npc += start;
@@ -715,7 +718,7 @@ bool
 			{
 				if (*conn && !*npc && !strincmp(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
@@ -734,7 +737,7 @@ bool
 			{
 				if (*conn && !*npc && strstrin(name, string, len))
 				{
-					int diff = strlen(name) - len;
+					float diff = (float)(strlen(name) - len);
 					if (diff < best)
 					{
 						*ret = val;
