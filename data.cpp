@@ -59,6 +59,9 @@ int
 	gAlpha = 0xFF,
 	gForms = -1;
 
+float
+	gNameSimilarity = 1.0f;
+
 // Options:
 //  
 //  1 = OLD_DEFAULT_NAME
@@ -225,15 +228,61 @@ void
 	}
 	else if (!strincmp(name, "SSCANF_ALPHA", 12))
 	{
-		gAlpha = (value & 0xFF) | (gAlpha & 0xFFFFFF00);
+		if (value == -1)
+		{
+			if (*(name + 12) == '=')
+			{
+				gAlpha = (atoi(name + 13) & 0xFF) | (gAlpha & 0xFFFFFF00);
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
+		}
+		else
+		{
+			gAlpha = (value & 0xFF) | (gAlpha & 0xFFFFFF00);
+		}
 	}
 	else if (!strincmp(name, "SSCANF_COLOUR_FORMS", 19))
 	{
-		gForms = value;
+		if (value == -1)
+		{
+			if (*(name + 19) == '=')
+			{
+				gForms = atoi(name + 20);
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
+		}
+		else
+		{
+			gForms = value;
+		}
 	}
 	else if (!strincmp(name, "SSCANF_ARGB", 11))
 	{
-		gAlpha = (gAlpha & 0xFF) | (value ? 0x100 : 0);
+		switch (value)
+		{
+		case 1:
+			gAlpha = (gAlpha & 0xFF) | 0x100;
+			break;
+		case 0:
+			gAlpha = (gAlpha & 0xFF);
+			break;
+		case -1:
+			if (*(name + 11) == '=')
+			{
+				if (*(name + 12) == '0') gAlpha = (gAlpha & 0xFF);
+				else gAlpha = (gAlpha & 0xFF) | 0x100;
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
+		}
 	}
 	else if (!strincmp(name, "OLD_DEFAULT_KUSTOM", 18) || !strincmp(name, "OLD_DEFAULT_CUSTOM", 18))
 	{
@@ -254,6 +303,65 @@ void
 			else
 			{
 				SscanfError("No option value.");
+			}
+		}
+	}
+	else if (!strincmp(name, "MATCH_NAME_BEST", 15))
+	{
+		switch (value)
+		{
+		case 1:
+			logprintf = qlog;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_BEST);
+			break;
+		case 0:
+			logprintf = real_logprintf;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_BEST);
+			break;
+		case -1:
+			if (*(name + 15) == '=')
+			{
+				if (*(name + 16) == '0')
+				{
+					gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_BEST);
+				}
+				else
+				{
+					gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_BEST);
+				}
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
+		}
+	}
+	else if (!strincmp(name, "MATCH_NAME_SIMILARITY", 21))
+	{
+		// The MSB is set on negative floats and ints, so this works.
+		if (value < 0)
+		{
+			if (*(name + 21) == '=')
+			{
+				gNameSimilarity = atof(name + 22);
+				if (gNameSimilarity < 0.0f || gNameSimilarity > 1.0f)
+				{
+					// Invalid value.
+					gNameSimilarity = -1.0f;
+				}
+			}
+			else
+			{
+				gNameSimilarity = -1.0f;
+			}
+		}
+		else
+		{
+			gNameSimilarity = amx_ctof(value);
+			if (gNameSimilarity > 1.0f)
+			{
+				// Invalid value.
+				gNameSimilarity = -1.0f;
 			}
 		}
 	}
@@ -298,6 +406,14 @@ cell
 	else if (!strincmp(name, "OLD_DEFAULT_KUSTOM", 18) || !strincmp(name, "OLD_DEFAULT_CUSTOM", 18))
 	{
 		return (gOptions & OLD_DEFAULT_KUSTOM) != SSCANF_OPTIONS_NONE;
+	}
+	else if (!strincmp(name, "MATCH_NAME_BEST", 15))
+	{
+		return (gOptions & MATCH_NAME_BEST) != SSCANF_OPTIONS_NONE;
+	}
+	else if (!strincmp(name, "MATCH_NAME_SIMILARITY", 21))
+	{
+		return amx_ftoc(gNameSimilarity);
 	}
 	else
 	{

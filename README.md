@@ -1067,6 +1067,20 @@ SSCANF_Option(SSCANF_ARGB, 1); // Set 3- and 6-digit colour outputs to `AARRGGBB
 SSCANF_Option(SSCANF_ARGB, 0); // Set 3- and 6-digit colour outputs to `RRGGBBAA` (default).
 ```
 
+### MATCH_NAME_BEST:
+
+Will return the best match to a name input, instead of the first.  So if there are players `Bob255` and `Bob7`, and the input is `Bob`, then `Bob7` will always be returned instead of depending on ID order.
+
+### MATCH_NAME_SIMILARITY:
+
+Use the same text similarity metrics as in kustom matchers to find the best name match to a given input.  The value given is the cutoff threshold for matches.  A value of `-1` disables this setting:
+
+```pawn
+sscanf("Y_Luss", "?<MATCH_NAME_SIMILARITY=0.3>u", id);
+```
+
+Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.
+
 ## All specifiers
 
 For quick reference, here is a list of ALL the specifiers and their use:
