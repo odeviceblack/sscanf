@@ -43,6 +43,7 @@
 #include "sscanf.h"
 #include "args.h"
 #include "utils.h"
+#include "data.h"
 
 extern unsigned int
 	g_iTrueMax;
@@ -53,6 +54,10 @@ extern logprintf_t
 
 void
 	qlog(char const *, ...);
+
+int
+	gAlpha = 0xFF,
+	gForms = -1;
 
 // Options:
 //  
@@ -74,10 +79,20 @@ void
 //  
 //    Disable all prints.
 //  
-int
-	gAlpha = 0xFF,
-	gForms = -1,
-	gOptions = 0;
+// 16 = OLD_DEFAULT_KUSTOM
+//
+//    `K(def)` needs a valid input as the default value.
+//
+// 32 = MATCH_NAME_BEST
+//
+//    Search for the best name match, not just the first.
+//
+// 64 = MATCH_NAME_SIMILAR
+//
+//    Use the similarity search code to find the best name.
+//
+E_SSCANF_OPTIONS
+	gOptions = SSCANF_OPTIONS_NONE;
 	
 cell * args_s::Next()
 {
@@ -97,12 +112,12 @@ void args_s::Restore()
 };
 
 void
-	RestoreOpts(int opt, int alpha, int forms)
+	RestoreOpts(E_SSCANF_OPTIONS opt, int alpha, int forms)
 {
 	gOptions = opt;
 	gAlpha = alpha;
 	gForms = forms;
-	if (gOptions & 8) logprintf = qlog;
+	if (gOptions & SSCANF_QUIET) logprintf = qlog;
 	else logprintf = real_logprintf;
 }
 
@@ -115,16 +130,16 @@ void
 		switch (value)
 		{
 		case 1:
-			gOptions |= 1;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | OLD_DEFAULT_NAME);
 			break;
 		case 0:
-			gOptions &= ~1;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~OLD_DEFAULT_NAME);
 			break;
 		case -1:
 			if (*(name + 16) == '=')
 			{
-				if (*(name + 17) == '0') gOptions &= ~1;
-				else gOptions |= 1;
+				if (*(name + 17) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~OLD_DEFAULT_NAME);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | OLD_DEFAULT_NAME);
 			}
 			else
 			{
@@ -137,16 +152,16 @@ void
 		switch (value)
 		{
 		case 1:
-			gOptions |= 2;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_PARTIAL);
 			break;
 		case 0:
-			gOptions &= ~2;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_PARTIAL);
 			break;
 		case -1:
 			if (*(name + 18) == '=')
 			{
-				if (*(name + 19) == '0') gOptions &= ~2;
-				else gOptions |= 2;
+				if (*(name + 19) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_PARTIAL);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_PARTIAL);
 			}
 			else
 			{
@@ -159,16 +174,16 @@ void
 		switch (value)
 		{
 		case 1:
-			gOptions |= 4;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | CELLMIN_ON_MATCHES);
 			break;
 		case 0:
-			gOptions &= ~4;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~CELLMIN_ON_MATCHES);
 			break;
 		case -1:
 			if (*(name + 18) == '=')
 			{
-				if (*(name + 19) == '0') gOptions &= ~4;
-				else gOptions |= 4;
+				if (*(name + 19) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~CELLMIN_ON_MATCHES);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | CELLMIN_ON_MATCHES);
 			}
 			else
 			{
@@ -182,11 +197,11 @@ void
 		{
 		case 1:
 			logprintf = qlog;
-			gOptions |= 8;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | SSCANF_QUIET);
 			break;
 		case 0:
 			logprintf = real_logprintf;
-			gOptions &= ~8;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~SSCANF_QUIET);
 			break;
 		case -1:
 			if (*(name + 12) == '=')
@@ -194,12 +209,12 @@ void
 				if (*(name + 13) == '0')
 				{
 					logprintf = real_logprintf;
-					gOptions &= ~8;
+					gOptions = (E_SSCANF_OPTIONS)(gOptions & ~SSCANF_QUIET);
 				}
 				else
 				{
 					logprintf = qlog;
-					gOptions |= 8;
+					gOptions = (E_SSCANF_OPTIONS)(gOptions | SSCANF_QUIET);
 				}
 			}
 			else
@@ -225,16 +240,16 @@ void
 		switch (value)
 		{
 		case 1:
-			gOptions |= 16;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | OLD_DEFAULT_KUSTOM);
 			break;
 		case 0:
-			gOptions &= ~16;
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~OLD_DEFAULT_KUSTOM);
 			break;
 		case -1:
 			if (*(name + 18) == '=')
 			{
-				if (*(name + 19) == '0') gOptions &= ~16;
-				else gOptions |= 16;
+				if (*(name + 19) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~OLD_DEFAULT_KUSTOM);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | OLD_DEFAULT_KUSTOM);
 			}
 			else
 			{
@@ -254,19 +269,19 @@ cell
 	// Not the most flexible code I've ever written...
 	if (!strincmp(name, "OLD_DEFAULT_NAME", 16))
 	{
-		return (gOptions >> 0) & 1;
+		return (gOptions & OLD_DEFAULT_NAME) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "MATCH_NAME_PARTIAL", 18))
 	{
-		return (gOptions >> 1) & 1;
+		return (gOptions & MATCH_NAME_PARTIAL) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "CELLMIN_ON_MATCHES", 18))
 	{
-		return (gOptions >> 2) & 1;
+		return (gOptions & CELLMIN_ON_MATCHES) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "SSCANF_QUIET", 12))
 	{
-		return (gOptions >> 3) & 1;
+		return (gOptions & SSCANF_QUIET) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "SSCANF_ALPHA", 12))
 	{
@@ -282,7 +297,7 @@ cell
 	}
 	else if (!strincmp(name, "OLD_DEFAULT_KUSTOM", 18) || !strincmp(name, "OLD_DEFAULT_CUSTOM", 18))
 	{
-		return (gOptions >> 4) & 1;
+		return (gOptions & OLD_DEFAULT_KUSTOM) != SSCANF_OPTIONS_NONE;
 	}
 	else
 	{

@@ -143,7 +143,9 @@ extern char *
 
 extern int
 	gAlpha,
-	gForms,
+	gForms;
+
+extern E_SSCANF_OPTIONS
 	gOptions;
 
 AMX *
@@ -335,7 +337,8 @@ static cell
 	// Save the default options so we can have local modifications.
 	int
 		defaultAlpha = gAlpha,
-		defaultForms = gForms,
+		defaultForms = gForms;
+	E_SSCANF_OPTIONS
 		defaultOpts = gOptions;
 	InitialiseDelimiter();
 	// Skip leading space.
@@ -567,7 +570,7 @@ static cell
 					{
 						int
 							len = GetLength(&format, args);
-						if (gOptions & 1)
+						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
 							SscanfError("'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
@@ -607,14 +610,15 @@ static cell
 					else
 					{
 						int
-							b = -1,
+							b = -1;
+						E_SSCANF_OPTIONS
 							od = gOptions;
 						if (doSave)
 						{
 							char *
 								tstr;
 							// Don't detect multiple results.
-							gOptions &= ~4;
+							gOptions = (E_SSCANF_OPTIONS)(gOptions & ~CELLMIN_ON_MATCHES);
 							cell *
 								cptr = args.Next();
 							while (--len)
@@ -668,7 +672,7 @@ static cell
 					{
 						int
 							len = GetLength(&format, args);
-						if (gOptions & 1)
+						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
 							SscanfError("'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
@@ -708,14 +712,15 @@ static cell
 					else
 					{
 						int
-							b = -1,
+							b = -1;
+						E_SSCANF_OPTIONS
 							od = gOptions;
 						if (doSave)
 						{
 							char *
 								tstr;
 							// Don't detect multiple results.
-							gOptions &= ~4;
+							gOptions = (E_SSCANF_OPTIONS)(gOptions & ~CELLMIN_ON_MATCHES);
 							cell *
 								cptr = args.Next();
 							while (--len)
@@ -769,7 +774,7 @@ static cell
 					{
 						int
 							len = GetLength(&format, args);
-						if (gOptions & 1)
+						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
 							SscanfError("'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
@@ -809,7 +814,8 @@ static cell
 					else
 					{
 						int
-							b = -1,
+							b = -1;
+						E_SSCANF_OPTIONS
 							od = gOptions;
 						if (doSave)
 						{
@@ -818,7 +824,7 @@ static cell
 							cell *
 								cptr = args.Next();
 							// Don't detect multiple results.
-							gOptions &= ~4;
+							gOptions = (E_SSCANF_OPTIONS)(gOptions & ~CELLMIN_ON_MATCHES);
 							while (--len)
 							{
 								tstr = string;
@@ -2070,9 +2076,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 	logprintf(" ===============================");
 	logprintf("");
 
-	#if SSCANF_QUIET
-		logprintf = qlog;
-	#endif
 	return true;
 }
 

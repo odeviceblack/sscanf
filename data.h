@@ -42,8 +42,20 @@
 
 #pragma once
 
+enum E_SSCANF_OPTIONS
+{
+	SSCANF_OPTIONS_NONE = 0,
+	OLD_DEFAULT_NAME = 1,
+	MATCH_NAME_PARTIAL = 2,
+	CELLMIN_ON_MATCHES = 4,
+	SSCANF_QUIET = 8,
+	OLD_DEFAULT_KUSTOM = 16,
+	MATCH_NAME_BEST = 32,
+	MATCH_NAME_SIMILAR = 64,
+};
+
 void
-	RestoreOpts(int, int, int);
+	RestoreOpts(E_SSCANF_OPTIONS, int, int);
 
 char
 	GetSingleType(char ** format);

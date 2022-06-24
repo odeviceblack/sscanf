@@ -130,7 +130,7 @@ bool
 extern AMX *
 	g_aCurAMX;
 
-extern int
+extern E_SSCANF_OPTIONS
 	gOptions;
 
 union update_u
@@ -279,7 +279,7 @@ int
 		if (defaults)
 		{
 			GET_CPTR();
-			if (gOptions & 1)
+			if (gOptions & OLD_DEFAULT_NAME)
 			{
 				int
 					b;
@@ -326,7 +326,7 @@ int
 		if (defaults)
 		{
 			GET_CPTR();
-			if (gOptions & 1)
+			if (gOptions & OLD_DEFAULT_NAME)
 			{
 				int
 					b;
@@ -373,7 +373,7 @@ int
 		if (defaults)
 		{
 			GET_CPTR();
-			if (gOptions & 1)
+			if (gOptions & OLD_DEFAULT_NAME)
 			{
 				int
 					b;

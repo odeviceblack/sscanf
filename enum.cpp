@@ -94,7 +94,7 @@ extern logprintf_t
 extern AMX *
 	g_aCurAMX;
 
-extern int
+extern E_SSCANF_OPTIONS
 	gOptions;
 
 bool
@@ -239,7 +239,7 @@ int
 				// FALLTHROUGH
 			case 'k':
 				//DOF(double, K)
-				if (defaults && !(gOptions & 16))
+				if (defaults && !(gOptions & OLD_DEFAULT_KUSTOM))
 				{
 					GetMultiType(&format);
 					if (doSave)
@@ -339,7 +339,7 @@ int
 					SkipLength(&format);
 				}
 				#define DoU(m,n) DoU(m,n,0)
-				if (defaults && !(gOptions & 1))
+				if (defaults && !(gOptions & OLD_DEFAULT_NAME))
 				{
 					DOV(int, I)
 				}
@@ -359,7 +359,7 @@ int
 					SkipLength(&format);
 				}
 				#define DoQ(m,n) DoQ(m,n,0)
-				if (defaults && !(gOptions & 1))
+				if (defaults && !(gOptions & OLD_DEFAULT_NAME))
 				{
 					DOV(int, I)
 				}
@@ -379,7 +379,7 @@ int
 					SkipLength(&format);
 				}
 				#define DoR(m,n) DoR(m,n,0)
-				if (defaults && !(gOptions & 1))
+				if (defaults && !(gOptions & OLD_DEFAULT_NAME))
 				{
 					DOV(int, I)
 				}

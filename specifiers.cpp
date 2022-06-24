@@ -54,7 +54,9 @@ extern logprintf_t
 
 extern int
 	gAlpha,
-	gForms,
+	gForms;
+
+extern E_SSCANF_OPTIONS
 	gOptions;
 
 extern unsigned int
@@ -378,9 +380,9 @@ bool
 			* name = GetNames();
 		name += start * g_iMaxPlayerName;
 		*end = '\0';
-		switch (gOptions & 6)
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
 		{
-		case 0:
+		case SSCANF_OPTIONS_NONE:
 			// Original.
 			while (val < g_iTrueMax)
 			{
@@ -392,7 +394,7 @@ bool
 				++val;
 			}
 			break;
-		case 2:
+		case MATCH_NAME_PARTIAL:
 			// Partial matches.
 			while (val < g_iTrueMax)
 			{
@@ -404,7 +406,7 @@ bool
 				++val;
 			}
 			break;
-		case 4:
+		case CELLMIN_ON_MATCHES:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -421,7 +423,7 @@ bool
 				++val;
 			}
 			break;
-		case 6:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
 			// Both.
 			while (val < g_iTrueMax)
 			{
@@ -488,9 +490,9 @@ bool
 			* name = GetNames();
 		// Make the input string shorter for comparison.
 		*end = '\0';
-		switch (gOptions & 6)
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
 		{
-		case 0:
+		case SSCANF_OPTIONS_NONE:
 			// Original.
 			while (val < g_iTrueMax)
 			{
@@ -504,7 +506,7 @@ bool
 				++val;
 			}
 			break;
-		case 2:
+		case MATCH_NAME_PARTIAL:
 			// Partial matches.
 			while (val < g_iTrueMax)
 			{
@@ -518,7 +520,7 @@ bool
 				++val;
 			}
 			break;
-		case 4:
+		case CELLMIN_ON_MATCHES:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -537,7 +539,7 @@ bool
 				++val;
 			}
 			break;
-		case 6:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
 			// Both.
 			// Loop through all the players and check that they're
 			// connected, an NPC, and that their name is correct.
@@ -602,9 +604,9 @@ bool
 			tmp = *end,
 			* name = GetNames();
 		*end = '\0';
-		switch (gOptions & 6)
+		switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES))
 		{
-		case 0:
+		case SSCANF_OPTIONS_NONE:
 			// Original.
 			while (val < g_iTrueMax)
 			{
@@ -618,7 +620,7 @@ bool
 				++val;
 			}
 			break;
-		case 2:
+		case MATCH_NAME_PARTIAL:
 			// Partial matches.
 			while (val < g_iTrueMax)
 			{
@@ -632,7 +634,7 @@ bool
 				++val;
 			}
 			break;
-		case 4:
+		case CELLMIN_ON_MATCHES:
 			// Multiple matches.
 			while (val < g_iTrueMax)
 			{
@@ -651,7 +653,7 @@ bool
 				++val;
 			}
 			break;
-		case 6:
+		case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
 			// Both.
 			// Loop through all the players and check that they're
 			// connected, an NPC, and that their name is correct.
@@ -931,7 +933,7 @@ bool
 	{
 		return false;
 	}
-	if (gOptions & 1) DoU(input, ret, 0);
+	if (gOptions & OLD_DEFAULT_NAME) DoU(input, ret, 0);
 	else DoN(input, ret);
 	return GetReturnDefault(input);
 }
@@ -943,7 +945,7 @@ bool
 	{
 		return false;
 	}
-	if (gOptions & 1) DoQ(input, ret, 0);
+	if (gOptions & OLD_DEFAULT_NAME) DoQ(input, ret, 0);
 	else DoN(input, ret);
 	return GetReturnDefault(input);
 }
@@ -955,7 +957,7 @@ bool
 	{
 		return false;
 	}
-	if (gOptions & 1) DoR(input, ret, 0);
+	if (gOptions & OLD_DEFAULT_NAME) DoR(input, ret, 0);
 	else DoN(input, ret);
 	return GetReturnDefault(input);
 }

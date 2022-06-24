@@ -52,7 +52,7 @@
 extern logprintf_t
 	logprintf;
 
-extern int
+extern E_SSCANF_OPTIONS
 	gOptions;
 
 bool
@@ -122,7 +122,7 @@ bool
 			{
 				if (opts)
 				{
-					if (gOptions & 16)
+					if (gOptions & OLD_DEFAULT_KUSTOM)
 					{
 						char
 							func[32];

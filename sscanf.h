@@ -66,11 +66,6 @@ typedef
 #define FLOAT_NAN_E             (0x7FFFFFFF)
 #define FLOAT_NEGATIVE_INFINITY (FLOAT_NEG_INFINITY)
 
-#define SSCANF_QUIET 0
-
-//void SscanfWarning(char const *, ...);
-//void SscanfError(char const *, ...);
-
 #define SscanfWarning(str,...) \
 	do																								                    \
 	{																								                    \
