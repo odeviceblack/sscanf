@@ -24,6 +24,7 @@
  *  SA:MP Team past, present and future
  */
 
+#include <string.h>
 #include "utils.h"
 #include "sscanf.h"
 
@@ -81,6 +82,7 @@ int
 bool
 	strstrin(const char * st1, const char * st2, unsigned int n)
 {
+	// `st1` is the complete name.  `st2` is the partial string.  `n` is the partial length.
 	char
 		f = tolower(*st2);
 	while (*st1)
@@ -89,7 +91,8 @@ bool
 		{
 			if (!strincmp(st1, st2, n))
 			{
-				return true;
+				// Check how much of the first string is left.
+				return (int)strlen(st1) - (int)n >= 0;
 			}
 		}
 		++st1;
