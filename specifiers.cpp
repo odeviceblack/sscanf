@@ -396,7 +396,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !strincmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -410,6 +411,7 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
+					int diff = strlen(name) - len;
 					if (*conn && strstrin(name, string, len))
 					{
 						*ret = val;
@@ -424,9 +426,9 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !strincmp(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -442,9 +444,9 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && strstrin(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -461,7 +463,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !strincmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -480,7 +483,8 @@ bool
 				// Both.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && strstrin(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -507,7 +511,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						*ret = val;
 						break;
@@ -522,13 +527,14 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					float diff = GetSimilarity(name, string);
-					if (*conn && diff >= gNameSimilarity)
+					float similarity = GetSimilarity(name, string);
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && similarity >= gNameSimilarity)
 					{
-						if (diff > best)
+						if (similarity > best)
 						{
 							*ret = val;
-							best = diff;
+							best = similarity;
 						}
 					}
 					++conn;
@@ -543,7 +549,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -614,7 +621,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -629,7 +637,8 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && strstrin(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -644,9 +653,9 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -663,9 +672,9 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && strstrin(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -683,7 +692,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -705,7 +715,8 @@ bool
 				// connected, an NPC, and that their name is correct.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && strstrin(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -735,7 +746,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						*ret = val;
 						break;
@@ -751,13 +763,14 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					float diff = GetSimilarity(name, string);
-					if (*conn && *npc && diff >= gNameSimilarity)
+					float similarity = GetSimilarity(name, string);
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && similarity >= gNameSimilarity)
 					{
-						if (diff > best)
+						if (similarity > best)
 						{
 							*ret = val;
-							best = diff;
+							best = similarity;
 						}
 					}
 					++conn;
@@ -773,7 +786,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && *npc && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && *npc && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -835,7 +849,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -850,7 +865,8 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && strstrin(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -865,9 +881,9 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -884,9 +900,9 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && strstrin(name, string, len))
 					{
-						int diff = strlen(name) - len;
 						if (diff < best)
 						{
 							*ret = val;
@@ -904,7 +920,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && !strincmp(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -926,7 +943,8 @@ bool
 				// connected, an NPC, and that their name is correct.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && strstrin(name, string, len))
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && strstrin(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -956,7 +974,8 @@ bool
 				// Original.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						*ret = val;
 						break;
@@ -972,13 +991,14 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					float diff = GetSimilarity(name, string);
-					if (*conn && !*npc && diff >= gNameSimilarity)
+					float similarity = GetSimilarity(name, string);
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && similarity >= gNameSimilarity)
 					{
-						if (diff > best)
+						if (similarity > best)
 						{
 							*ret = val;
-							best = diff;
+							best = similarity;
 						}
 					}
 					++conn;
@@ -994,7 +1014,8 @@ bool
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
-					if (*conn && !*npc && GetSimilarity(name, string) >= gNameSimilarity)
+					int diff = strlen(name) - len;
+					if (*conn && diff >= 0 && !*npc && GetSimilarity(name, string) >= gNameSimilarity)
 					{
 						if (*ret != g_iInvalid)
 						{
