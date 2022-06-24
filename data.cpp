@@ -114,98 +114,98 @@ void
 	{
 		switch (value)
 		{
-			case 1:
-				gOptions |= 1;
-				break;
-			case 0:
-				gOptions &= ~1;
-				break;
-			case -1:
-				if (*(name + 16) == '=')
-				{
-					if (*(name + 17) == '0') gOptions &= ~1;
-					else gOptions |= 1;
-				}
-				else
-				{
-					SscanfError("No option value.");
-				}
+		case 1:
+			gOptions |= 1;
+			break;
+		case 0:
+			gOptions &= ~1;
+			break;
+		case -1:
+			if (*(name + 16) == '=')
+			{
+				if (*(name + 17) == '0') gOptions &= ~1;
+				else gOptions |= 1;
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
 		}
 	}
 	else if (!strincmp(name, "MATCH_NAME_PARTIAL", 18))
 	{
 		switch (value)
 		{
-			case 1:
-				gOptions |= 2;
-				break;
-			case 0:
-				gOptions &= ~2;
-				break;
-			case -1:
-				if (*(name + 18) == '=')
-				{
-					if (*(name + 19) == '0') gOptions &= ~2;
-					else gOptions |= 2;
-				}
-				else
-				{
-					SscanfError("No option value.");
-				}
+		case 1:
+			gOptions |= 2;
+			break;
+		case 0:
+			gOptions &= ~2;
+			break;
+		case -1:
+			if (*(name + 18) == '=')
+			{
+				if (*(name + 19) == '0') gOptions &= ~2;
+				else gOptions |= 2;
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
 		}
 	}
 	else if (!strincmp(name, "CELLMIN_ON_MATCHES", 18))
 	{
 		switch (value)
 		{
-			case 1:
-				gOptions |= 4;
-				break;
-			case 0:
-				gOptions &= ~4;
-				break;
-			case -1:
-				if (*(name + 18) == '=')
-				{
-					if (*(name + 19) == '0') gOptions &= ~4;
-					else gOptions |= 4;
-				}
-				else
-				{
-					SscanfError("No option value.");
-				}
+		case 1:
+			gOptions |= 4;
+			break;
+		case 0:
+			gOptions &= ~4;
+			break;
+		case -1:
+			if (*(name + 18) == '=')
+			{
+				if (*(name + 19) == '0') gOptions &= ~4;
+				else gOptions |= 4;
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
 		}
 	}
 	else if (!strincmp(name, "SSCANF_QUIET", 12))
 	{
 		switch (value)
 		{
-			case 1:
-				logprintf = qlog;
-				gOptions |= 8;
-				break;
-			case 0:
-				logprintf = real_logprintf;
-				gOptions &= ~8;
-				break;
-			case -1:
-				if (*(name + 12) == '=')
+		case 1:
+			logprintf = qlog;
+			gOptions |= 8;
+			break;
+		case 0:
+			logprintf = real_logprintf;
+			gOptions &= ~8;
+			break;
+		case -1:
+			if (*(name + 12) == '=')
+			{
+				if (*(name + 13) == '0')
 				{
-					if (*(name + 13) == '0')
-					{
-						logprintf = real_logprintf;
-						gOptions &= ~8;
-					}
-					else
-					{
-						logprintf = qlog;
-						gOptions |= 8;
-					}
+					logprintf = real_logprintf;
+					gOptions &= ~8;
 				}
 				else
 				{
-					SscanfError("No option value.");
+					logprintf = qlog;
+					gOptions |= 8;
 				}
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
 		}
 	}
 	else if (!strincmp(name, "SSCANF_ALPHA", 12))
@@ -224,22 +224,22 @@ void
 	{
 		switch (value)
 		{
-			case 1:
-				gOptions |= 16;
-				break;
-			case 0:
-				gOptions &= ~16;
-				break;
-			case -1:
-				if (*(name + 18) == '=')
-				{
-					if (*(name + 19) == '0') gOptions &= ~16;
-					else gOptions |= 16;
-				}
-				else
-				{
-					SscanfError("No option value.");
-				}
+		case 1:
+			gOptions |= 16;
+			break;
+		case 0:
+			gOptions &= ~16;
+			break;
+		case -1:
+			if (*(name + 18) == '=')
+			{
+				if (*(name + 19) == '0') gOptions &= ~16;
+				else gOptions |= 16;
+			}
+			else
+			{
+				SscanfError("No option value.");
+			}
 		}
 	}
 	else
@@ -455,16 +455,16 @@ int
 		neg = 1;
 	switch (*str)
 	{
-		case '-':
-			neg = -1;
-			// FALLTHROUGH
-		case '+':
-			// Check there is valid data after
-			if (((unsigned char)(*(++str) - '0')) >= 10)
-			{
-				// Just return now, the caller will recognise this as bad.
-				return 0;
-			}
+	case '-':
+		neg = -1;
+		// FALLTHROUGH
+	case '+':
+		// Check there is valid data after
+		if (((unsigned char)(*(++str) - '0')) >= 10)
+		{
+			// Just return now, the caller will recognise this as bad.
+			return 0;
+		}
 	}
 	*input = str;
 	return GetDecValue(input) * neg;
@@ -502,16 +502,16 @@ int
 		neg = 1;
 	switch (*str)
 	{
-		case '-':
-			neg = -1;
-			// FALLTHROUGH
-		case '+':
-			// Check there is valid data after
-			if (((unsigned char)(*(++str) - '0')) >= 8)
-			{
-				// Just return now, the caller will recognise this as bad.
-				return 0;
-			}
+	case '-':
+		neg = -1;
+		// FALLTHROUGH
+	case '+':
+		// Check there is valid data after
+		if (((unsigned char)(*(++str) - '0')) >= 8)
+		{
+			// Just return now, the caller will recognise this as bad.
+			return 0;
+		}
 	}
 	*input = str;
 	return GetOctValue(input) * neg;
@@ -529,63 +529,63 @@ int
 	{
 		switch (*str)
 		{
-			case '0':
-				val = (val * 16) + 0x00;
-				break;
-			case '1':
-				val = (val * 16) + 0x01;
-				break;
-			case '2':
-				val = (val * 16) + 0x02;
-				break;
-			case '3':
-				val = (val * 16) + 0x03;
-				break;
-			case '4':
-				val = (val * 16) + 0x04;
-				break;
-			case '5':
-				val = (val * 16) + 0x05;
-				break;
-			case '6':
-				val = (val * 16) + 0x06;
-				break;
-			case '7':
-				val = (val * 16) + 0x07;
-				break;
-			case '8':
-				val = (val * 16) + 0x08;
-				break;
-			case '9':
-				val = (val * 16) + 0x09;
-				break;
-			case 'a':
-			case 'A':
-				val = (val * 16) + 0x0A;
-				break;
-			case 'b':
-			case 'B':
-				val = (val * 16) + 0x0B;
-				break;
-			case 'c':
-			case 'C':
-				val = (val * 16) + 0x0C;
-				break;
-			case 'd':
-			case 'D':
-				val = (val * 16) + 0x0D;
-				break;
-			case 'e':
-			case 'E':
-				val = (val * 16) + 0x0E;
-				break;
-			case 'f':
-			case 'F':
-				val = (val * 16) + 0x0F;
-				break;
-			default:
-				// UGLY UGLY UGLY!
-				goto sscanf_hex_switch;
+		case '0':
+			val = (val * 16) + 0x00;
+			break;
+		case '1':
+			val = (val * 16) + 0x01;
+			break;
+		case '2':
+			val = (val * 16) + 0x02;
+			break;
+		case '3':
+			val = (val * 16) + 0x03;
+			break;
+		case '4':
+			val = (val * 16) + 0x04;
+			break;
+		case '5':
+			val = (val * 16) + 0x05;
+			break;
+		case '6':
+			val = (val * 16) + 0x06;
+			break;
+		case '7':
+			val = (val * 16) + 0x07;
+			break;
+		case '8':
+			val = (val * 16) + 0x08;
+			break;
+		case '9':
+			val = (val * 16) + 0x09;
+			break;
+		case 'a':
+		case 'A':
+			val = (val * 16) + 0x0A;
+			break;
+		case 'b':
+		case 'B':
+			val = (val * 16) + 0x0B;
+			break;
+		case 'c':
+		case 'C':
+			val = (val * 16) + 0x0C;
+			break;
+		case 'd':
+		case 'D':
+			val = (val * 16) + 0x0D;
+			break;
+		case 'e':
+		case 'E':
+			val = (val * 16) + 0x0E;
+			break;
+		case 'f':
+		case 'F':
+			val = (val * 16) + 0x0F;
+			break;
+		default:
+			// UGLY UGLY UGLY!
+			goto sscanf_hex_switch;
 		}
 		++str;
 	}
@@ -607,16 +607,16 @@ int
 		neg = 1;
 	switch (*str)
 	{
-		case '-':
-			neg = -1;
-			// FALLTHROUGH
-		case '+':
-			// Check there is valid data after
-			if (((unsigned char)(*(++str) - '0')) >= 10)
-			{
-				// Just return now, the caller will recognise this as bad.
-				return 0;
-			}
+	case '-':
+		neg = -1;
+		// FALLTHROUGH
+	case '+':
+		// Check there is valid data after
+		if (((unsigned char)(*(++str) - '0')) >= 10)
+		{
+			// Just return now, the caller will recognise this as bad.
+			return 0;
+		}
 	}
 	if (*str == '0')
 	{
@@ -837,77 +837,77 @@ int
 		neg = 1;
 	switch (*str)
 	{
-		case '-':
-			neg = -1;
-			// FALLTHROUGH
-		case '+':
-			// Check there is valid data after
-			if (((unsigned char)(*(++str) - '0')) >= 10)
-			{
-				// Just return now, the caller will recognise this as bad.
-				return 0;
-			}
+	case '-':
+		neg = -1;
+		// FALLTHROUGH
+	case '+':
+		// Check there is valid data after
+		if (((unsigned char)(*(++str) - '0')) >= 10)
+		{
+			// Just return now, the caller will recognise this as bad.
+			return 0;
+		}
 	}
 	if (*str == '0')
 	{
 		++str;
 		switch (*str)
 		{
-			case 'x':
-			case 'X':
-				// Hex.
+		case 'x':
+		case 'X':
+			// Hex.
+			++str;
+			if (((*str >= '0') && (*str <= '9')) || (((*str | 0x20) >= 'a') && ((*str | 0x20) <= 'f')))
+			{
+				*input = str;
+				return GetHexValue(input) * neg;
+			}
+			else
+			{
+				*input = str - 1;
+				return 0;
+			}
+		case 'b':
+		case 'B':
+			// Bool.
+			if (neg == -1)
+			{
+				// Can't have negative booleans.
+				*input = str;
+				return 0;
+			}
+			else
+			{
 				++str;
-				if (((*str >= '0') && (*str <= '9')) || (((*str | 0x20) >= 'a') && ((*str | 0x20) <= 'f')))
+				if ((*str == '0') || (*str == '1'))
 				{
 					*input = str;
-					return GetHexValue(input) * neg;
+					return (int)GetBoolValue(input);
 				}
 				else
 				{
 					*input = str - 1;
 					return 0;
 				}
-			case 'b':
-			case 'B':
-				// Bool.
-				if (neg == -1)
-				{
-					// Can't have negative booleans.
-					*input = str;
-					return 0;
-				}
-				else
-				{
-					++str;
-					if ((*str == '0') || (*str == '1'))
-					{
-						*input = str;
-						return (int)GetBoolValue(input);
-					}
-					else
-					{
-						*input = str - 1;
-						return 0;
-					}
-				}
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-				// Octal.
-				*input = str;
-				return GetOctValue(input) * neg;
-			case '8':
-			case '9':
-				// Decimal.
-				break;
-			default:
-				*input = str;
-				return 0;
+			}
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+			// Octal.
+			*input = str;
+			return GetOctValue(input) * neg;
+		case '8':
+		case '9':
+			// Decimal.
+			break;
+		default:
+			*input = str;
+			return 0;
 		}
 	}
 	else if ((*str < '0') || (*str > '9'))
@@ -930,54 +930,54 @@ bool
 		ret;
 	switch (*string++)
 	{
-		case '0':
-			// Set the value to false till we decide otherwise.
-			ret = false;
-			while (!IsSpacer(*string))
+	case '0':
+		// Set the value to false till we decide otherwise.
+		ret = false;
+		while (!IsSpacer(*string))
+		{
+			if (*string++ != '0')
 			{
-				if (*string++ != '0')
-				{
-					// Value is not false, thus is true.
-					ret = true;
-					break;
-				}
+				// Value is not false, thus is true.
+				ret = true;
+				break;
 			}
-			// Let the cleanup code below handle excess chars.
-			break;
-		case 'f':
-		case 'F':
-			// Default to true unless we find "false" exactly.
-			ret = true;
-			if ((*string | 0x20) == 'a')
+		}
+		// Let the cleanup code below handle excess chars.
+		break;
+	case 'f':
+	case 'F':
+		// Default to true unless we find "false" exactly.
+		ret = true;
+		if ((*string | 0x20) == 'a')
+		{
+			++string;
+			if ((*string | 0x20) == 'l')
 			{
 				++string;
-				if ((*string | 0x20) == 'l')
+				if ((*string | 0x20) == 's')
 				{
 					++string;
-					if ((*string | 0x20) == 's')
+					if ((*string | 0x20) == 'e')
 					{
 						++string;
-						if ((*string | 0x20) == 'e')
+						// We have the whole word, check that it's on its
+						// own, i.e. is followed by a space or delimiter
+						// Note that if your delimiter is in the word
+						// "false", you may have a bug here but they seem
+						// like odd delimiter characters tbh.
+						if (IsSpacer(*string))
 						{
-							++string;
-							// We have the whole word, check that it's on its
-							// own, i.e. is followed by a space or delimiter
-							// Note that if your delimiter is in the word
-							// "false", you may have a bug here but they seem
-							// like odd delimiter characters tbh.
-							if (IsSpacer(*string))
-							{
-								// Exact word found on its own so save the fact
-								// that it's false.
-								ret = false;
-							}
+							// Exact word found on its own so save the fact
+							// that it's false.
+							ret = false;
 						}
 					}
 				}
 			}
-			break;
-		default:
-			ret = true;
+		}
+		break;
+	default:
+		ret = true;
 		break;
 	}
 	// Skip the rest of the data.

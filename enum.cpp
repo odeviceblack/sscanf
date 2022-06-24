@@ -125,477 +125,477 @@ int
 		{
 			switch (*format++)
 			{
-				case 'L':
-					DX(bool, L)
-					// FALLTHROUGH
-				case 'l':
-					DOV(bool, L)
-					break;
-				case 'B':
-					DX(int, B)
-					// FALLTHROUGH
-				case 'b':
-					DO(int, B)
-				case 'N':
-					DX(int, N)
-					// FALLTHROUGH
-				case 'n':
-					DO(int, N)
-				case 'C':
-					DX(char, C)
-					// FALLTHROUGH
-				case 'c':
-					DO(char, C)
-				case 'I':
-				case 'D':
-					DX(int, I)
-					// FALLTHROUGH
-				case 'i':
-				case 'd':
-					DO(int, I)
-				case 'H':
-				case 'X':
-					DX(int, H)
-					// FALLTHROUGH
-				case 'h':
-				case 'x':
-					DO(int, H)
-				case 'M':
-					DX(unsigned int, M)
-					// FALLTHROUGH
-				case 'm':
-					DO(unsigned int, M)
-				case 'O':
-					DX(int, O)
-					// FALLTHROUGH
-				case 'o':
-					DO(int, O)
-				case 'F':
-					DXF(double, F)
-					// FALLTHROUGH
-				case 'f':
-					DOF(double, F)
-				case 'G':
-					DXF(double, G)
-					// FALLTHROUGH
-				case 'g':
-					DOF(double, G)
-				case '{':
-					if (doSave)
+			case 'L':
+				DX(bool, L)
+				// FALLTHROUGH
+			case 'l':
+				DOV(bool, L)
+				break;
+			case 'B':
+				DX(int, B)
+				// FALLTHROUGH
+			case 'b':
+				DO(int, B)
+			case 'N':
+				DX(int, N)
+				// FALLTHROUGH
+			case 'n':
+				DO(int, N)
+			case 'C':
+				DX(char, C)
+				// FALLTHROUGH
+			case 'c':
+				DO(char, C)
+			case 'I':
+			case 'D':
+				DX(int, I)
+				// FALLTHROUGH
+			case 'i':
+			case 'd':
+				DO(int, I)
+			case 'H':
+			case 'X':
+				DX(int, H)
+				// FALLTHROUGH
+			case 'h':
+			case 'x':
+				DO(int, H)
+			case 'M':
+				DX(unsigned int, M)
+				// FALLTHROUGH
+			case 'm':
+				DO(unsigned int, M)
+			case 'O':
+				DX(int, O)
+				// FALLTHROUGH
+			case 'o':
+				DO(int, O)
+			case 'F':
+				DXF(double, F)
+				// FALLTHROUGH
+			case 'f':
+				DOF(double, F)
+			case 'G':
+				DXF(double, G)
+				// FALLTHROUGH
+			case 'g':
+				DOF(double, G)
+			case '{':
+				if (doSave)
+				{
+					doSave = false;
+				}
+				else if (cptr)
+				{
+					// Already in a quiet section.
+					SscanfWarning("Can't have nestled quiet sections.");
+				}
+				continue;
+			case '}':
+				if (doSave)
+				{
+					SscanfWarning("Not in a quiet section.");
+				}
+				else
+				{
+					if (cptr)
 					{
-						doSave = false;
-					}
-					else if (cptr)
-					{
-						// Already in a quiet section.
-						SscanfWarning("Can't have nestled quiet sections.");
-					}
-					continue;
-				case '}':
-					if (doSave)
-					{
-						SscanfWarning("Not in a quiet section.");
+						doSave = true;
 					}
 					else
 					{
-						if (cptr)
-						{
-							doSave = true;
-						}
-						else
-						{
-							SscanfWarning("Can't remove quiet in enum.");
-						}
+						SscanfWarning("Can't remove quiet in enum.");
 					}
-					continue;
-				case 'P':
-					{
-						ResetDelimiter();
-						char *
-							t = GetMultiType(&format);
-						if (t) AddDelimiters(t);
-						else return SSCANF_FAIL_RETURN;
-						continue;
-					}
-					//SscanfWarning("You can't have an optional delimiter.");
-					// FALLTHROUGH
-				case 'p':
-					// 'P' doesn't exist.
-					// Theoretically, for compatibility, this should be:
-					// p<delimiter>, but that will break backwards
-					// compatibility with anyone doing "p<" to use '<' as a
-					// delimiter (doesn't matter how rare that may be).  Also,
-					// writing deprecation code and both the new and old code
-					// is more trouble than it's worth, and it's slow.
-					// UPDATE: I wrote the "GetSingleType" code for 'a' and
-					// figured out a way to support legacy and new code, while
-					// still maintaining support for the legacy "p<" separator,
-					// so here it is:
+				}
+				continue;
+			case 'P':
+				{
 					ResetDelimiter();
-					AddDelimiter(GetSingleType(&format));
+					char *
+						t = GetMultiType(&format);
+					if (t) AddDelimiters(t);
+					else return SSCANF_FAIL_RETURN;
 					continue;
-				case 'K':
-					OPTIONAL_INVALID;
-					// FALLTHROUGH
-				case 'k':
-					//DOF(double, K)
-					if (defaults && !(gOptions & 16))
+				}
+				//SscanfWarning("You can't have an optional delimiter.");
+				// FALLTHROUGH
+			case 'p':
+				// 'P' doesn't exist.
+				// Theoretically, for compatibility, this should be:
+				// p<delimiter>, but that will break backwards
+				// compatibility with anyone doing "p<" to use '<' as a
+				// delimiter (doesn't matter how rare that may be).  Also,
+				// writing deprecation code and both the new and old code
+				// is more trouble than it's worth, and it's slow.
+				// UPDATE: I wrote the "GetSingleType" code for 'a' and
+				// figured out a way to support legacy and new code, while
+				// still maintaining support for the legacy "p<" separator,
+				// so here it is:
+				ResetDelimiter();
+				AddDelimiter(GetSingleType(&format));
+				continue;
+			case 'K':
+				OPTIONAL_INVALID;
+				// FALLTHROUGH
+			case 'k':
+				//DOF(double, K)
+				if (defaults && !(gOptions & 16))
+				{
+					GetMultiType(&format);
+					if (doSave)
 					{
-						GetMultiType(&format);
-						if (doSave)
-						{
-							int
-								b;
-							DoI(&string, &b);
-							*cptr++ = b;
-						}
-						else
-						{
-							int
-								b;
-							DoI(&string, &b);
-						}
+						int
+							b;
+						DoI(&string, &b);
+						*cptr++ = b;
+					}
+					else
+					{
+						int
+							b;
+						DoI(&string, &b);
+					}
+					*(format - 1) = '>';
+					break;
+				}
+				else if (doSave)
+				{
+					if (DoK(g_aCurAMX, &format, &string, cptr, false, false))
+					{
+						*(format - 1) = '>';
+						++cptr;
+						break;
+					}
+				}
+				else
+				{
+					if (DoK(g_aCurAMX, &format, &string, NULL, false, false))
+					{
 						*(format - 1) = '>';
 						break;
 					}
-					else if (doSave)
+				}
+				*input = string;
+				return SSCANF_FAIL_RETURN;
+			case 'S':
+				OPTIONAL_INVALID;
+				// FALLTHROUGH
+			case 's':
+				{
+					// Get the length.
+					int
+						lole = GetLength(&format, args);
+					if (!lole)
 					{
-						if (DoK(g_aCurAMX, &format, &string, cptr, false, false))
+						return SSCANF_FAIL_RETURN;
+					}
+					char *
+						dest;
+					DoS(&string, &dest, lole, IsEnd(*format));
+					// Send the string to PAWN.
+					if (doSave)
+					{
+						// Save the string.
+						amx_SetString(cptr, dest, 0, 0, lole);
+						// Increase the pointer by the MAXIMUM length of
+						// the string - that's how enum strings work.
+						cptr += lole;
+					}
+				}
+				break;
+			case 'Z':
+				OPTIONAL_INVALID;
+				// FALLTHROUGH
+			case 'z':
+				{
+					// Get the length.
+					int
+						lole = GetLength(&format, args);
+					if (!lole)
+					{
+						return SSCANF_FAIL_RETURN;
+					}
+					char *
+						dest;
+					DoS(&string, &dest, lole, IsEnd(*format));
+					// Send the string to PAWN.
+					if (doSave)
+					{
+						// Save the string.
+						amx_SetString(cptr, dest, 1, 0, lole);
+						// Increase the pointer by the MAXIMUM length of
+						// the string - that's how enum strings work.
+						cptr += lole;
+					}
+				}
+				break;
+			case 'U':
+				DX(int, U)
+				// FALLTHROUGH
+			case 'u':
+				if (*format == '[')
+				{
+					SscanfWarning("User arrays are not supported in enums.");
+					SkipLength(&format);
+				}
+				#define DoU(m,n) DoU(m,n,0)
+				if (defaults && !(gOptions & 1))
+				{
+					DOV(int, I)
+				}
+				else
+				{
+					DOV(int, U)
+				}
+				#undef DoU
+				break;
+			case 'Q':
+				DX(int, Q)
+				// FALLTHROUGH
+			case 'q':
+				if (*format == '[')
+				{
+					SscanfWarning("User arrays are not supported in enums.");
+					SkipLength(&format);
+				}
+				#define DoQ(m,n) DoQ(m,n,0)
+				if (defaults && !(gOptions & 1))
+				{
+					DOV(int, I)
+				}
+				else
+				{
+					DOV(int, Q)
+				}
+				#undef DoQ
+				break;
+			case 'R':
+				DX(int, R)
+				// FALLTHROUGH
+			case 'r':
+				if (*format == '[')
+				{
+					SscanfWarning("User arrays are not supported in enums.");
+					SkipLength(&format);
+				}
+				#define DoR(m,n) DoR(m,n,0)
+				if (defaults && !(gOptions & 1))
+				{
+					DOV(int, I)
+				}
+				else
+				{
+					DOV(int, R)
+				}
+				#undef DoR
+				break;
+			case 'A':
+			case 'a':
+				SscanfError("Arrays are not supported in enums.");
+				*input = string;
+				return SSCANF_FAIL_RETURN;
+			case 'E':
+			case 'e':
+				SscanfError("Enums are not supported in enums.");
+				*input = string;
+				return SSCANF_FAIL_RETURN;
+			case '\'':
+				// Find the end of the literal.
+				{
+					char
+						* str = format,
+						* write = format;
+					bool
+						escape = false;
+					while (!IsEnd(*str) && (escape || *str != '\''))
+					{
+						if (*str == '\\')
 						{
-							*(format - 1) = '>';
-							++cptr;
-							break;
-						}
-					}
-					else
-					{
-						if (DoK(g_aCurAMX, &format, &string, NULL, false, false))
-						{
-							*(format - 1) = '>';
-							break;
-						}
-					}
-					*input = string;
-					return SSCANF_FAIL_RETURN;
-				case 'S':
-					OPTIONAL_INVALID;
-					// FALLTHROUGH
-				case 's':
-					{
-						// Get the length.
-						int
-							lole = GetLength(&format, args);
-						if (!lole)
-						{
-							return SSCANF_FAIL_RETURN;
-						}
-						char *
-							dest;
-						DoS(&string, &dest, lole, IsEnd(*format));
-						// Send the string to PAWN.
-						if (doSave)
-						{
-							// Save the string.
-							amx_SetString(cptr, dest, 0, 0, lole);
-							// Increase the pointer by the MAXIMUM length of
-							// the string - that's how enum strings work.
-							cptr += lole;
-						}
-					}
-					break;
-				case 'Z':
-					OPTIONAL_INVALID;
-					// FALLTHROUGH
-				case 'z':
-					{
-						// Get the length.
-						int
-							lole = GetLength(&format, args);
-						if (!lole)
-						{
-							return SSCANF_FAIL_RETURN;
-						}
-						char *
-							dest;
-						DoS(&string, &dest, lole, IsEnd(*format));
-						// Send the string to PAWN.
-						if (doSave)
-						{
-							// Save the string.
-							amx_SetString(cptr, dest, 1, 0, lole);
-							// Increase the pointer by the MAXIMUM length of
-							// the string - that's how enum strings work.
-							cptr += lole;
-						}
-					}
-					break;
-				case 'U':
-					DX(int, U)
-					// FALLTHROUGH
-				case 'u':
-					if (*format == '[')
-					{
-						SscanfWarning("User arrays are not supported in enums.");
-						SkipLength(&format);
-					}
-					#define DoU(m,n) DoU(m,n,0)
-					if (defaults && !(gOptions & 1))
-					{
-						DOV(int, I)
-					}
-					else
-					{
-						DOV(int, U)
-					}
-					#undef DoU
-					break;
-				case 'Q':
-					DX(int, Q)
-					// FALLTHROUGH
-				case 'q':
-					if (*format == '[')
-					{
-						SscanfWarning("User arrays are not supported in enums.");
-						SkipLength(&format);
-					}
-					#define DoQ(m,n) DoQ(m,n,0)
-					if (defaults && !(gOptions & 1))
-					{
-						DOV(int, I)
-					}
-					else
-					{
-						DOV(int, Q)
-					}
-					#undef DoQ
-					break;
-				case 'R':
-					DX(int, R)
-					// FALLTHROUGH
-				case 'r':
-					if (*format == '[')
-					{
-						SscanfWarning("User arrays are not supported in enums.");
-						SkipLength(&format);
-					}
-					#define DoR(m,n) DoR(m,n,0)
-					if (defaults && !(gOptions & 1))
-					{
-						DOV(int, I)
-					}
-					else
-					{
-						DOV(int, R)
-					}
-					#undef DoR
-					break;
-				case 'A':
-				case 'a':
-					SscanfError("Arrays are not supported in enums.");
-					*input = string;
-					return SSCANF_FAIL_RETURN;
-				case 'E':
-				case 'e':
-					SscanfError("Enums are not supported in enums.");
-					*input = string;
-					return SSCANF_FAIL_RETURN;
-				case '\'':
-					// Find the end of the literal.
-					{
-						char
-							* str = format,
-							* write = format;
-						bool
-							escape = false;
-						while (!IsEnd(*str) && (escape || *str != '\''))
-						{
-							if (*str == '\\')
+							if (escape)
 							{
-								if (escape)
-								{
-									// "\\" - Go back a step to write this
-									// character over the last character (which
-									// just happens to be the same character).
-									--write;
-								}
-								escape = !escape;
+								// "\\" - Go back a step to write this
+								// character over the last character (which
+								// just happens to be the same character).
+								--write;
 							}
-							else
-							{
-								if (*str == '\'')
-								{
-									// Overwrite the escape character with the
-									// quote character.  Must have been
-									// preceeded by a slash or it wouldn't have
-									// got to here in the loop.
-									--write;
-								}
-								escape = false;
-							}
-							// Copy the string over itself to get rid of excess
-							// escape characters.
-							// Not sure if it's faster in the average case to
-							// always do the copy or check if it's needed.
-							// This write is always safe as it makes the string
-							// shorter, so we'll never run out of space.  It
-							// will also not overwrite the original string.
-							*write++ = *str++;
-						}
-						if (*str == '\'')
-						{
-							// Correct end.  Make a shorter string to search
-							// for.
-							*write = '\0';
-							// Find the current section of format in string.
-							char *
-								find = strstr(string, format);
-							if (!find)
-							{
-								// Didn't find the string.
-								*input = string;
-								return SSCANF_FAIL_RETURN;
-							}
-							// Found the string.  Update the current string
-							// position to the length of the search term
-							// further along from the start of the term.  Use
-							// "write" here as we want the escaped string
-							// length.
-							string = find + (write - format);
-							// Move to after the end of the search string.  Use
-							// "str" here as we want the unescaped string
-							// length.
-							format = str + 1;
+							escape = !escape;
 						}
 						else
 						{
-							SscanfWarning("Unclosed string literal.");
-							char *
-								find = strstr(string, format);
-							if (!find)
+							if (*str == '\'')
 							{
-								*input = string;
-								return SSCANF_FAIL_RETURN;
+								// Overwrite the escape character with the
+								// quote character.  Must have been
+								// preceeded by a slash or it wouldn't have
+								// got to here in the loop.
+								--write;
 							}
-							string = find + (write - format);
-							format = str;
+							escape = false;
 						}
+						// Copy the string over itself to get rid of excess
+						// escape characters.
+						// Not sure if it's faster in the average case to
+						// always do the copy or check if it's needed.
+						// This write is always safe as it makes the string
+						// shorter, so we'll never run out of space.  It
+						// will also not overwrite the original string.
+						*write++ = *str++;
 					}
-					break;
-				case '?':
-					SscanfError("Options are not supported in enums.");
-					return SSCANF_FAIL_RETURN;
-				case '%':
-					SscanfWarning("sscanf specifiers do not require '%' before them.");
-					continue;
-				case '-':
+					if (*str == '\'')
 					{
-						int
-							len = 1;
-						switch (*format++)
+						// Correct end.  Make a shorter string to search
+						// for.
+						*write = '\0';
+						// Find the current section of format in string.
+						char *
+							find = strstr(string, format);
+						if (!find)
 						{
-							case 'i':
-							case 'f':
-							case 'l':
-							case 'b':
-							case 'n':
-							case 'c':
-							case 'd':
-							case 'h':
-							case 'm':
-							case 'x':
-							case 'o':
-							case 'g':
-								break;
-							case 'I':
-							case 'F':
-							case 'L':
-							case 'B':
-							case 'N':
-							case 'C':
-							case 'D':
-							case 'H':
-							case 'M':
-							case 'X':
-							case 'O':
-							case 'G':
-								OPTIONAL_INVALID;
-								break;
-							case 'K':
-								OPTIONAL_INVALID;
-							case 'k':
-								GetMultiType(&format);
-								break;
-							case 'P':
-							case 'p':
-								SscanfWarning("A minus delimiter makes no sense.");
-								len = 0;
-								break;
-							case '{':
-							case '}':
-								SscanfWarning("A minus quiet section makes no sense.");
-								len = 0;
-								break;
-							case 'U':
-							case 'Q':
-							case 'R':
-								OPTIONAL_INVALID;
-							case 'u':
-							case 'q':
-							case 'r':
-								if (*format == '[')
-								{
-									len = GetLength(&format, args);
-								}
-								break;
-							case 'A':
-								OPTIONAL_INVALID;
-							case 'a':
-								len = GetLength(&format, args);
-								break;
-							case 'E':
-								OPTIONAL_INVALID;
-							case 'e':
-								SscanfError("Enums are not supported in enums.");
-								*input = string;
-								return SSCANF_FAIL_RETURN;
-							case 'Z':
-								OPTIONAL_INVALID;
-								// FALLTHROUGH
-							case 'z':
-								len = GetLength(&format, args);
-								break;
-							case 'S':
-								OPTIONAL_INVALID;
-								// FALLTHROUGH
-							case 's':
-								len = GetLength(&format, args);
-								break;
-							case '?':
-								SscanfWarning("A minus option makes no sense.");
-								len = 0;
-								break;
-							case '%':
-								SscanfWarning("sscanf specifiers do not require '%' before them.");
-								len = 0;
-								break;
-							case '-':
-								SscanfWarning("A minus minus makes no sense.");
-								len = 0;
-								break;
-							default:
-								SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
-								len = 0;
-								break;
+							// Didn't find the string.
+							*input = string;
+							return SSCANF_FAIL_RETURN;
 						}
-						if (doSave)
-						{
-							cptr += len;
-						}
+						// Found the string.  Update the current string
+						// position to the length of the search term
+						// further along from the start of the term.  Use
+						// "write" here as we want the escaped string
+						// length.
+						string = find + (write - format);
+						// Move to after the end of the search string.  Use
+						// "str" here as we want the unescaped string
+						// length.
+						format = str + 1;
 					}
-					break;
-				default:
-					SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
-					continue;
+					else
+					{
+						SscanfWarning("Unclosed string literal.");
+						char *
+							find = strstr(string, format);
+						if (!find)
+						{
+							*input = string;
+							return SSCANF_FAIL_RETURN;
+						}
+						string = find + (write - format);
+						format = str;
+					}
+				}
+				break;
+			case '?':
+				SscanfError("Options are not supported in enums.");
+				return SSCANF_FAIL_RETURN;
+			case '%':
+				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				continue;
+			case '-':
+				{
+					int
+						len = 1;
+					switch (*format++)
+					{
+					case 'i':
+					case 'f':
+					case 'l':
+					case 'b':
+					case 'n':
+					case 'c':
+					case 'd':
+					case 'h':
+					case 'm':
+					case 'x':
+					case 'o':
+					case 'g':
+						break;
+					case 'I':
+					case 'F':
+					case 'L':
+					case 'B':
+					case 'N':
+					case 'C':
+					case 'D':
+					case 'H':
+					case 'M':
+					case 'X':
+					case 'O':
+					case 'G':
+						OPTIONAL_INVALID;
+						break;
+					case 'K':
+						OPTIONAL_INVALID;
+					case 'k':
+						GetMultiType(&format);
+						break;
+					case 'P':
+					case 'p':
+						SscanfWarning("A minus delimiter makes no sense.");
+						len = 0;
+						break;
+					case '{':
+					case '}':
+						SscanfWarning("A minus quiet section makes no sense.");
+						len = 0;
+						break;
+					case 'U':
+					case 'Q':
+					case 'R':
+						OPTIONAL_INVALID;
+					case 'u':
+					case 'q':
+					case 'r':
+						if (*format == '[')
+						{
+							len = GetLength(&format, args);
+						}
+						break;
+					case 'A':
+						OPTIONAL_INVALID;
+					case 'a':
+						len = GetLength(&format, args);
+						break;
+					case 'E':
+						OPTIONAL_INVALID;
+					case 'e':
+						SscanfError("Enums are not supported in enums.");
+						*input = string;
+						return SSCANF_FAIL_RETURN;
+					case 'Z':
+						OPTIONAL_INVALID;
+						// FALLTHROUGH
+					case 'z':
+						len = GetLength(&format, args);
+						break;
+					case 'S':
+						OPTIONAL_INVALID;
+						// FALLTHROUGH
+					case 's':
+						len = GetLength(&format, args);
+						break;
+					case '?':
+						SscanfWarning("A minus option makes no sense.");
+						len = 0;
+						break;
+					case '%':
+						SscanfWarning("sscanf specifiers do not require '%' before them.");
+						len = 0;
+						break;
+					case '-':
+						SscanfWarning("A minus minus makes no sense.");
+						len = 0;
+						break;
+					default:
+						SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+						len = 0;
+						break;
+					}
+					if (doSave)
+					{
+						cptr += len;
+					}
+				}
+				break;
+			default:
+				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				continue;
 			}
 			// Loop cleanup - only skip one spacer so that we can detect
 			// multiple explicit delimiters in a row, for example:
@@ -704,14 +704,14 @@ bool
 				// Do this twice.  Once to get the lengths, once for the data.
 				switch (DoEnumValues(type, &opts, cptr, true, args))
 				{
-					case SSCANF_TRUE_RETURN:
-						break;
-					case SSCANF_CONT_RETURN:
-						SscanfError("Insufficient default values.");
-						// FALLTHROUGH
-					default:
-						RestoreDelimiter();
-						return false;
+				case SSCANF_TRUE_RETURN:
+					break;
+				case SSCANF_CONT_RETURN:
+					SscanfError("Insufficient default values.");
+					// FALLTHROUGH
+				default:
+					RestoreDelimiter();
+					return false;
 				}
 				RestoreDelimiter();
 				if (cptr)
@@ -737,20 +737,20 @@ bool
 		args.Restore();
 		switch (DoEnumValues(type, input, cptr, false, args))
 		{
-			case SSCANF_TRUE_RETURN:
+		case SSCANF_TRUE_RETURN:
+			if (cptr)
+				args.Next();
+			return true;
+		case SSCANF_CONT_RETURN:
+			if (optional)
+			{
 				if (cptr)
 					args.Next();
 				return true;
-			case SSCANF_CONT_RETURN:
-				if (optional)
-				{
-					if (cptr)
-						args.Next();
-					return true;
-				}
-				// FALLTHROUGH
-			default:
-				return false;
+			}
+			// FALLTHROUGH
+		default:
+			return false;
 		}
 	}
 	return true;

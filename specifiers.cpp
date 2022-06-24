@@ -155,53 +155,53 @@ bool
 		temp = 0;
 	switch (*string)
 	{
-		case 'N':
-		case 'n':
-			if (strichecks(string, "NAN_E"))
-			{
-				*input += 5;
-				temp = FLOAT_NAN_E;
-			}
-			else if (strichecks(string, "NAN"))
-			{
-				*input += 3;
-				temp = FLOAT_NAN;
-			}
-			else if (strichecks(string, "NEG_INFINITY"))
-			{
-				*input += 12;
-				temp = FLOAT_NEG_INFINITY;
-			}
-			else if (strichecks(string, "NEGATIVE_INFINITY"))
-			{
-				*input += 17;
-				temp = FLOAT_NEG_INFINITY;
-			}
+	case 'N':
+	case 'n':
+		if (strichecks(string, "NAN_E"))
+		{
+			*input += 5;
+			temp = FLOAT_NAN_E;
+		}
+		else if (strichecks(string, "NAN"))
+		{
+			*input += 3;
+			temp = FLOAT_NAN;
+		}
+		else if (strichecks(string, "NEG_INFINITY"))
+		{
+			*input += 12;
+			temp = FLOAT_NEG_INFINITY;
+		}
+		else if (strichecks(string, "NEGATIVE_INFINITY"))
+		{
+			*input += 17;
+			temp = FLOAT_NEG_INFINITY;
+		}
+		*ret = (double)(*((float *)&temp));
+		break;
+	case 'I':
+	case 'i':
+		if (strichecks(string, "INFINITY"))
+		{
+			*input += 8;
+			temp = FLOAT_INFINITY;
+			*ret = (double)(*((float *)&temp));
+		}
+		break;
+	case '-':
+		if (strichecks(string + 1, "INFINITY"))
+		{
+			*input += 9;
+			temp = FLOAT_NEG_INFINITY;
 			*ret = (double)(*((float *)&temp));
 			break;
-		case 'I':
-		case 'i':
-			if (strichecks(string, "INFINITY"))
-			{
-				*input += 8;
-				temp = FLOAT_INFINITY;
-				*ret = (double)(*((float *)&temp));
-			}
-			break;
-		case '-':
-			if (strichecks(string + 1, "INFINITY"))
-			{
-				*input += 9;
-				temp = FLOAT_NEG_INFINITY;
-				*ret = (double)(*((float *)&temp));
-				break;
-			}
-			// FALLTHROUGH
-		default:
-			// Read in the value and save the pointer - may as well use
-			// existing, pre set up variables.
-			*ret = strtod(string, input);
-			break;
+		}
+		// FALLTHROUGH
+	default:
+		// Read in the value and save the pointer - may as well use
+		// existing, pre set up variables.
+		*ret = strtod(string, input);
+		break;
 	}
 	return GetReturn(input);
 }
@@ -380,64 +380,64 @@ bool
 		*end = '\0';
 		switch (gOptions & 6)
 		{
-			case 0:
-				// Original.
-				while (val < g_iTrueMax)
+		case 0:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && !strincmp(name, string, len))
 				{
-					if (*conn++ && !strincmp(name, string, len))
+					break;
+				}
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 2:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && strstrin(name, string, len))
+				{
+					break;
+				}
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 4:
+			// Multiple matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && !strincmp(name, string, len))
+				{
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 2:
-				// Partial matches.
-				while (val < g_iTrueMax)
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 6:
+			// Both.
+			while (val < g_iTrueMax)
+			{
+				if (*conn++ && strstrin(name, string, len))
 				{
-					if (*conn++ && strstrin(name, string, len))
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 4:
-				// Multiple matches.
-				while (val < g_iTrueMax)
-				{
-					if (*conn++ && !strincmp(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
-			case 6:
-				// Both.
-				while (val < g_iTrueMax)
-				{
-					if (*conn++ && strstrin(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		}
 		*end = tmp;
 	}
@@ -490,76 +490,76 @@ bool
 		*end = '\0';
 		switch (gOptions & 6)
 		{
-			case 0:
-				// Original.
-				while (val < g_iTrueMax)
+		case 0:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && !strincmp(name, string, len))
 				{
-					if (*conn && *npc && !strincmp(name, string, len))
+					break;
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 2:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && strstrin(name, string, len))
+				{
+					break;
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 4:
+			// Multiple matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && !strincmp(name, string, len))
+				{
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 2:
-				// Partial matches.
-				while (val < g_iTrueMax)
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 6:
+			// Both.
+			// Loop through all the players and check that they're
+			// connected, an NPC, and that their name is correct.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && *npc && strstrin(name, string, len))
 				{
-					if (*conn && *npc && strstrin(name, string, len))
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 4:
-				// Multiple matches.
-				while (val < g_iTrueMax)
-				{
-					if (*conn && *npc && !strincmp(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
-			case 6:
-				// Both.
-				// Loop through all the players and check that they're
-				// connected, an NPC, and that their name is correct.
-				while (val < g_iTrueMax)
-				{
-					if (*conn && *npc && strstrin(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					// Can't do *npc++ above as it's not always reached and we
-					// need it to be incremented (short circuiting).
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
+				// Can't do *npc++ above as it's not always reached and we
+				// need it to be incremented (short circuiting).
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		}
 		*end = tmp;
 	}
@@ -604,76 +604,76 @@ bool
 		*end = '\0';
 		switch (gOptions & 6)
 		{
-			case 0:
-				// Original.
-				while (val < g_iTrueMax)
+		case 0:
+			// Original.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && !strincmp(name, string, len))
 				{
-					if (*conn && !*npc && !strincmp(name, string, len))
+					break;
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 2:
+			// Partial matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && strstrin(name, string, len))
+				{
+					break;
+				}
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 4:
+			// Multiple matches.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && !strincmp(name, string, len))
+				{
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 2:
-				// Partial matches.
-				while (val < g_iTrueMax)
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
+		case 6:
+			// Both.
+			// Loop through all the players and check that they're
+			// connected, an NPC, and that their name is correct.
+			while (val < g_iTrueMax)
+			{
+				if (*conn && !*npc && strstrin(name, string, len))
 				{
-					if (*conn && !*npc && strstrin(name, string, len))
+					if (*ret != g_iInvalid)
 					{
+						val = 0x80000000;
 						break;
 					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
+					*ret = val;
 				}
-				break;
-			case 4:
-				// Multiple matches.
-				while (val < g_iTrueMax)
-				{
-					if (*conn && !*npc && !strincmp(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
-			case 6:
-				// Both.
-				// Loop through all the players and check that they're
-				// connected, an NPC, and that their name is correct.
-				while (val < g_iTrueMax)
-				{
-					if (*conn && !*npc && strstrin(name, string, len))
-					{
-						if (*ret != g_iInvalid)
-						{
-							val = 0x80000000;
-							break;
-						}
-						*ret = val;
-					}
-					// Can't do *npc++ above as it's not always reached and we
-					// need it to be incremented (short circuiting).
-					++conn;
-					++npc;
-					name += g_iMaxPlayerName;
-					++val;
-				}
-				break;
+				// Can't do *npc++ above as it's not always reached and we
+				// need it to be incremented (short circuiting).
+				++conn;
+				++npc;
+				name += g_iMaxPlayerName;
+				++val;
+			}
+			break;
 		}
 		*end = tmp;
 	}
@@ -803,53 +803,53 @@ bool
 		temp = 0;
 	switch (*string)
 	{
-		case 'N':
-		case 'n':
-			if (strichecks(string, "NAN_E"))
-			{
-				*input += 5;
-				temp = FLOAT_NAN_E;
-			}
-			else if (strichecks(string, "NAN"))
-			{
-				*input += 3;
-				temp = FLOAT_NAN;
-			}
-			else if (strichecks(string, "NEG_INFINITY"))
-			{
-				*input += 12;
-				temp = FLOAT_NEG_INFINITY;
-			}
-			else if (strichecks(string, "NEGATIVE_INFINITY"))
-			{
-				*input += 17;
-				temp = FLOAT_NEG_INFINITY;
-			}
+	case 'N':
+	case 'n':
+		if (strichecks(string, "NAN_E"))
+		{
+			*input += 5;
+			temp = FLOAT_NAN_E;
+		}
+		else if (strichecks(string, "NAN"))
+		{
+			*input += 3;
+			temp = FLOAT_NAN;
+		}
+		else if (strichecks(string, "NEG_INFINITY"))
+		{
+			*input += 12;
+			temp = FLOAT_NEG_INFINITY;
+		}
+		else if (strichecks(string, "NEGATIVE_INFINITY"))
+		{
+			*input += 17;
+			temp = FLOAT_NEG_INFINITY;
+		}
+		*ret = (double)(*((float *)&temp));
+		break;
+	case 'I':
+	case 'i':
+		if (strichecks(string, "INFINITY"))
+		{
+			*input += 8;
+			temp = FLOAT_INFINITY;
+			*ret = (double)(*((float *)&temp));
+		}
+		break;
+	case '-':
+		if (strichecks(string + 1, "INFINITY"))
+		{
+			*input += 9;
+			temp = FLOAT_NEG_INFINITY;
 			*ret = (double)(*((float *)&temp));
 			break;
-		case 'I':
-		case 'i':
-			if (strichecks(string, "INFINITY"))
-			{
-				*input += 8;
-				temp = FLOAT_INFINITY;
-				*ret = (double)(*((float *)&temp));
-			}
-			break;
-		case '-':
-			if (strichecks(string + 1, "INFINITY"))
-			{
-				*input += 9;
-				temp = FLOAT_NEG_INFINITY;
-				*ret = (double)(*((float *)&temp));
-				break;
-			}
-			// FALLTHROUGH
-		default:
-			// Read in the value and save the pointer - may as well use
-			// existing, pre set up variables.
-			*ret = strtod(string, input);
-			break;
+		}
+		// FALLTHROUGH
+	default:
+		// Read in the value and save the pointer - may as well use
+		// existing, pre set up variables.
+		*ret = strtod(string, input);
+		break;
 	}
 	return GetReturnDefault(input);
 }

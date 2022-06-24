@@ -386,135 +386,116 @@ static cell
 		{
 			switch (*format++)
 			{
-				case 'L':
-					DX(bool, L)
-					// FALLTHROUGH
-				case 'l':
-					DOV(bool, L)
-					break;
-				case 'B':
-					DX(int, B)
-					// FALLTHROUGH
-				case 'b':
-					DO(int, B)
-				case 'N':
-					DX(int, N)
-					// FALLTHROUGH
-				case 'n':
-					DO(int, N)
-				case 'C':
-					DX(char, C)
-					// FALLTHROUGH
-				case 'c':
-					DO(char, C)
-				case 'I':
-				case 'D':
-					DX(int, I)
-					// FALLTHROUGH
-				case 'i':
-				case 'd':
-					DO(int, I)
-				case 'H':
-				case 'X':
-					DX(int, H)
-					// FALLTHROUGH
-				case 'h':
-				case 'x':
-					DO(int, H)
-				case 'M':
-					DX(unsigned int, M)
-					// FALLTHROUGH
-				case 'm':
-					DO(unsigned int, M)
-				case 'O':
-					DX(int, O)
-					// FALLTHROUGH
-				case 'o':
-					DO(int, O)
-				case 'F':
-					DXF(double, F)
-					// FALLTHROUGH
-				case 'f':
-					DOF(double, F)
-				case 'G':
-					DXF(double, G)
-					// FALLTHROUGH
-				case 'g':
-					DOF(double, G)
-				case '{':
-					if (doSave)
-					{
-						doSave = false;
-					}
-					else
-					{
-						// Already in a quiet section.
-						SscanfWarning("Can't have nestled quiet sections.");
-					}
-					continue;
-				case '}':
-					if (doSave)
-					{
-						SscanfWarning("Not in a quiet section.");
-					}
-					else
-					{
-						doSave = true;
-					}
-					continue;
-				case 'P':
-					{
-						ResetDelimiter();
-						char *
-							t = GetMultiType(&format);
-						if (t) AddDelimiters(t);
-						else return SSCANF_FAIL_RETURN;
-						continue;
-					}
-					// FALLTHROUGH
-				case 'p':
-					// 'P' doesn't exist.
-					// Theoretically, for compatibility, this should be:
-					// p<delimiter>, but that will break backwards
-					// compatibility with anyone doing "p<" to use '<' as a
-					// delimiter (doesn't matter how rare that may be).  Also,
-					// writing deprecation code and both the new and old code
-					// is more trouble than it's worth, and it's slow.
-					// UPDATE: I wrote the "GetSingleType" code for 'a' and
-					// figured out a way to support legacy and new code, while
-					// still maintaining support for the legacy "p<" separator,
-					// so here it is:
+			case 'L':
+				DX(bool, L)
+				// FALLTHROUGH
+			case 'l':
+				DOV(bool, L)
+				break;
+			case 'B':
+				DX(int, B)
+				// FALLTHROUGH
+			case 'b':
+				DO(int, B)
+			case 'N':
+				DX(int, N)
+				// FALLTHROUGH
+			case 'n':
+				DO(int, N)
+			case 'C':
+				DX(char, C)
+				// FALLTHROUGH
+			case 'c':
+				DO(char, C)
+			case 'I':
+			case 'D':
+				DX(int, I)
+				// FALLTHROUGH
+			case 'i':
+			case 'd':
+				DO(int, I)
+			case 'H':
+			case 'X':
+				DX(int, H)
+				// FALLTHROUGH
+			case 'h':
+			case 'x':
+				DO(int, H)
+			case 'M':
+				DX(unsigned int, M)
+				// FALLTHROUGH
+			case 'm':
+				DO(unsigned int, M)
+			case 'O':
+				DX(int, O)
+				// FALLTHROUGH
+			case 'o':
+				DO(int, O)
+			case 'F':
+				DXF(double, F)
+				// FALLTHROUGH
+			case 'f':
+				DOF(double, F)
+			case 'G':
+				DXF(double, G)
+				// FALLTHROUGH
+			case 'g':
+				DOF(double, G)
+			case '{':
+				if (doSave)
+				{
+					doSave = false;
+				}
+				else
+				{
+					// Already in a quiet section.
+					SscanfWarning("Can't have nestled quiet sections.");
+				}
+				continue;
+			case '}':
+				if (doSave)
+				{
+					SscanfWarning("Not in a quiet section.");
+				}
+				else
+				{
+					doSave = true;
+				}
+				continue;
+			case 'P':
+				{
 					ResetDelimiter();
-					AddDelimiter(GetSingleType(&format));
+					char *
+						t = GetMultiType(&format);
+					if (t) AddDelimiters(t);
+					else return SSCANF_FAIL_RETURN;
 					continue;
-				case 'S':
-					if (IsDelimiter(*string))
+				}
+				// FALLTHROUGH
+			case 'p':
+				// 'P' doesn't exist.
+				// Theoretically, for compatibility, this should be:
+				// p<delimiter>, but that will break backwards
+				// compatibility with anyone doing "p<" to use '<' as a
+				// delimiter (doesn't matter how rare that may be).  Also,
+				// writing deprecation code and both the new and old code
+				// is more trouble than it's worth, and it's slow.
+				// UPDATE: I wrote the "GetSingleType" code for 'a' and
+				// figured out a way to support legacy and new code, while
+				// still maintaining support for the legacy "p<" separator,
+				// so here it is:
+				ResetDelimiter();
+				AddDelimiter(GetSingleType(&format));
+				continue;
+			case 'S':
+				if (IsDelimiter(*string))
+				{
+					char *
+						dest;
+					int
+						length;
+					if (DoSD(&format, &dest, &length, args))
 					{
-						char *
-							dest;
-						int
-							length;
-						if (DoSD(&format, &dest, &length, args))
-						{
-							// Send the string to PAWN.
-							if (doSave)
-							{
-								amx_SetString(args.Next(), dest, 0, 0, length);
-							}
-						}
-						break;
-					}
-					// Implicit "else".
-					SkipDefaultEx(&format);
-					// FALLTHROUGH
-				case 's':
-					{
-						// Get the length.
-						int
-							length = GetLength(&format, args);
-						char *
-							dest;
-						DoS(&string, &dest, length, IsEnd(*format) || (!doSave && *format == '}' && IsEnd(*(format + 1))));
 						// Send the string to PAWN.
 						if (doSave)
 						{
@@ -522,34 +503,34 @@ static cell
 						}
 					}
 					break;
-				case 'Z':
-					if (IsDelimiter(*string))
+				}
+				// Implicit "else".
+				SkipDefaultEx(&format);
+				// FALLTHROUGH
+			case 's':
+				{
+					// Get the length.
+					int
+						length = GetLength(&format, args);
+					char *
+						dest;
+					DoS(&string, &dest, length, IsEnd(*format) || (!doSave && *format == '}' && IsEnd(*(format + 1))));
+					// Send the string to PAWN.
+					if (doSave)
 					{
-						char *
-							dest;
-						int
-							length;
-						if (DoSD(&format, &dest, &length, args))
-						{
-							// Send the string to PAWN.
-							if (doSave)
-							{
-								amx_SetString(args.Next(), dest, 1, 0, length);
-							}
-						}
-						break;
+						amx_SetString(args.Next(), dest, 0, 0, length);
 					}
-					// Implicit "else".
-					SkipDefaultEx(&format);
-					// FALLTHROUGH
-				case 'z':
+				}
+				break;
+			case 'Z':
+				if (IsDelimiter(*string))
+				{
+					char *
+						dest;
+					int
+						length;
+					if (DoSD(&format, &dest, &length, args))
 					{
-						// Get the length.
-						int
-							length = GetLength(&format, args);
-						char *
-							dest;
-						DoS(&string, &dest, length, IsEnd(*format) || (!doSave && *format == '}' && IsEnd(*(format + 1))));
 						// Send the string to PAWN.
 						if (doSave)
 						{
@@ -557,487 +538,506 @@ static cell
 						}
 					}
 					break;
-				case 'U':
-					if (IsDelimiter(*string))
-					{
-						int
-							b;
-						DoUD(&format, &b);
-						if (*format == '[')
-						{
-							int
-								len = GetLength(&format, args);
-							if (gOptions & 1)
-							{
-								// Incompatible combination.
-								SscanfError("'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (len < 2)
-							{
-								SscanfError("'U(num)[len]' length under 2.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (doSave)
-							{
-								cell *
-									cptr = args.Next();
-								*cptr++ = b;
-								*cptr = g_iInvalid;
-							}
-						}
-						else
-						{
-							SAVE_VALUE((cell)b);
-						}
-						break;
-					}
-					SkipDefault(&format);
-					// FALLTHROUGH
-				case 'u':
-					if (*format == '[')
-					{
-						int
-							len = GetLength(&format, args);
-						if (len < 2)
-						{
-							SscanfError("'u[len]' length under 2.");
-							return SSCANF_FAIL_RETURN;
-						}
-						else
-						{
-							int
-								b = -1,
-								od = gOptions;
-							if (doSave)
-							{
-								char *
-									tstr;
-								// Don't detect multiple results.
-								gOptions &= ~4;
-								cell *
-									cptr = args.Next();
-								while (--len)
-								{
-									tstr = string;
-									if (!DoU(&tstr, &b, b + 1))
-									{
-										*cptr++ = b;
-										b = g_iInvalid;
-										break;
-									}
-									if (b == g_iInvalid) break;
-									*cptr++ = b;
-								}
-								if (b == g_iInvalid)
-								{
-									*cptr = g_iInvalid;
-								}
-								else
-								{
-									tstr = string;
-									DoU(&tstr, &b, b + 1);
-									if (b == g_iInvalid) *cptr = g_iInvalid;
-									else *cptr = 0x80000000;
-								}
-								// Restore results detection.
-								gOptions = od;
-								string = tstr;
-							}
-							else
-							{
-								DoU(&string, &b, 0);
-							}
-						}
-					}
-					else
-					{
-						int
-							b;
-						DoU(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-					}
-					break;
-				case 'Q':
-					if (IsDelimiter(*string))
-					{
-						int
-							b;
-						DoQD(&format, &b);
-						if (*format == '[')
-						{
-							int
-								len = GetLength(&format, args);
-							if (gOptions & 1)
-							{
-								// Incompatible combination.
-								SscanfError("'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (len < 2)
-							{
-								SscanfError("'Q(num)[len]' length under 2.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (doSave)
-							{
-								cell *
-									cptr = args.Next();
-								*cptr++ = b;
-								*cptr = g_iInvalid;
-							}
-						}
-						else
-						{
-							SAVE_VALUE((cell)b);
-						}
-						break;
-					}
-					SkipDefault(&format);
-					// FALLTHROUGH
-				case 'q':
-					if (*format == '[')
-					{
-						int
-							len = GetLength(&format, args);
-						if (len < 2)
-						{
-							SscanfError("'q[len]' length under 2.");
-							return SSCANF_FAIL_RETURN;
-						}
-						else
-						{
-							int
-								b = -1,
-								od = gOptions;
-							if (doSave)
-							{
-								char *
-									tstr;
-								// Don't detect multiple results.
-								gOptions &= ~4;
-								cell *
-									cptr = args.Next();
-								while (--len)
-								{
-									tstr = string;
-									if (!DoQ(&tstr, &b, b + 1))
-									{
-										*cptr++ = b;
-										b = g_iInvalid;
-										break;
-									}
-									if (b == g_iInvalid) break;
-									*cptr++ = b;
-								}
-								if (b == g_iInvalid)
-								{
-									*cptr = g_iInvalid;
-								}
-								else
-								{
-									tstr = string;
-									DoQ(&tstr, &b, b + 1);
-									if (b == g_iInvalid) *cptr = g_iInvalid;
-									else *cptr = 0x80000000;
-								}
-								// Restore results detection.
-								gOptions = od;
-								string = tstr;
-							}
-							else
-							{
-								DoQ(&string, &b, 0);
-							}
-						}
-					}
-					else
-					{
-						int
-							b;
-						DoQ(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-					}
-					break;
-				case 'R':
-					if (IsDelimiter(*string))
-					{
-						int
-							b;
-						DoRD(&format, &b);
-						if (*format == '[')
-						{
-							int
-								len = GetLength(&format, args);
-							if (gOptions & 1)
-							{
-								// Incompatible combination.
-								SscanfError("'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (len < 2)
-							{
-								SscanfError("'R(num)[len]' length under 2.");
-								return SSCANF_FAIL_RETURN;
-							}
-							else if (doSave)
-							{
-								cell *
-									cptr = args.Next();
-								*cptr++ = b;
-								*cptr = g_iInvalid;
-							}
-						}
-						else
-						{
-							SAVE_VALUE((cell)b);
-						}
-						break;
-					}
-					SkipDefault(&format);
-					// FALLTHROUGH
-				case 'r':
-					if (*format == '[')
-					{
-						int
-							len = GetLength(&format, args);
-						if (len < 2)
-						{
-							SscanfError("'r[len]' length under 2.");
-							return SSCANF_FAIL_RETURN;
-						}
-						else
-						{
-							int
-								b = -1,
-								od = gOptions;
-							if (doSave)
-							{
-								char *
-									tstr;
-								cell *
-									cptr = args.Next();
-								// Don't detect multiple results.
-								gOptions &= ~4;
-								while (--len)
-								{
-									tstr = string;
-									if (!DoR(&tstr, &b, b + 1))
-									{
-										*cptr++ = b;
-										b = g_iInvalid;
-										break;
-									}
-									if (b == g_iInvalid) break;
-									*cptr++ = b;
-								}
-								if (b == g_iInvalid)
-								{
-									*cptr = g_iInvalid;
-								}
-								else
-								{
-									tstr = string;
-									DoR(&tstr, &b, b + 1);
-									if (b == g_iInvalid) *cptr = g_iInvalid;
-									else *cptr = 0x80000000;
-								}
-								// Restore results detection.
-								gOptions = od;
-								string = tstr;
-							}
-							else
-							{
-								DoR(&string, &b, 0);
-							}
-						}
-					}
-					else
-					{
-						int
-							b;
-						DoR(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-					}
-					break;
-				case 'A':
-					// We need the default values here.
-					if (DoA(&format, &string, args, true, doSave))
-					{
-						break;
-					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'a':
-					if (DoA(&format, &string, args, false, doSave))
-					{
-						break;
-					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'E':
-					// We need the default values here.
-					if (DoE(&format, &string, args, true, doSave))
-					{
-						break;
-					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'e':
-					if (DoE(&format, &string, args, false, doSave))
-					{
-						break;
-					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'K':
+				}
+				// Implicit "else".
+				SkipDefaultEx(&format);
+				// FALLTHROUGH
+			case 'z':
 				{
-					const char *first_closing_lace = FindFirstOf(format, '>');
-					const char *first_closing_bracket = FindFirstOf(format, ')');
-					const char *after_spec = (first_closing_lace < first_closing_bracket) 
-						? first_closing_bracket : first_closing_lace;
-					if (*after_spec != '\0')
-						after_spec += 1;
-					bool consume_all = IsEnd(*after_spec)
-						|| (!doSave && *after_spec == '}' && IsEnd(*(after_spec + 1)));
-					// We need the default values here.
+					// Get the length.
+					int
+						length = GetLength(&format, args);
+					char *
+						dest;
+					DoS(&string, &dest, length, IsEnd(*format) || (!doSave && *format == '}' && IsEnd(*(format + 1))));
+					// Send the string to PAWN.
 					if (doSave)
 					{
-						if (DoK(amx, &format, &string, args.Next(), true, consume_all))
-						{
-							break;
-						}
+						amx_SetString(args.Next(), dest, 1, 0, length);
 					}
-					else
-					{
-						// Pass a NULL pointer so data isn't saved anywhere.
-						if (DoK(amx, &format, &string, NULL, true, consume_all))
-						{
-							break;
-						}
-					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
 				}
-				case 'k':
+				break;
+			case 'U':
+				if (IsDelimiter(*string))
 				{
-					const char *after_spec = FindFirstOf(format, '>') + 1;
-					bool consume_all = IsEnd(*after_spec)
-						|| (!doSave && *after_spec == '}' && IsEnd(*(after_spec + 1)));
-					if (doSave)
+					int
+						b;
+					DoUD(&format, &b);
+					if (*format == '[')
 					{
-						if (DoK(amx, &format, &string, args.Next(), false, consume_all))
+						int
+							len = GetLength(&format, args);
+						if (gOptions & 1)
 						{
-							break;
+							// Incompatible combination.
+							SscanfError("'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (len < 2)
+						{
+							SscanfError("'U(num)[len]' length under 2.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (doSave)
+						{
+							cell *
+								cptr = args.Next();
+							*cptr++ = b;
+							*cptr = g_iInvalid;
 						}
 					}
 					else
 					{
-						// Pass a NULL pointer so data isn't saved anywhere.
-						if (DoK(amx, &format, &string, NULL, false, consume_all))
+						SAVE_VALUE((cell)b);
+					}
+					break;
+				}
+				SkipDefault(&format);
+				// FALLTHROUGH
+			case 'u':
+				if (*format == '[')
+				{
+					int
+						len = GetLength(&format, args);
+					if (len < 2)
+					{
+						SscanfError("'u[len]' length under 2.");
+						return SSCANF_FAIL_RETURN;
+					}
+					else
+					{
+						int
+							b = -1,
+							od = gOptions;
+						if (doSave)
 						{
-							break;
+							char *
+								tstr;
+							// Don't detect multiple results.
+							gOptions &= ~4;
+							cell *
+								cptr = args.Next();
+							while (--len)
+							{
+								tstr = string;
+								if (!DoU(&tstr, &b, b + 1))
+								{
+									*cptr++ = b;
+									b = g_iInvalid;
+									break;
+								}
+								if (b == g_iInvalid) break;
+								*cptr++ = b;
+							}
+							if (b == g_iInvalid)
+							{
+								*cptr = g_iInvalid;
+							}
+							else
+							{
+								tstr = string;
+								DoU(&tstr, &b, b + 1);
+								if (b == g_iInvalid) *cptr = g_iInvalid;
+								else *cptr = 0x80000000;
+							}
+							// Restore results detection.
+							gOptions = od;
+							string = tstr;
+						}
+						else
+						{
+							DoU(&string, &b, 0);
 						}
 					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
 				}
-				case '\'':
-					// Find the end of the literal.
+				else
+				{
+					int
+						b;
+					DoU(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+				}
+				break;
+			case 'Q':
+				if (IsDelimiter(*string))
+				{
+					int
+						b;
+					DoQD(&format, &b);
+					if (*format == '[')
 					{
-						char
-							* str = format,
-							* write = format;
-						bool
+						int
+							len = GetLength(&format, args);
+						if (gOptions & 1)
+						{
+							// Incompatible combination.
+							SscanfError("'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (len < 2)
+						{
+							SscanfError("'Q(num)[len]' length under 2.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (doSave)
+						{
+							cell *
+								cptr = args.Next();
+							*cptr++ = b;
+							*cptr = g_iInvalid;
+						}
+					}
+					else
+					{
+						SAVE_VALUE((cell)b);
+					}
+					break;
+				}
+				SkipDefault(&format);
+				// FALLTHROUGH
+			case 'q':
+				if (*format == '[')
+				{
+					int
+						len = GetLength(&format, args);
+					if (len < 2)
+					{
+						SscanfError("'q[len]' length under 2.");
+						return SSCANF_FAIL_RETURN;
+					}
+					else
+					{
+						int
+							b = -1,
+							od = gOptions;
+						if (doSave)
+						{
+							char *
+								tstr;
+							// Don't detect multiple results.
+							gOptions &= ~4;
+							cell *
+								cptr = args.Next();
+							while (--len)
+							{
+								tstr = string;
+								if (!DoQ(&tstr, &b, b + 1))
+								{
+									*cptr++ = b;
+									b = g_iInvalid;
+									break;
+								}
+								if (b == g_iInvalid) break;
+								*cptr++ = b;
+							}
+							if (b == g_iInvalid)
+							{
+								*cptr = g_iInvalid;
+							}
+							else
+							{
+								tstr = string;
+								DoQ(&tstr, &b, b + 1);
+								if (b == g_iInvalid) *cptr = g_iInvalid;
+								else *cptr = 0x80000000;
+							}
+							// Restore results detection.
+							gOptions = od;
+							string = tstr;
+						}
+						else
+						{
+							DoQ(&string, &b, 0);
+						}
+					}
+				}
+				else
+				{
+					int
+						b;
+					DoQ(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+				}
+				break;
+			case 'R':
+				if (IsDelimiter(*string))
+				{
+					int
+						b;
+					DoRD(&format, &b);
+					if (*format == '[')
+					{
+						int
+							len = GetLength(&format, args);
+						if (gOptions & 1)
+						{
+							// Incompatible combination.
+							SscanfError("'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (len < 2)
+						{
+							SscanfError("'R(num)[len]' length under 2.");
+							return SSCANF_FAIL_RETURN;
+						}
+						else if (doSave)
+						{
+							cell *
+								cptr = args.Next();
+							*cptr++ = b;
+							*cptr = g_iInvalid;
+						}
+					}
+					else
+					{
+						SAVE_VALUE((cell)b);
+					}
+					break;
+				}
+				SkipDefault(&format);
+				// FALLTHROUGH
+			case 'r':
+				if (*format == '[')
+				{
+					int
+						len = GetLength(&format, args);
+					if (len < 2)
+					{
+						SscanfError("'r[len]' length under 2.");
+						return SSCANF_FAIL_RETURN;
+					}
+					else
+					{
+						int
+							b = -1,
+							od = gOptions;
+						if (doSave)
+						{
+							char *
+								tstr;
+							cell *
+								cptr = args.Next();
+							// Don't detect multiple results.
+							gOptions &= ~4;
+							while (--len)
+							{
+								tstr = string;
+								if (!DoR(&tstr, &b, b + 1))
+								{
+									*cptr++ = b;
+									b = g_iInvalid;
+									break;
+								}
+								if (b == g_iInvalid) break;
+								*cptr++ = b;
+							}
+							if (b == g_iInvalid)
+							{
+								*cptr = g_iInvalid;
+							}
+							else
+							{
+								tstr = string;
+								DoR(&tstr, &b, b + 1);
+								if (b == g_iInvalid) *cptr = g_iInvalid;
+								else *cptr = 0x80000000;
+							}
+							// Restore results detection.
+							gOptions = od;
+							string = tstr;
+						}
+						else
+						{
+							DoR(&string, &b, 0);
+						}
+					}
+				}
+				else
+				{
+					int
+						b;
+					DoR(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+				}
+				break;
+			case 'A':
+				// We need the default values here.
+				if (DoA(&format, &string, args, true, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'a':
+				if (DoA(&format, &string, args, false, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'E':
+				// We need the default values here.
+				if (DoE(&format, &string, args, true, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'e':
+				if (DoE(&format, &string, args, false, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'K':
+			{
+				const char *first_closing_lace = FindFirstOf(format, '>');
+				const char *first_closing_bracket = FindFirstOf(format, ')');
+				const char *after_spec = (first_closing_lace < first_closing_bracket) 
+					? first_closing_bracket : first_closing_lace;
+				if (*after_spec != '\0')
+					after_spec += 1;
+				bool consume_all = IsEnd(*after_spec)
+					|| (!doSave && *after_spec == '}' && IsEnd(*(after_spec + 1)));
+				// We need the default values here.
+				if (doSave)
+				{
+					if (DoK(amx, &format, &string, args.Next(), true, consume_all))
+					{
+						break;
+					}
+				}
+				else
+				{
+					// Pass a NULL pointer so data isn't saved anywhere.
+					if (DoK(amx, &format, &string, NULL, true, consume_all))
+					{
+						break;
+					}
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			}
+			case 'k':
+			{
+				const char *after_spec = FindFirstOf(format, '>') + 1;
+				bool consume_all = IsEnd(*after_spec)
+					|| (!doSave && *after_spec == '}' && IsEnd(*(after_spec + 1)));
+				if (doSave)
+				{
+					if (DoK(amx, &format, &string, args.Next(), false, consume_all))
+					{
+						break;
+					}
+				}
+				else
+				{
+					// Pass a NULL pointer so data isn't saved anywhere.
+					if (DoK(amx, &format, &string, NULL, false, consume_all))
+					{
+						break;
+					}
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			}
+			case '\'':
+				// Find the end of the literal.
+				{
+					char
+						* str = format,
+						* write = format;
+					bool
+						escape = false;
+					while (!IsEnd(*str) && (escape || *str != '\''))
+					{
+						if (*str == '\\')
+						{
+							if (escape)
+							{
+								// "\\" - Go back a step to write this
+								// character over the last character (which
+								// just happens to be the same character).
+								--write;
+							}
+							escape = !escape;
+						}
+						else
+						{
+							if (*str == '\'')
+							{
+								// Overwrite the escape character with the
+								// quote character.  Must have been
+								// preceeded by a slash or it wouldn't have
+								// got to here in the loop.
+								--write;
+							}
 							escape = false;
-						while (!IsEnd(*str) && (escape || *str != '\''))
-						{
-							if (*str == '\\')
-							{
-								if (escape)
-								{
-									// "\\" - Go back a step to write this
-									// character over the last character (which
-									// just happens to be the same character).
-									--write;
-								}
-								escape = !escape;
-							}
-							else
-							{
-								if (*str == '\'')
-								{
-									// Overwrite the escape character with the
-									// quote character.  Must have been
-									// preceeded by a slash or it wouldn't have
-									// got to here in the loop.
-									--write;
-								}
-								escape = false;
-							}
-							// Copy the string over itself to get rid of excess
-							// escape characters.
-							// Not sure if it's faster in the average case to
-							// always do the copy or check if it's needed.
-							// This write is always safe as it makes the string
-							// shorter, so we'll never run out of space.  It
-							// will also not overwrite the original string.
-							*write++ = *str++;
 						}
-						if (*str == '\'')
-						{
-							// Correct end.  Make a shorter string to search
-							// for.
-							*write = '\0';
-							// Find the current section of format in string.
-							char *
-								find = strstr(string, format);
-							if (!find)
-							{
-								// Didn't find the string
-								RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-								return SSCANF_FAIL_RETURN;
-							}
-							// Found the string.  Update the current string
-							// position to the length of the search term
-							// further along from the start of the term.  Use
-							// "write" here as we want the escaped string
-							// length.
-							string = find + (write - format);
-							// Move to after the end of the search string.  Use
-							// "str" here as we want the unescaped string
-							// length.
-							format = str + 1;
-						}
-						else
-						{
-							SscanfWarning("Unclosed string literal.");
-							char *
-								find = strstr(string, format);
-							if (!find)
-							{
-								RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-								return SSCANF_FAIL_RETURN;
-							}
-							string = find + (write - format);
-							format = str;
-						}
+						// Copy the string over itself to get rid of excess
+						// escape characters.
+						// Not sure if it's faster in the average case to
+						// always do the copy or check if it's needed.
+						// This write is always safe as it makes the string
+						// shorter, so we'll never run out of space.  It
+						// will also not overwrite the original string.
+						*write++ = *str++;
 					}
-					break;
-				case '?':
+					if (*str == '\'')
 					{
+						// Correct end.  Make a shorter string to search
+						// for.
+						*write = '\0';
+						// Find the current section of format in string.
 						char *
-							t = GetMultiType(&format);
-						if (t) SetOptions(t, -1);
-						else return SSCANF_FAIL_RETURN;
-						continue;
+							find = strstr(string, format);
+						if (!find)
+						{
+							// Didn't find the string
+							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+							return SSCANF_FAIL_RETURN;
+						}
+						// Found the string.  Update the current string
+						// position to the length of the search term
+						// further along from the start of the term.  Use
+						// "write" here as we want the escaped string
+						// length.
+						string = find + (write - format);
+						// Move to after the end of the search string.  Use
+						// "str" here as we want the unescaped string
+						// length.
+						format = str + 1;
 					}
-				case '%':
-					SscanfWarning("sscanf specifiers do not require '%' before them.");
+					else
+					{
+						SscanfWarning("Unclosed string literal.");
+						char *
+							find = strstr(string, format);
+						if (!find)
+						{
+							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+							return SSCANF_FAIL_RETURN;
+						}
+						string = find + (write - format);
+						format = str;
+					}
+				}
+				break;
+			case '?':
+				{
+					char *
+						t = GetMultiType(&format);
+					if (t) SetOptions(t, -1);
+					else return SSCANF_FAIL_RETURN;
 					continue;
-				default:
-					SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
-					continue;
+				}
+			case '%':
+				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				continue;
+			default:
+				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				continue;
 			}
 			// Loop cleanup - only skip one spacer so that we can detect
 			// multiple explicit delimiters in a row, for example:
@@ -1081,200 +1081,200 @@ static cell
 			// Do the main switch again.
 			switch (*format++)
 			{
-				case 'L':
-					DE(bool, L)
-				case 'B':
-					DE(int, B)
-				case 'N':
-					DE(int, N)
-				case 'C':
-					DE(char, C)
-				case 'I':
-				case 'D':
-					DE(int, I)
-				case 'H':
-				case 'X':
-					DE(int, H)
-				case 'M':
-					DE(unsigned int, M)
-				case 'O':
-					DE(int, O)
-				case 'F':
-					DEF(double, F)
-				case 'G':
-					DEF(double, G)
-				case 'U':
-					DE(int, U)
-				case 'Q':
-					DE(int, Q)
-				case 'R':
-					DE(int, R)
-				case 'A':
-					if (DoA(&format, NULL, args, true, doSave))
+			case 'L':
+				DE(bool, L)
+			case 'B':
+				DE(int, B)
+			case 'N':
+				DE(int, N)
+			case 'C':
+				DE(char, C)
+			case 'I':
+			case 'D':
+				DE(int, I)
+			case 'H':
+			case 'X':
+				DE(int, H)
+			case 'M':
+				DE(unsigned int, M)
+			case 'O':
+				DE(int, O)
+			case 'F':
+				DEF(double, F)
+			case 'G':
+				DEF(double, G)
+			case 'U':
+				DE(int, U)
+			case 'Q':
+				DE(int, Q)
+			case 'R':
+				DE(int, R)
+			case 'A':
+				if (DoA(&format, NULL, args, true, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'E':
+				if (DoE(&format, NULL, args, true, doSave))
+				{
+					break;
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case 'K':
+				if (doSave)
+				{
+					if (DoK(amx, &format, NULL, args.Next(), true, false))
 					{
 						break;
 					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'E':
-					if (DoE(&format, NULL, args, true, doSave))
+				}
+				else
+				{
+					// Pass a NULL pointer so data isn't saved anywhere.
+					// Also pass NULL data so it knows to only collect the
+					// default values.
+					if (DoK(amx, &format, NULL, NULL, true, false))
 					{
 						break;
 					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case 'K':
-					if (doSave)
+				}
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case '{':
+				if (doSave)
+				{
+					doSave = false;
+				}
+				else
+				{
+					// Already in a quiet section.
+					SscanfWarning("Can't have nestled quiet sections.");
+				}
+				break;
+			case '}':
+				if (doSave)
+				{
+					SscanfWarning("Not in a quiet section.");
+				}
+				else
+				{
+					doSave = true;
+				}
+				break;
+			case 'S':
+				{
+					char *
+						dest;
+					int
+						length;
+					if (DoSD(&format, &dest, &length, args))
 					{
-						if (DoK(amx, &format, NULL, args.Next(), true, false))
+						// Send the string to PAWN.
+						if (doSave)
 						{
-							break;
+							amx_SetString(args.Next(), dest, 0, 0, length);
 						}
 					}
-					else
+				}
+				break;
+			case 'Z':
+				{
+					char *
+						dest;
+					int
+						length;
+					if (DoSD(&format, &dest, &length, args))
 					{
-						// Pass a NULL pointer so data isn't saved anywhere.
-						// Also pass NULL data so it knows to only collect the
-						// default values.
-						if (DoK(amx, &format, NULL, NULL, true, false))
+						// Send the string to PAWN.
+						if (doSave)
 						{
-							break;
+							amx_SetString(args.Next(), dest, 1, 0, length);
 						}
 					}
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case '{':
-					if (doSave)
+				}
+				break;
+			case 'P':
+				//SscanfWarning("You can't have an optional delimiter.");
+				GetMultiType(&format);
+				continue;
+				// FALLTHROUGH
+			case 'p':
+				// Discard delimiter.  This only matters when they have
+				// real inputs, not the default ones used here.
+				GetSingleType(&format);
+				continue;
+			case '\'':
+				// Implicitly optional if the specifiers after it are
+				// optional.
+				{
+					bool
+						escape = false;
+					while (!IsEnd(*format) && (escape || *format != '\''))
 					{
-						doSave = false;
-					}
-					else
-					{
-						// Already in a quiet section.
-						SscanfWarning("Can't have nestled quiet sections.");
-					}
-					break;
-				case '}':
-					if (doSave)
-					{
-						SscanfWarning("Not in a quiet section.");
-					}
-					else
-					{
-						doSave = true;
-					}
-					break;
-				case 'S':
-					{
-						char *
-							dest;
-						int
-							length;
-						if (DoSD(&format, &dest, &length, args))
+						if (*format == '\\')
 						{
-							// Send the string to PAWN.
-							if (doSave)
-							{
-								amx_SetString(args.Next(), dest, 0, 0, length);
-							}
-						}
-					}
-					break;
-				case 'Z':
-					{
-						char *
-							dest;
-						int
-							length;
-						if (DoSD(&format, &dest, &length, args))
-						{
-							// Send the string to PAWN.
-							if (doSave)
-							{
-								amx_SetString(args.Next(), dest, 1, 0, length);
-							}
-						}
-					}
-					break;
-				case 'P':
-					//SscanfWarning("You can't have an optional delimiter.");
-					GetMultiType(&format);
-					continue;
-					// FALLTHROUGH
-				case 'p':
-					// Discard delimiter.  This only matters when they have
-					// real inputs, not the default ones used here.
-					GetSingleType(&format);
-					continue;
-				case '\'':
-					// Implicitly optional if the specifiers after it are
-					// optional.
-					{
-						bool
-							escape = false;
-						while (!IsEnd(*format) && (escape || *format != '\''))
-						{
-							if (*format == '\\')
-							{
-								escape = !escape;
-							}
-							else
-							{
-								escape = false;
-							}
-							++format;
-						}
-						if (*format == '\'')
-						{
-							++format;
+							escape = !escape;
 						}
 						else
 						{
-							SscanfWarning("Unclosed string literal.");
+							escape = false;
 						}
+						++format;
 					}
-					break;
-					// Large block of specifiers all together.
-				case 'a':
-				case 'b':
-				case 'c':
-				case 'd':
-				case 'e':
-				case 'f':
-				case 'g':
-				case 'h':
-				case 'i':
-				case 'k':
-				case 'l':
-				case 'n':
-				case 'o':
-				case 'q':
-				case 'r':
-				case 's':
-				case 'z':
-				case 'u':
-				case 'x':
-				case 'm':
-					// These are non optional items, but the input string
-					// didn't include them, so we fail - this is in fact the
-					// most basic definition of a fail (the original)!  We
-					// don't need any text warnings here - admittedly we don't
-					// know if the format specifier is well formed (there may
-					// not be enough return variables for example), but it
-					// doesn't matter - the coder should have tested for those
-					// things, and the more important thing is that the user
-					// didn't enter the correct data.
-					RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
-					return SSCANF_FAIL_RETURN;
-				case '?':
-					GetMultiType(&format);
-					continue;
-				case '%':
-					SscanfWarning("sscanf specifiers do not require '%' before them.");
-					break;
-				default:
-					SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
-					break;
+					if (*format == '\'')
+					{
+						++format;
+					}
+					else
+					{
+						SscanfWarning("Unclosed string literal.");
+					}
+				}
+				break;
+				// Large block of specifiers all together.
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
+			case 'g':
+			case 'h':
+			case 'i':
+			case 'k':
+			case 'l':
+			case 'n':
+			case 'o':
+			case 'q':
+			case 'r':
+			case 's':
+			case 'z':
+			case 'u':
+			case 'x':
+			case 'm':
+				// These are non optional items, but the input string
+				// didn't include them, so we fail - this is in fact the
+				// most basic definition of a fail (the original)!  We
+				// don't need any text warnings here - admittedly we don't
+				// know if the format specifier is well formed (there may
+				// not be enough return variables for example), but it
+				// doesn't matter - the coder should have tested for those
+				// things, and the more important thing is that the user
+				// didn't enter the correct data.
+				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				return SSCANF_FAIL_RETURN;
+			case '?':
+				GetMultiType(&format);
+				continue;
+			case '%':
+				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				break;
+			default:
+				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				break;
 			}
 			// Don't need any cleanup here.
 		}

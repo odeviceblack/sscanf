@@ -157,443 +157,443 @@ int
 		cptr = NULL;
 	switch (*type++)
 	{
-		// Copied directly from the main loop, just with different macros.
-		case 'L':
-			DX(bool, L)
-			// FALLTHROUGH
-		case 'l':
+	// Copied directly from the main loop, just with different macros.
+	case 'L':
+		DX(bool, L)
+		// FALLTHROUGH
+	case 'l':
+		{
+			// The only custom code here.  If the result is either "true"
+			// or "false" it makes no sense to alternate in defaults as we
+			// will just end up with larger values of true.
+			bool
+				b;
+			GET_CPTR();
+			while (count < length && *string)
 			{
-				// The only custom code here.  If the result is either "true"
-				// or "false" it makes no sense to alternate in defaults as we
-				// will just end up with larger values of true.
-				bool
-					b;
-				GET_CPTR();
-				while (count < length && *string)
+				DoL(&string, &b);
+				SAVE_VALUE((cell)b);
+				if (defaults)
 				{
-					DoL(&string, &b);
-					SAVE_VALUE((cell)b);
-					if (defaults)
-					{
-						last.c = (cell)b;
-					}
-					SkipOneSpacer(&string);
-					++count;
+					last.c = (cell)b;
 				}
+				SkipOneSpacer(&string);
+				++count;
 			}
-			break;
-		case 'B':
-			DX(int, B)
-			// FALLTHROUGH
-		case 'b':
-			DO(int, B)
-		case 'N':
-			DX(int, N)
-			// FALLTHROUGH
-		case 'n':
-			DO(int, N)
-		case 'C':
-			DX(char, C)
-			// FALLTHROUGH
-		case 'c':
-			DO(char, C)
-		case 'I':
-		case 'D':
-			DX(int, I)
-			// FALLTHROUGH
-		case 'i':
-		case 'd':
-			DO(int, I)
-		case 'H':
-		case 'X':
-			DX(int, H)
-			// FALLTHROUGH
-		case 'h':
-		case 'x':
-			DO(int, H)
-		case 'M':
-			DX(unsigned int, M)
-			// FALLTHROUGH
-		case 'm':
-			DO(unsigned int, M)
-		case 'O':
-			DX(int, O)
-			// FALLTHROUGH
-		case 'o':
-			DO(int, O)
-		case 'F':
-			DXF(double, F)
-			// FALLTHROUGH
-		case 'f':
-			DOF(double, F)
-		case 'G':
-			DXF(double, G)
-			// FALLTHROUGH
-		case 'g':
+		}
+		break;
+	case 'B':
+		DX(int, B)
+		// FALLTHROUGH
+	case 'b':
+		DO(int, B)
+	case 'N':
+		DX(int, N)
+		// FALLTHROUGH
+	case 'n':
+		DO(int, N)
+	case 'C':
+		DX(char, C)
+		// FALLTHROUGH
+	case 'c':
+		DO(char, C)
+	case 'I':
+	case 'D':
+		DX(int, I)
+		// FALLTHROUGH
+	case 'i':
+	case 'd':
+		DO(int, I)
+	case 'H':
+	case 'X':
+		DX(int, H)
+		// FALLTHROUGH
+	case 'h':
+	case 'x':
+		DO(int, H)
+	case 'M':
+		DX(unsigned int, M)
+		// FALLTHROUGH
+	case 'm':
+		DO(unsigned int, M)
+	case 'O':
+		DX(int, O)
+		// FALLTHROUGH
+	case 'o':
+		DO(int, O)
+	case 'F':
+		DXF(double, F)
+		// FALLTHROUGH
+	case 'f':
+		DOF(double, F)
+	case 'G':
+		DXF(double, G)
+		// FALLTHROUGH
+	case 'g':
+		{
+			double
+				b;
+			GET_CPTR();
+			while (DO_LOOP(G))
 			{
-				double
-					b;
-				GET_CPTR();
-				while (DO_LOOP(G))
+				float
+					f = (float)b;
+				if (doSave)
 				{
-					float
-						f = (float)b;
-					if (doSave)
+					*cptr++ = amx_ftoc(f);
+				}
+				if (defaults)
+				{
+					switch (amx_ftoc(f))
 					{
-						*cptr++ = amx_ftoc(f);
-					}
-					if (defaults)
-					{
-						switch (amx_ftoc(f))
+					default:
+						if (count)
 						{
-							default:
-								if (count)
-								{
-									diff.d = b - last.d;
-									last.d = b;
-									break;
-								}
-								// FALLTHROUGH
-							case FLOAT_NEG_INFINITY:
-							case FLOAT_INFINITY:
-							case FLOAT_NAN:
-							case FLOAT_NAN_E:
-								last.d = b;
-								diff.d = 0;
-								break;
+							diff.d = b - last.d;
+							last.d = b;
+							break;
 						}
-					}
-					SkipOneSpacer(&string);
-					++count;
-				}
-			}
-			break;
-		case 'U':
-			DX(int, U)
-			// FALLTHROUGH
-		case 'u':
-			if (*type == '[')
-			{
-				SscanfWarning("User arrays are not supported in arrays.");
-			}
-			if (defaults)
-			{
-				GET_CPTR();
-				if (gOptions & 1)
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoU(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
+						// FALLTHROUGH
+					case FLOAT_NEG_INFINITY:
+					case FLOAT_INFINITY:
+					case FLOAT_NAN:
+					case FLOAT_NAN_E:
+						last.d = b;
+						diff.d = 0;
+						break;
 					}
 				}
-				else
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoI(&string, &b);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
-					}
-				}
+				SkipOneSpacer(&string);
+				++count;
 			}
-			else
-			#define DoU(m,n) DoU(m,n,0)
-			{
-				DOV(int, U)
-			}
-			#undef DoU
-			break;
-		case 'Q':
-			DX(int, Q)
-			// FALLTHROUGH
-		case 'q':
-			if (*type == '[')
-			{
-				SscanfWarning("User arrays are not supported in arrays.");
-			}
-			if (defaults)
-			{
-				GET_CPTR();
-				if (gOptions & 1)
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoQ(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
-					}
-				}
-				else
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoI(&string, &b);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
-					}
-				}
-			}
-			else
-			#define DoQ(m,n) DoQ(m,n,0)
-			{
-				DOV(int, Q)
-			}
-			#undef DoQ
-			break;
-		case 'R':
-			DX(int, R)
-			// FALLTHROUGH
-		case 'r':
-			if (*type == '[')
-			{
-				SscanfWarning("User arrays are not supported in arrays.");
-			}
-			if (defaults)
-			{
-				GET_CPTR();
-				if (gOptions & 1)
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoR(&string, &b, 0);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
-					}
-				}
-				else
-				{
-					int
-						b;
-					while (count < length && *string)
-					{
-						DoI(&string, &b);
-						SAVE_VALUE((cell)b);
-						last.c = b;
-						diff.c = 0;
-						SkipOneSpacer(&string);
-						++count;
-					}
-				}
-			}
-			else
-			#define DoR(m,n) DoR(m,n,0)
-			{
-				DOV(int, R)
-			}
-			#undef DoR
-			break;
-		case 'A':
-		case 'a':
-			SscanfError("Multi-dimensional arrays are not supported.");
-			return SSCANF_FAIL_RETURN;
-		case '\'':
-			SscanfError("Search strings are not supported in arrays.");
-			return SSCANF_FAIL_RETURN;
-		case 'P':
-		case 'p':
-			SscanfError("Delimiters are not supported in arrays.");
-			return SSCANF_FAIL_RETURN;
-		case '?':
-			SscanfError("Options are not supported in arrays.");
-			return SSCANF_FAIL_RETURN;
-		case 'k':
-			if (defaults)
-			{
-				GET_CPTR();
-				if (DoK(g_aCurAMX, &type, &string, cptr, false, true) && doSave)
-				{
-					while (++count < length)
-					{
-						*(cptr + 1) = *cptr;
-						++cptr;
-					}
-				}
-			}
-			else
-			{
-				char *
-					f = type;
-				GET_CPTR();
-				while (count < length && *string && DoK(g_aCurAMX, &f, &string, cptr, false, wholeString && count == length - 1))
-				{
-					if (doSave) ++cptr;
-					SkipOneSpacer(&string);
-					++count;
-					*(f - 1) = '>';
-					f = type;
-				}
-			}
-			break;
-		case 's':
-			//SscanfError("Strings are not supported in arrays.");
-			// Now they are (or rather, now I would like them to be, I've not
-			// actually WRITTEN the code yet...).
-			// This code has to read the memory pointed to by "cptr", which for
-			// a multi-dimensional array points to the array header and from
-			// which we can actually read the array lengths.  Note that this
-			// actually means that we don't need to include the string length in
-			// the array specifier, and can thus support jagged arrays!
-			if (defaults)
+		}
+		break;
+	case 'U':
+		DX(int, U)
+		// FALLTHROUGH
+	case 'u':
+		if (*type == '[')
+		{
+			SscanfWarning("User arrays are not supported in arrays.");
+		}
+		if (defaults)
+		{
+			GET_CPTR();
+			if (gOptions & 1)
 			{
 				int
-					nl = GetLength(&type, args),
-					sl;
-				char *
-					dest;
-				// Parse the default string.
-				DoS(&string, &dest, 0x7FFFFFFF, true);
-				GET_CPTR();
+					b;
+				while (count < length && *string)
+				{
+					DoU(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+			else
+			{
+				int
+					b;
+				while (count < length && *string)
+				{
+					DoI(&string, &b);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+		}
+		else
+		#define DoU(m,n) DoU(m,n,0)
+		{
+			DOV(int, U)
+		}
+		#undef DoU
+		break;
+	case 'Q':
+		DX(int, Q)
+		// FALLTHROUGH
+	case 'q':
+		if (*type == '[')
+		{
+			SscanfWarning("User arrays are not supported in arrays.");
+		}
+		if (defaults)
+		{
+			GET_CPTR();
+			if (gOptions & 1)
+			{
+				int
+					b;
+				while (count < length && *string)
+				{
+					DoQ(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+			else
+			{
+				int
+					b;
+				while (count < length && *string)
+				{
+					DoI(&string, &b);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+		}
+		else
+		#define DoQ(m,n) DoQ(m,n,0)
+		{
+			DOV(int, Q)
+		}
+		#undef DoQ
+		break;
+	case 'R':
+		DX(int, R)
+		// FALLTHROUGH
+	case 'r':
+		if (*type == '[')
+		{
+			SscanfWarning("User arrays are not supported in arrays.");
+		}
+		if (defaults)
+		{
+			GET_CPTR();
+			if (gOptions & 1)
+			{
+				int
+					b;
+				while (count < length && *string)
+				{
+					DoR(&string, &b, 0);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+			else
+			{
+				int
+					b;
+				while (count < length && *string)
+				{
+					DoI(&string, &b);
+					SAVE_VALUE((cell)b);
+					last.c = b;
+					diff.c = 0;
+					SkipOneSpacer(&string);
+					++count;
+				}
+			}
+		}
+		else
+		#define DoR(m,n) DoR(m,n,0)
+		{
+			DOV(int, R)
+		}
+		#undef DoR
+		break;
+	case 'A':
+	case 'a':
+		SscanfError("Multi-dimensional arrays are not supported.");
+		return SSCANF_FAIL_RETURN;
+	case '\'':
+		SscanfError("Search strings are not supported in arrays.");
+		return SSCANF_FAIL_RETURN;
+	case 'P':
+	case 'p':
+		SscanfError("Delimiters are not supported in arrays.");
+		return SSCANF_FAIL_RETURN;
+	case '?':
+		SscanfError("Options are not supported in arrays.");
+		return SSCANF_FAIL_RETURN;
+	case 'k':
+		if (defaults)
+		{
+			GET_CPTR();
+			if (DoK(g_aCurAMX, &type, &string, cptr, false, true) && doSave)
+			{
+				while (++count < length)
+				{
+					*(cptr + 1) = *cptr;
+					++cptr;
+				}
+			}
+		}
+		else
+		{
+			char *
+				f = type;
+			GET_CPTR();
+			while (count < length && *string && DoK(g_aCurAMX, &f, &string, cptr, false, wholeString && count == length - 1))
+			{
+				if (doSave) ++cptr;
+				SkipOneSpacer(&string);
+				++count;
+				*(f - 1) = '>';
+				f = type;
+			}
+		}
+		break;
+	case 's':
+		//SscanfError("Strings are not supported in arrays.");
+		// Now they are (or rather, now I would like them to be, I've not
+		// actually WRITTEN the code yet...).
+		// This code has to read the memory pointed to by "cptr", which for
+		// a multi-dimensional array points to the array header and from
+		// which we can actually read the array lengths.  Note that this
+		// actually means that we don't need to include the string length in
+		// the array specifier, and can thus support jagged arrays!
+		if (defaults)
+		{
+			int
+				nl = GetLength(&type, args),
+				sl;
+			char *
+				dest;
+			// Parse the default string.
+			DoS(&string, &dest, 0x7FFFFFFF, true);
+			GET_CPTR();
+			if (doSave)
+			{
+				cell *
+					sptr;
+				// Send the string to PAWN.
+				while (count < length)
+				{
+					// Get the true address as offset from the array
+					// base address, and its length.
+					GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
+					amx_SetString(sptr, dest, 0, 0, sl);
+					++count;
+				}
+			}
+			break;
+		}
+		else
+		{
+			// Get the length.
+			int
+				nl = GetLength(&type, args),
+				sl;
+			char *
+				dest;
+			GET_CPTR();
+			while (count < length && *string)
+			{
 				if (doSave)
 				{
 					cell *
 						sptr;
-					// Send the string to PAWN.
-					while (count < length)
-					{
-						// Get the true address as offset from the array
-						// base address, and its length.
-						GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
-						amx_SetString(sptr, dest, 0, 0, sl);
-						++count;
-					}
+					// Get the true address as offset from the array
+					// base address, and its length.
+					GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
+					//printf("%d %d\n", nl, sl);
+					//printf("%d %d %d", cptr, sptr, sl);
+					DoS(&string, &dest, sl, wholeString && count == length - 1);
+					amx_SetString(sptr, dest, 0, 0, sl);
 				}
-				break;
-			}
-			else
-			{
-				// Get the length.
-				int
-					nl = GetLength(&type, args),
-					sl;
-				char *
-					dest;
-				GET_CPTR();
-				while (count < length && *string)
+				else
 				{
-					if (doSave)
-					{
-						cell *
-							sptr;
-						// Get the true address as offset from the array
-						// base address, and its length.
-						GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
-						//printf("%d %d\n", nl, sl);
-						//printf("%d %d %d", cptr, sptr, sl);
-						DoS(&string, &dest, sl, wholeString && count == length - 1);
-						amx_SetString(sptr, dest, 0, 0, sl);
-					}
-					else
-					{
-						DoS(&string, &dest, 0x7FFFFFFF, wholeString && count == length - 1);
-					}
-					SkipOneSpacer(&string);
+					DoS(&string, &dest, 0x7FFFFFFF, wholeString && count == length - 1);
+				}
+				SkipOneSpacer(&string);
+				++count;
+			}
+			break;
+		}
+		//return SSCANF_FAIL_RETURN;
+	case 'z':
+		//SscanfError("Strings are not supported in arrays.");
+		// Now they are (or rather, now I would like them to be, I've not
+		// actually WRITTEN the code yet...).
+		// This code has to read the memory pointed to by "cptr", which for
+		// a multi-dimensional array points to the array header and from
+		// which we can actually read the array lengths.  Note that this
+		// actually means that we don't need to include the string length in
+		// the array specifier, and can thus support jagged arrays!
+		if (defaults)
+		{
+			int
+				nl = GetLength(&type, args),
+				sl;
+			char *
+				dest;
+			// Parse the default string.
+			DoS(&string, &dest, 0x7FFFFFFF, true);
+			GET_CPTR();
+			if (doSave)
+			{
+				cell *
+					sptr;
+				// Send the string to PAWN.
+				while (count < length)
+				{
+					// Get the true address as offset from the array
+					// base address, and its length.
+					GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
+					amx_SetString(sptr, dest, 1, 0, sl);
 					++count;
 				}
-				break;
 			}
-			//return SSCANF_FAIL_RETURN;
-		case 'z':
-			//SscanfError("Strings are not supported in arrays.");
-			// Now they are (or rather, now I would like them to be, I've not
-			// actually WRITTEN the code yet...).
-			// This code has to read the memory pointed to by "cptr", which for
-			// a multi-dimensional array points to the array header and from
-			// which we can actually read the array lengths.  Note that this
-			// actually means that we don't need to include the string length in
-			// the array specifier, and can thus support jagged arrays!
-			if (defaults)
+			break;
+		}
+		else
+		{
+			// Get the length.
+			int
+				nl = GetLength(&type, args),
+				sl;
+			char *
+				dest;
+			GET_CPTR();
+			while (count < length && *string)
 			{
-				int
-					nl = GetLength(&type, args),
-					sl;
-				char *
-					dest;
-				// Parse the default string.
-				DoS(&string, &dest, 0x7FFFFFFF, true);
-				GET_CPTR();
 				if (doSave)
 				{
 					cell *
 						sptr;
-					// Send the string to PAWN.
-					while (count < length)
-					{
-						// Get the true address as offset from the array
-						// base address, and its length.
-						GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
-						amx_SetString(sptr, dest, 1, 0, sl);
-						++count;
-					}
+					// Get the true address as offset from the array
+					// base address, and its length.
+					GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
+					//printf("%d %d\n", nl, sl);
+					//printf("%d %d %d", cptr, sptr, sl);
+					DoS(&string, &dest, sl, wholeString && count == length - 1);
+					amx_SetString(sptr, dest, 1, 0, sl);
 				}
-				break;
-			}
-			else
-			{
-				// Get the length.
-				int
-					nl = GetLength(&type, args),
-					sl;
-				char *
-					dest;
-				GET_CPTR();
-				while (count < length && *string)
+				else
 				{
-					if (doSave)
-					{
-						cell *
-							sptr;
-						// Get the true address as offset from the array
-						// base address, and its length.
-						GetJaggedSlot(cptr, length, nl, count, &sptr, &sl);
-						//printf("%d %d\n", nl, sl);
-						//printf("%d %d %d", cptr, sptr, sl);
-						DoS(&string, &dest, sl, wholeString && count == length - 1);
-						amx_SetString(sptr, dest, 1, 0, sl);
-					}
-					else
-					{
-						DoS(&string, &dest, 0x7FFFFFFF, wholeString && count == length - 1);
-					}
-					SkipOneSpacer(&string);
-					++count;
+					DoS(&string, &dest, 0x7FFFFFFF, wholeString && count == length - 1);
 				}
-				break;
+				SkipOneSpacer(&string);
+				++count;
 			}
-			//return SSCANF_FAIL_RETURN;
-		case '{':
-		case '}':
-			SscanfError("Quiet sections are not supported in arrays.");
-			return SSCANF_FAIL_RETURN;
-		default:
-			SscanfError("Unknown format specifier '%c'.", *(type - 1));
-			return SSCANF_FAIL_RETURN;
+			break;
+		}
+		//return SSCANF_FAIL_RETURN;
+	case '{':
+	case '}':
+		SscanfError("Quiet sections are not supported in arrays.");
+		return SSCANF_FAIL_RETURN;
+	default:
+		SscanfError("Unknown format specifier '%c'.", *(type - 1));
+		return SSCANF_FAIL_RETURN;
 	}
 	// Save the end of the string.
 	*input = string;
@@ -610,39 +610,39 @@ int
 			{
 				switch (*(type - 1))
 				{
-					case 'F':
-					case 'f':
-					case 'G':
-					case 'g':
-						// Float type.
-						do
+				case 'F':
+				case 'f':
+				case 'G':
+				case 'g':
+					// Float type.
+					do
+					{
+						last.d += diff.d;
+						SAVE_VALUE_F(last.d);
+						++count;
+					}
+					while (count < length);
+					break;
+				case 'K':
+				case 'k':
+				case 's':
+				case 'z':
+					// There is no "progression" in optional strings - you
+					// specify one and JUST one!
+					break;
+				default:
+					do
+					{
+						// Other type.
+						while (count < length)
 						{
-							last.d += diff.d;
-							SAVE_VALUE_F(last.d);
+							last.c += diff.c;
+							SAVE_VALUE(last.c);
 							++count;
 						}
-						while (count < length);
-						break;
-					case 'K':
-					case 'k':
-					case 's':
-					case 'z':
-						// There is no "progression" in optional strings - you
-						// specify one and JUST one!
-						break;
-					default:
-						do
-						{
-							// Other type.
-							while (count < length)
-							{
-								last.c += diff.c;
-								SAVE_VALUE(last.c);
-								++count;
-							}
-						}
-						while (count < length);
-						break;
+					}
+					while (count < length);
+					break;
 				}
 			}
 		}
@@ -683,18 +683,18 @@ bool
 	if (!type) return false;
 	switch (*type)
 	{
-		case 'S':
-			OPTIONAL_INVALID;
-			*type = 's';
-			break;
-		case 'Z':
-			OPTIONAL_INVALID;
-			*type = 'z';
-			break;
-		case 'K':
-			OPTIONAL_INVALID;
-			*type = 'k';
-			break;
+	case 'S':
+		OPTIONAL_INVALID;
+		*type = 's';
+		break;
+	case 'Z':
+		OPTIONAL_INVALID;
+		*type = 'z';
+		break;
+	case 'K':
+		OPTIONAL_INVALID;
+		*type = 'k';
+		break;
 	}
 	if (optional)
 	{
@@ -714,21 +714,21 @@ bool
 			{
 				switch (**defaults)
 				{
-					case '\0':
+				case '\0':
+					goto DoA_after_loop;
+				case '\\':
+					escape = !escape;
+					break;
+				case ')':
+					if (!escape)
+					{
+						// End the loop after ")" if it isn't escaped.
 						goto DoA_after_loop;
-					case '\\':
-						escape = !escape;
-						break;
-					case ')':
-						if (!escape)
-						{
-							// End the loop after ")" if it isn't escaped.
-							goto DoA_after_loop;
-						}
-						// FALLTHROUGH.
-					default:
-						escape = false;
-						break;
+					}
+					// FALLTHROUGH.
+				default:
+					escape = false;
+					break;
 				}
 				// Don't need to check for escaped ")"s here as you can't have
 				// arrays of strings, which is the only place that would be.
@@ -789,19 +789,19 @@ DoA_after_loop:
 			args.Restore();
 			switch (DoArrayValues(type, input, args, length, false, (*type == 's' || *type == 'z' || *type == 'k') && (IsEnd(**defaults) || (!doSave && **defaults == '}' && IsEnd(*(*defaults + 1)))), doSave))
 			{
-				case SSCANF_CONT_RETURN:
-					if (optional)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				case SSCANF_TRUE_RETURN:
+			case SSCANF_CONT_RETURN:
+				if (optional)
+				{
 					return true;
-				default:
+				}
+				else
+				{
 					return false;
+				}
+			case SSCANF_TRUE_RETURN:
+				return true;
+			default:
+				return false;
 			}
 		}
 		else
