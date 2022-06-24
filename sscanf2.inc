@@ -105,7 +105,7 @@
 
 #define SSCANF_STATIC__
 #if defined __PawnBuild
-	#if __PawnBuild == 1
+	#if __PawnBuild == 11
 		// `const static` support.
 		#undef SSCANF_STATIC__
 		#define SSCANF_STATIC__ static
