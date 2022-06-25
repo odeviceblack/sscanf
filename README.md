@@ -1078,7 +1078,7 @@ Will return the first match to a name input, instead of the best.  So if there a
 Use the same text similarity metrics as in kustom matchers to find the best name match to a given input.  The value given is the cutoff threshold for matches.  A value of `-1` disables this setting:
 
 ```pawn
-sscanf("Y_Luss", "?<MATCH_NAME_SIMILARITY=0.3>u", id);
+sscanf("Y_Lass", "?<MATCH_NAME_SIMILARITY=0.3>u", id);
 ```
 
 Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0` would return only exact matches; a similarity of `0.0` will always return something, even if the input is total gibberish.  When set (i.e. not `-1`) this option overrides `MATCH_NAME_PARTIAL`, but works well with all the other name matching options.  This is the only float option, and so needs a tag override to read:
