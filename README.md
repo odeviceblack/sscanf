@@ -208,7 +208,7 @@ if (unformat(params, "ui", giveplayerid, amount))
 
 The `sscanf` binary (`sscanf.dll` on Windows, or `sscanf.so` on Linux) works as both a legacy (SA:MP) plugin or an *open.mp* component.  The recommended method is to use it as a component - just place the file in the `components` directory in the server root and *open.mp* will load it automatically.
 
-If you wish to use it as a legacy plugin for some reason (there is no need if you are on version `2.13.1` or higher) place it in the `plugins` directory in the open.mp server root and either follow the *SA:MP*-specific instructions for `server.cfg` on your platform or add `"sscanf"` to `"pawn.legacy_plugins"` in `config.json`:
+If you wish to use it as a legacy plugin for some reason (there is no need if you are on version `2.12.1` or higher) place it in the `plugins` directory in the open.mp server root and either follow the *SA:MP*-specific instructions for `server.cfg` on your platform or add `"sscanf"` to `"pawn.legacy_plugins"` in `config.json`:
 
 ```json
 {
