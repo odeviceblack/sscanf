@@ -748,17 +748,17 @@ stock const SSCANF_ARGB[] = "SSCANF_ARGB";
 /**
  * <library>sscanf</library>
  * <remarks>
- * The <c>MATCH_NAME_BEST</c> option as a constant string so you can get compile-
+ * The <c>MATCH_NAME_FIRST</c> option as a constant string so you can get compile-
  * time spell checking on the name.  Specify whether <c>u</c> etc keep searching
- * for better matching players after finding one:
+ * for better matching player names after finding one:
  *
  * <code>
- *     SSCANF_Option(MATCH_NAME_BEST, 1); // Enable scanning for the best name match not the first. <br />
- *     SSCANF_Option(MATCH_NAME_BEST, 0); // Enable scanning for the first name match not the best (default).
+ *     SSCANF_Option(MATCH_NAME_FIRST, 0); // Enable scanning for the best name match not the first (default). <br />
+ *     SSCANF_Option(MATCH_NAME_FIRST, 1); // Enable scanning for the first name match not the best (old behaviour).
  * </code>
  * </remarks>
  */
-stock const MATCH_NAME_BEST[] = "MATCH_NAME_BEST";
+stock const MATCH_NAME_FIRST[] = "MATCH_NAME_FIRST";
 
 /**
  * <library>sscanf</library>

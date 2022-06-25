@@ -87,7 +87,7 @@ float
 //
 //    `K(def)` needs a valid input as the default value.
 //
-// 32 = MATCH_NAME_BEST
+// 32 = MATCH_NAME_FIRST
 //
 //    Search for the best name match, not just the first.
 //
@@ -307,28 +307,28 @@ void
 			}
 		}
 	}
-	else if (!strincmp(name, "MATCH_NAME_BEST", 15))
+	else if (!strincmp(name, "MATCH_NAME_FIRST", 16))
 	{
 		switch (value)
 		{
 		case 1:
 			logprintf = qlog;
-			gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_BEST);
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_FIRST);
 			break;
 		case 0:
 			logprintf = real_logprintf;
-			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_BEST);
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_FIRST);
 			break;
 		case -1:
-			if (*(name + 15) == '=')
+			if (*(name + 16) == '=')
 			{
-				if (*(name + 16) == '0')
+				if (*(name + 17) == '0')
 				{
-					gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_BEST);
+					gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_FIRST);
 				}
 				else
 				{
-					gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_BEST);
+					gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_FIRST);
 				}
 			}
 			else
@@ -408,9 +408,9 @@ cell
 	{
 		return (gOptions & OLD_DEFAULT_KUSTOM) != SSCANF_OPTIONS_NONE;
 	}
-	else if (!strincmp(name, "MATCH_NAME_BEST", 15))
+	else if (!strincmp(name, "MATCH_NAME_FIRST", 16))
 	{
-		return (gOptions & MATCH_NAME_BEST) != SSCANF_OPTIONS_NONE;
+		return (gOptions & MATCH_NAME_FIRST) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "MATCH_NAME_SIMILARITY", 21))
 	{

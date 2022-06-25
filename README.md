@@ -58,7 +58,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 6.6 [SSCANF_ALPHA:](#sscanf_alpha)
     * 6.7 [SSCANF_COLOUR_FORMS:](#sscanf_colour_forms)
     * 6.8 [SSCANF_ARGB:](#sscanf_argb)
-    * 6.9 [MATCH_NAME_BEST:](#match_name_best)
+    * 6.9 [MATCH_NAME_FIRST:](#match_name_first)
     * 6.10 [MATCH_NAME_SIMILARITY:](#match_name_similarity)
 * 7 [All Specifiers](#all-specifiers)
 * 8 [Full API](#full-api)
@@ -1069,9 +1069,9 @@ SSCANF_Option(SSCANF_ARGB, 1); // Set 3- and 6-digit colour outputs to `AARRGGBB
 SSCANF_Option(SSCANF_ARGB, 0); // Set 3- and 6-digit colour outputs to `RRGGBBAA` (default).
 ```
 
-### MATCH_NAME_BEST:
+### MATCH_NAME_FIRST:
 
-Will return the best match to a name input, instead of the first.  So if there are players `Bob255` and `Bob7`, and the input is `Bob`, then `Bob7` will always be returned instead of depending on ID order.
+Will return the first match to a name input, instead of the best.  So if there are players `Bob255` and `Bob7`, and the input is `Bob`, then the result will depend on ID order.  This matches the old behaviour.
 
 ### MATCH_NAME_SIMILARITY:
 

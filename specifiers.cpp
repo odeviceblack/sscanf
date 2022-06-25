@@ -390,9 +390,9 @@ bool
 		{
 			int
 				best = 1000;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -407,7 +407,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -422,7 +422,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -440,7 +440,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -459,7 +459,7 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
@@ -479,7 +479,7 @@ bool
 				}
 				break;
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Both.
 				while (val < g_iTrueMax)
 				{
@@ -504,10 +504,10 @@ bool
 		{
 			float
 				best = 0.0f;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_FIRST:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -522,8 +522,8 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -543,9 +543,9 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
@@ -615,9 +615,9 @@ bool
 		{
 			int
 				best = 1000;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -633,7 +633,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -649,7 +649,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -668,7 +668,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -688,7 +688,7 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
@@ -709,7 +709,7 @@ bool
 				}
 				break;
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Both.
 				// Loop through all the players and check that they're
 				// connected, an NPC, and that their name is correct.
@@ -739,10 +739,10 @@ bool
 		{
 			float
 				best = 0.0f;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_FIRST:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -758,8 +758,8 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -780,9 +780,9 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
@@ -843,9 +843,9 @@ bool
 		{
 			int
 				best = 1000;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -861,7 +861,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -877,7 +877,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -896,7 +896,7 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -916,7 +916,7 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
@@ -937,7 +937,7 @@ bool
 				}
 				break;
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Both.
 				// Loop through all the players and check that they're
 				// connected, an NPC, and that their name is correct.
@@ -967,10 +967,10 @@ bool
 		{
 			float
 				best = 0.0f;
-			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST))
+			switch (gOptions & (MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST))
 			{
-			case SSCANF_OPTIONS_NONE:
-			case MATCH_NAME_PARTIAL:
+			case MATCH_NAME_FIRST:
+			case MATCH_NAME_PARTIAL | MATCH_NAME_FIRST:
 				// Original.
 				while (val < g_iTrueMax)
 				{
@@ -986,8 +986,8 @@ bool
 					++val;
 				}
 				break;
-			case MATCH_NAME_BEST:
-			case MATCH_NAME_PARTIAL | MATCH_NAME_BEST:
+			case SSCANF_OPTIONS_NONE:
+			case MATCH_NAME_PARTIAL:
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
@@ -1008,9 +1008,9 @@ bool
 				}
 				break;
 			case CELLMIN_ON_MATCHES:
-			case CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES:
-			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_BEST:
+			case MATCH_NAME_PARTIAL | CELLMIN_ON_MATCHES | MATCH_NAME_FIRST:
 				// Multiple matches.
 				while (val < g_iTrueMax)
 				{
