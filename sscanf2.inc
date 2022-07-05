@@ -327,7 +327,7 @@ native SSCANF_Levenshtein(const string1[], const string2[]);
  * <remarks>
  * This works out the similarity between two strings.  The Levenshtein distance
  * often produces results that seem weird to people, for example by that measure
- * <c>NRG</c> is closer to <c>TUG</c> than <c>NRG-400</c>.  Instead this
+ * <c>NRG</c> is closer to <c>TUG</c> than <c>NRG-500</c>.  Instead this
  * function compares all pairs of letters between the two strings to work out
  * what percentage of each string is in the other string, then multiplies the
  * results to get the final similarity.  This algorithm produces much more human
