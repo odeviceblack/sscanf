@@ -33,6 +33,8 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
 	* 4.4 [SA:MP Linux](#samp-linux)
 	* 4.5 [NPC Modes](#npc-modes)
 * 5 [Tutorials](#tutorials)
+    * 5.1 [`/sendcash` Command](#sendcash-command)
+    * 5.2 [INI Parser](#ini-parser)
 * 6 [Specifiers](#specifiers)
     * 6.1 [Strings](#strings)
     * 6.2 [Packed Strings](#packed-strings)
@@ -261,6 +263,74 @@ You must also place `sscanf.so` in the `plugins` subdirectory of the server.  If
 To use sscanf in an NPC mode save the plugin as `amxsscanf.dll` (on Windows) or `amxsscanf.so` (on Linux) in the same directory as `samp-npc(.exe)` (i.e. the server root).  This allows NPC modes to automatically find and load the library.  The only tiny differences between this sscanf and the normal sscanf are that there are no prints; and `u`, `r`, and `q` don't know if a user is a bot or not thus just assume they are all players.
 
 ## Tutorials
+
+### `/sendcash` Command
+
+Send some of your money to another player.  This command allows you to specify the target player using their name or ID so you can type `/sendcash Y_Less 500` to send me $500 (*hint hint...*), or `/sendcash 27 12` to send $12 to whoever player ID 27 is.  Note that if a player has a numeric name such as `69` you will have to use their ID only, typing that name will always select the player with ID 69, not the player with name "69":
+
+```pawn
+YCMD:sendcash(playerid, params[], help)
+{
+	if (help)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "Send money to another player.  Usage: /sendcash <name/id> <amount>");
+		return 1;
+	}
+	new targetid, money;
+	if (sscanf(params, "ui", targetid, money) != 0)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "Missing parameters.  Usage: /sendcash <name/id> <amount>");
+		return 1;
+	}
+	if (targetid == INVALID_PLAYER_ID)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "Unknown target player.");
+		return 1;
+	}
+	if (money > GetPlayerMoney(playerid))
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "You don't have enough money.");
+		return 1;
+	}
+	GivePlayerMoney(playerid, -money);
+	GivePlayerMoney(targetid, money);
+	SendClientMessage(playerid, COLOUR_HELP, "You sent money.");
+	SendClientMessage(targetid, COLOUR_HELP, "You receieved money.");
+	return 1;
+}
+```
+
+### INI Parser
+
+This very basic file reader uses *sscanf* to split the keys and values in an INI file by `=`.
+
+```pawn
+bool:ReadINIString(const filename[], const key[], &value)
+{
+	new File:f = fopen(filename, io_read);
+	if (!f)
+	{
+		return false;
+	}
+	new line[128];
+	new k[32], v[96];
+	while ((fread(f, line)))
+	{
+		if (sscanf(line, "p<=>s[32]s[96]", k, v) == 0)
+		{
+			if (strcmp(key, k, true) == 0)
+			{
+				value = strval(v);
+				fclose(f);
+				return true;
+			}
+		}
+	}
+	fclose(f);
+	return false;
+}
+```
+
 ## Specifiers
 
 The basic specifiers (the letters `u`, `i`, `s` etc. in the codes above) here.  There are more advanced ones in a later table.
