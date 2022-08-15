@@ -533,6 +533,11 @@ native sscanf(const data[], const format[], {Float, _}:...);
 #pragma deprecated - include <sscanf2> first.
 forward unformat(const data[], const format[], {Float, _}:...);
 
+// For pawno native detection.
+/*
+native unformat(const data[], const format[], {Float, _}:...);
+*/
+
 #if defined __PawnBuild
 	#define unformat( SSCANF__(__file,__line,
 #else
