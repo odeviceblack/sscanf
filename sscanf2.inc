@@ -249,7 +249,7 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * compatibility with older versions of this include.
  * </remarks>
  */
-native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
+/* */ native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
 
 /**
  * <library>sscanf</library>
@@ -262,7 +262,7 @@ native SSCANF__(const file[], const line, const data[], const format[], {Float, 
  * name can be used as a macro.
  * </remarks>
  */
-native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
+/* */ native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
 
 /**
  * <library>sscanf</library>
@@ -273,7 +273,7 @@ native UNFORMAT__(const file[], const line, const data[], const format[], {Float
  * Initialise the plugin with real server information.
  * </remarks>
  */
-native SSCANF_Init(players, invalid, len);
+/* */ native SSCANF_Init(players, invalid, len);
 
 /**
  * <library>sscanf</library>
@@ -284,7 +284,7 @@ native SSCANF_Init(players, invalid, len);
  * Called when a player joins to inform the plugin of the connection.
  * </remarks>
  */
-native SSCANF_Join(playerid, const name[], bool:npc);
+/* */ native SSCANF_Join(playerid, const name[], bool:npc);
 
 /**
  * <library>sscanf</library>
@@ -293,7 +293,7 @@ native SSCANF_Join(playerid, const name[], bool:npc);
  * Called when a player leaves to inform the plugin of the disconnection.
  * </remarks>
  */
-native SSCANF_Leave(playerid);
+/* */ native SSCANF_Leave(playerid);
 
 /**
  * <library>sscanf</library>
@@ -303,7 +303,7 @@ native SSCANF_Leave(playerid);
  * to re-add players.
  * </remarks>
  */
-native bool:SSCANF_IsConnected(playerid);
+/* */ native bool:SSCANF_IsConnected(playerid);
 
 /**
  * <library>sscanf</library>
@@ -363,7 +363,7 @@ native SSCANF_GetOption(const name[]) = SSCANF_Option;
  * to <c>Get__</c> and <c>Set__</c> functions.
  * </remarks>
  */
-native SSCANF_GetOption__(const name[]) = SSCANF_Option;
+/* */ native SSCANF_GetOption__(const name[]) = SSCANF_Option;
 
 /**
  * <library>sscanf</library>
@@ -393,7 +393,7 @@ native SSCANF_SetOption(const name[], {_, Float}:value) = SSCANF_Option;
  * to <c>Get__</c> and <c>Set__</c> functions.
  * </remarks>
  */
-native SSCANF_SetOption__(const name[], {_, Float}:value) = SSCANF_Option;
+/* */ native SSCANF_SetOption__(const name[], {_, Float}:value) = SSCANF_Option;
 
 /**
  * <library>sscanf</library>
@@ -443,7 +443,7 @@ native SSCANF_VersionString(version[], size = sizeof (version)) = SSCANF_Version
  * return a string when called with parameters, or a BCD value when not.
  * </remarks>
  */
-native SSCANF_VersionString__(version[], size = sizeof (version)) = SSCANF_Version;
+/* */ native SSCANF_VersionString__(version[], size = sizeof (version)) = SSCANF_Version;
 
 /**
  * <library>sscanf</library>
@@ -463,7 +463,7 @@ native SSCANF_VersionBCD() = SSCANF_Version;
  * return a string when called with parameters, or a BCD value when not.
  * </remarks>
  */
-native SSCANF_VersionBCD__() = SSCANF_Version;
+/* */ native SSCANF_VersionBCD__() = SSCANF_Version;
 
 // The `SSCANF_Version` function is overloaded to take 0 or 2 parameters (or 1 plus a default).
 
@@ -500,6 +500,11 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  */
 #pragma deprecated - include <sscanf2> first.
 forward sscanf(const data[], const format[], {Float, _}:...);
+
+// For pawno native detection.
+/*
+native sscanf(const data[], const format[], {Float, _}:...);
+*/
 
 #if defined __PawnBuild
 	#define sscanf( SSCANF__(__file,__line,
@@ -830,7 +835,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
  * const-correct wrapper for <c>SetTimer</c>, mainly for NPC modes.
  * </remarks>
  */
-native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
+/* */ native SSCANF_SetTimer(const funcname[], interval, bool:repeating) = SetTimer;
 
 /// <library>sscanf</library>
 /// <remarks>
@@ -1346,7 +1351,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * </remarks>
  */
 #if defined SSCANF_NO_K_WEAPON
-	native SSCANF_no_k_weapon();
+	/* */ native SSCANF_no_k_weapon();
 	#define SSCANF_no_k_weapon()
 #else
 	SSCANF:weapon(const string[])
@@ -1434,7 +1439,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * </remarks>
  */
 #if defined SSCANF_NO_K_VEHICLE
-	native SSCANF_no_k_vehicle();
+	/* */ native SSCANF_no_k_vehicle();
 	#define SSCANF_no_k_vehicle()
 #else
 	SSCANF:vehicle(const string[])
