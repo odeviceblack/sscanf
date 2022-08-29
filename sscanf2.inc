@@ -249,7 +249,7 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * compatibility with older versions of this include.
  * </remarks>
  */
-/* */ native SSCANF__(const file[], const line, const data[], const format[], {Float, _}:...);
+/* */ native SSCANF__(const file[], const line, const data[], const format[], {T_WEAPON, Float, _}:...);
 
 /**
  * <library>sscanf</library>
@@ -262,7 +262,7 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * name can be used as a macro.
  * </remarks>
  */
-/* */ native UNFORMAT__(const file[], const line, const data[], const format[], {Float, _}:...) = SSCANF__;
+/* */ native UNFORMAT__(const file[], const line, const data[], const format[], {T_WEAPON, Float, _}:...) = SSCANF__;
 
 /**
  * <library>sscanf</library>
@@ -499,11 +499,11 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  * </remarks>
  */
 #pragma deprecated - include <sscanf2> first.
-forward sscanf(const data[], const format[], {Float, _}:...);
+forward sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 
 // For pawno native detection.
 /*
-native sscanf(const data[], const format[], {Float, _}:...);
+native sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 */
 
 #if defined __PawnBuild
@@ -531,11 +531,11 @@ native sscanf(const data[], const format[], {Float, _}:...);
  * </remarks>
  */
 #pragma deprecated - include <sscanf2> first.
-forward unformat(const data[], const format[], {Float, _}:...);
+forward unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
 
 // For pawno native detection.
 /*
-native unformat(const data[], const format[], {Float, _}:...);
+native unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
 */
 
 #if defined __PawnBuild
