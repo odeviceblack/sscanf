@@ -1,4 +1,4 @@
-# sscanf 2.13.1
+# sscanf 2.13.2
 
 ## Introduction
 
@@ -162,6 +162,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 15.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
     * 15.13 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
     * 15.14 [sscanf 2.13.1 - 25/06/2022](#sscanf-2131---25062022)
+    * 15.15 [sscanf 2.13.2 - 07/09/2022](#sscanf-2132---07092022)
 
 ## Downloads
 
@@ -2103,3 +2104,8 @@ the Initial Developer.  All Rights Reserved.
 * Add `MATCH_NAME_FIRST` to revert best name match behaviour.
 * Improve `MATCH_NAME_PARTIAL`.
 * Internal cleanup and fixes.
+
+### sscanf 2.13.2 - 07/09/2022
+
+* Rebuild for open.mp beta 9 SDK changes.
+
