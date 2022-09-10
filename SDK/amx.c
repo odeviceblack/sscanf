@@ -429,7 +429,7 @@ int AMXAPI npcamx_Flags(AMX *amx,uint16_t *flags)
     return AMX_ERR_FORMAT;
   if (hdr->file_version>CUR_FILE_VERSION || hdr->amx_version<MIN_FILE_VERSION)
     return AMX_ERR_VERSION;
-  if (hdr->file_version==9 && hdr->npcamx_version==9)
+  if (hdr->file_version==9 && hdr->amx_version==9)
     /* special check for old compiler code using `-O2` */
     return AMX_ERR_VERSION;
   *flags=hdr->flags;
@@ -919,7 +919,7 @@ int AMXAPI npcamx_Init(AMX *amx,void *program)
     return AMX_ERR_FORMAT;
   if (hdr->file_version>CUR_FILE_VERSION || hdr->amx_version<MIN_FILE_VERSION)
     return AMX_ERR_VERSION;
-  if (hdr->file_version==9 && hdr->npcamx_version==9)
+  if (hdr->file_version==9 && hdr->amx_version==9)
     /* special check for old compiler code using `-O2` */
     return AMX_ERR_VERSION;
   if (hdr->defsize!=sizeof(AMX_FUNCSTUB) && hdr->defsize!=sizeof(AMX_FUNCSTUBNT))
