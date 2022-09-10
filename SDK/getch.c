@@ -1,5 +1,4 @@
 /* Extremely inefficient but portable POSIX getch() */
-#ifndef WIN32
 
 #include <stdio.h>
 #include <string.h>
@@ -77,4 +76,26 @@ kbhit (void)
   return result;
 }
 
+#if defined TEST_GETCH
+int
+main ()
+{
+  int i;
+  char c[4];
+
+  printf("Enter %d keys to continue: ", sizeof c - 1);
+  fflush (stdout);
+
+  memset(c, 0, sizeof c);
+  for (i=0; i<sizeof c - 1; i++)
+    c[i] = getch ();
+
+  printf("Your input: [%s]\n", c);
+
+  printf("Now hit any key to abort: ");
+  while (!kbhit())
+    printf(".");
+
+  return 0;
+}
 #endif
