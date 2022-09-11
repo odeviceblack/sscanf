@@ -4,6 +4,9 @@
     <Filter Include="amx">
       <UniqueIdentifier>{5940dfd7-6123-4984-b1ff-5218df41c57f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="subhook">
+      <UniqueIdentifier>{ff98dde5-92c2-44ca-8709-4f341a6cf3d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDK\plugincommon.h">
@@ -39,6 +42,9 @@
     </ClCompile>
     <ClCompile Include="SDK\amxplugin.c">
       <Filter>amx</Filter>
+    </ClCompile>
+    <ClCompile Include="subhook\subhook.c">
+      <Filter>subhook</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
