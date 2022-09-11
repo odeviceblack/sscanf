@@ -55,6 +55,7 @@
 #include "SDK/plugincommon.h"
 #include <sdk.hpp>
 #include <Server/Components/Pawn/pawn.hpp>
+#include "subhook/subhook.h"
 
 #define DEFER_STRINGISE(n) #n
 #define STRINGISE(n) DEFER_STRINGISE(n)
@@ -74,9 +75,9 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
-typedef int  AMXAPI(*amx_Register_t)(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number);
-amx_Register_t
-	OriginalRegister;
+typedef int AMXAPI(*amx_Register_t)(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number);
+
+subhook_t amx_Register_hook;
 
 // These are the pointers to all the functions currently used by sscanf.  If
 // more are added, this table will need to be updated.
@@ -1998,6 +1999,27 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
 }
 
+int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number)
+{
+	subhook_remove(amx_Register_hook);
+	// If `number` is `-1` loop until a null entry.
+	for (int i = 0; number == -1 ? nativelist[i].name : i < number; ++i)
+	{
+		if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
+		{
+			// Found the original version, inject ours first.
+			AMX_NATIVE_INFO
+				native = { "SetPlayerName", n_SSCANF_SetPlayerName };
+			SetPlayerName = nativelist[i].func;
+			amx_Register(amx, &native, 1);
+			break;
+		}
+	}
+	int ret = amx_Register(amx, nativelist, number);
+	subhook_install(amx_Register_hook);
+	return ret;
+}
+
 //----------------------------------------------------------
 // The Load() function gets passed on exported functions from
 // the SA-MP Server, like the AMX Functions and logprintf().
@@ -2005,28 +2027,6 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 
 int Init(AMX * amx)
 {
-	int
-		num,
-		idx;
-	// Operate on the raw AMX file, don't use the amx_ functions to avoid issues
-	// with the fact that we've not actually finished initialisation yet.  Based
-	// VERY heavilly on code from "amx.c" in the PAWN runtime library.
-	AMX_HEADER *
-		hdr = (AMX_HEADER *)amx->base;
-	AMX_FUNCWIDE *
-		func;
-	num = NUMENTRIES(hdr, natives, libraries);
-	for (idx = 0; idx != num; ++idx)
-	{
-		func = (AMX_FUNCWIDE *)GETENTRY(hdr, natives, idx);
-		if (!strcmp("SetPlayerName", GETENTRYNAME(hdr, func)))
-		{
-			// Intercept the call!
-			SetPlayerName = (AMX_NATIVE)func->address;
-			func->address = (uintptr_t)n_SSCANF_SetPlayerName;
-			break;
-		}
-	}
 	return amx_Register(amx, sscanfSAMPNatives, -1);
 }
 
@@ -2062,7 +2062,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 {
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-	OriginalRegister = ((amx_Register_t*)pAMXFunctions)[PLUGIN_AMX_EXPORT_Register];
+
+	amx_Register_hook = subhook_new((void*)((amx_Register_t*)pAMXFunctions)[PLUGIN_AMX_EXPORT_Register], (void*)&SSCANF_Register, SUBHOOK_64BIT_OFFSET);
+	subhook_install(amx_Register_hook);
+
 	real_logprintf = logprintf;
 	
 	logprintf("");
