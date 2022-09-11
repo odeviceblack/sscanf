@@ -4214,8 +4214,7 @@ int AMXAPI npcamx_StrLen(const cell *cstr, int *length)
 #if defined AMX_XXXSTRING || defined AMX_EXEC
 int AMXAPI npcamx_SetStringLen(cell* dest, const char* source, int length, int pack, int use_wchar, size_t size)
 { /* the memory blocks should not overlap */
-	size_t len;
-	int i;
+	size_t len, i;
 
     assert_static(UNLIMITED > 0);
     len = length;
