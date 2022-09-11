@@ -74,6 +74,11 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
+typedef int AMXAPI(*AMX_Register_t)(AMX* amx, const AMX_NATIVE_INFO* list, int number);
+
+AMX_Register_t
+	OriginalRegister;
+
 // These are the pointers to all the functions currently used by sscanf.  If
 // more are added, this table will need to be updated.
 static void *
@@ -1999,7 +2004,7 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 // the SA-MP Server, like the AMX Functions and logprintf().
 // Should return true if loading the plugin has succeeded.
 
-int Init(AMX * amx) 
+int Init(AMX * amx)
 {
 	int
 		num,
@@ -2058,6 +2063,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 {
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	OriginalRegister = (AMX_Register_t)pAMXFunctions[PLUGIN_AMX_EXPORT_Register];
 	real_logprintf = logprintf;
 	
 	logprintf("");
