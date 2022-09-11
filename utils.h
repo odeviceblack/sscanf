@@ -27,10 +27,10 @@
 #pragma once
 
 int
-	strincmp(const char *, const char *, const unsigned int);
+	strincmp(const char *, const char *, size_t);
 
 bool
-	strstrin(const char *, const char *, unsigned int);
+	strstrin(const char *, const char *, size_t);
 
 int *
 	GetConnected();

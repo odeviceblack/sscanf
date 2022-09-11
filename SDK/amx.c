@@ -1740,7 +1740,7 @@ int AMXAPI npcamx_PushStringLen(AMX* amx, cell* amx_addr, cell** phys_addr, cons
 
 int AMXAPI npcamx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const char *string, int pack, int use_wchar)
 {
-  int length;
+  size_t length;
 
   assert(string!=NULL);
 
@@ -1749,7 +1749,7 @@ int AMXAPI npcamx_PushString(AMX *amx, cell *amx_addr, cell **phys_addr, const c
   #else
     length = (use_wchar ? wcslen((const wchar_t*)string) : strlen(string));
   #endif
-    return npcamx_PushStringLen(amx, amx_addr, phys_addr, string, length, pack, use_wchar);
+    return npcamx_PushStringLen(amx, amx_addr, phys_addr, string, (int)length, pack, use_wchar);
 }
 #endif /* AMX_PUSHXXX */
 
@@ -4177,7 +4177,7 @@ int AMXAPI npcamx_Release(AMX *amx,cell amx_addr)
 
 int AMXAPI npcamx_StrLen(const cell *cstr, int *length)
 {
-  int len;
+  size_t len;
   #if BYTE_ORDER==LITTLE_ENDIAN
     cell c;
   #endif
@@ -4206,7 +4206,7 @@ int AMXAPI npcamx_StrLen(const cell *cstr, int *length)
     for (len=0; cstr[len]!=0; len++)
       /* nothing */;
   } /* if */
-  *length = len;
+  *length = (int)len;
   return AMX_ERR_NONE;
 }
 #endif
@@ -4214,13 +4214,14 @@ int AMXAPI npcamx_StrLen(const cell *cstr, int *length)
 #if defined AMX_XXXSTRING || defined AMX_EXEC
 int AMXAPI npcamx_SetStringLen(cell* dest, const char* source, int length, int pack, int use_wchar, size_t size)
 { /* the memory blocks should not overlap */
-    int len, i;
+	size_t len;
+	int i;
 
     assert_static(UNLIMITED > 0);
     len = length;
     if (pack) {
         /* create a packed string */
-        if (size < UNLIMITED / sizeof(cell) && (size_t)len >= size * sizeof(cell))
+        if (size < UNLIMITED / sizeof(cell) && len >= size * sizeof(cell))
             len = size * sizeof(cell) - 1;
         dest[len / sizeof(cell)] = 0; /* clear last bytes of last (semi-filled) cell*/
 #if defined AMX_ANSIONLY
@@ -4245,7 +4246,7 @@ int AMXAPI npcamx_SetStringLen(cell* dest, const char* source, int length, int p
 
     } else {
         /* create an unpacked string */
-        if (size < UNLIMITED && (size_t)len >= size)
+        if (size < UNLIMITED && len >= size)
             len = size - 1;
 #if defined AMX_ANSIONLY
         for (i = 0; i < len; i++)
@@ -4266,7 +4267,7 @@ int AMXAPI npcamx_SetStringLen(cell* dest, const char* source, int length, int p
 
 int AMXAPI npcamx_SetString(cell *dest,const char *source,int pack,int use_wchar,size_t size)
 {                 /* the memory blocks should not overlap */
-  int length;
+  size_t length;
 
   assert(source!=NULL);
 
@@ -4276,14 +4277,14 @@ int AMXAPI npcamx_SetString(cell *dest,const char *source,int pack,int use_wchar
   #else
     length = use_wchar ? wcslen((const wchar_t*)source) : strlen(source);
   #endif
-    return npcamx_SetStringLen(dest, source, length, pack, use_wchar, size);
+    return npcamx_SetStringLen(dest, source, (int)length, pack, use_wchar, size);
 }
 #endif
 
 #if defined AMX_XXXSTRING
 int AMXAPI npcamx_GetString(char *dest,const cell *source,int use_wchar,size_t size)
 {
-  int len=0;
+  size_t len=0;
   #if defined AMX_ANSIONLY
     (void)use_wchar;
   #endif

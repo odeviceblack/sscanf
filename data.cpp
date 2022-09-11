@@ -1332,7 +1332,7 @@ void
 		++start;
 	}
 	*rs = sstart;
-	*rl = (dend - sstart);
+	*rl = (int)(dend - sstart);
 }
 
 float

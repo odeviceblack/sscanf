@@ -60,7 +60,7 @@ extern logprintf_t
 // Server information
 
 int
-	strincmp(const char * st1, const char * st2, unsigned int n)
+	strincmp(const char * st1, const char * st2, size_t n)
 {
 	int
 		ret;
@@ -80,7 +80,7 @@ int
 }
 
 bool
-	strstrin(const char * st1, const char * st2, unsigned int n)
+	strstrin(const char * st1, const char * st2, size_t n)
 {
 	// `st1` is the complete name.  `st2` is the partial string.  `n` is the partial length.
 	char

@@ -345,7 +345,7 @@ int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr)
 }
 
 typedef int  AMXAPI (*amx_Callback_t)(AMX *amx, cell index, cell *result, const cell *params);
-int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params)
+int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, const cell *params)
 {
 	amx_Callback_t fn = ((amx_Callback_t*)pAMXFunctions)[PLUGIN_AMX_EXPORT_Callback];
 	return fn(amx, index, result, params);

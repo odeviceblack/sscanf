@@ -1983,23 +1983,6 @@ AMX_NATIVE_INFO
 extern AMX_NATIVE_INFO
 	sscanfOMPNatives[];
 
-// From "amx.c", part of the PAWN language runtime:
-// http://code.google.com/p/pawnscript/source/browse/trunk/amx/amx.c
-
-#define USENAMETABLE(hdr) \
-	((hdr)->defsize==sizeof(AMX_FUNCSTUBNT))
-
-#define NUMENTRIES(hdr,field,nextfield) \
-	(unsigned)(((hdr)->nextfield - (hdr)->field) / (hdr)->defsize)
-
-#define GETENTRY(hdr,table,index) \
-	(AMX_FUNCSTUB *)((unsigned char*)(hdr) + (unsigned)(hdr)->table + (unsigned)index*(hdr)->defsize)
-
-#define GETENTRYNAME(hdr,entry) \
-	(USENAMETABLE(hdr) ? \
-		(char *)((unsigned char*)(hdr) + (unsigned)((AMX_FUNCSTUBNT*)(entry))->nameofs) : \
-		((AMX_FUNCSTUB*)(entry))->name)
-
 //----------------------------------------------------------
 // The Support() function indicates what possibilities this
 // plugin has. The SUPPORTS_VERSION flag is required to check
@@ -2026,17 +2009,17 @@ int Init(AMX * amx)
 	// VERY heavilly on code from "amx.c" in the PAWN runtime library.
 	AMX_HEADER *
 		hdr = (AMX_HEADER *)amx->base;
-	AMX_FUNCSTUB *
+	AMX_FUNCWIDE *
 		func;
 	num = NUMENTRIES(hdr, natives, libraries);
 	for (idx = 0; idx != num; ++idx)
 	{
-		func = GETENTRY(hdr, natives, idx);
+		func = (AMX_FUNCWIDE *)GETENTRY(hdr, natives, idx);
 		if (!strcmp("SetPlayerName", GETENTRYNAME(hdr, func)))
 		{
 			// Intercept the call!
 			SetPlayerName = (AMX_NATIVE)func->address;
-			func->address = (ucell)n_SSCANF_SetPlayerName;
+			func->address = (uintptr_t)n_SSCANF_SetPlayerName;
 			break;
 		}
 	}
@@ -2221,7 +2204,7 @@ private:
 	void SaveName(IPlayer& player)
 	{
 		StringView name = player.getName();
-		unsigned int
+		size_t
 			playerid = player.getID(),
 			len = name.length();
 		if (len >= g_iMaxPlayerName)
