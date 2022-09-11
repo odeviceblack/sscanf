@@ -74,9 +74,8 @@ logprintf_t
 AMX_NATIVE
 	SetPlayerName;
 
-typedef int AMXAPI(*AMX_Register_t)(AMX* amx, const AMX_NATIVE_INFO* list, int number);
-
-AMX_Register_t
+typedef int  AMXAPI(*amx_Register_t)(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number);
+amx_Register_t
 	OriginalRegister;
 
 // These are the pointers to all the functions currently used by sscanf.  If
@@ -2063,7 +2062,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL
 {
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-	OriginalRegister = (AMX_Register_t)pAMXFunctions[PLUGIN_AMX_EXPORT_Register];
+	OriginalRegister = ((amx_Register_t*)pAMXFunctions)[PLUGIN_AMX_EXPORT_Register];
 	real_logprintf = logprintf;
 	
 	logprintf("");
