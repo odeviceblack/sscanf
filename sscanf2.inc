@@ -227,6 +227,7 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
 #define sscanf_%0\32; sscanf_
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
+#define @kustom()%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
 // The check for `SSCANF_GetClosestString` ensures that this is the first
 // compiler pass and thus the check for `sscanf` only finds earlier definitions

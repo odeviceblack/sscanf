@@ -919,7 +919,7 @@ Note also that user arrays can't be combined with normal arrays or enums, but no
 The latest version of sscanf adds a new `k` specifier to allow you to define your own specifers in PAWN:
 
 ```pawn
-SSCANF:playerstate(string[])
+@kustom() playerstate(string[])
 {
     if ('0' <= string[0] <= '9')
     {
@@ -946,25 +946,23 @@ The code above, when added to the top level of your mode, will add the `playerst
 sscanf(params, "uk<playerstate>", playerid, state);
 ```
 
-This system supports optional custom specifiers with no additional PAWN code:
+With this a user can either type a number or the full name of a state and the function will convert the name or number to a number.
+
+This system supports optional custom specifiers (`K`) with no additional PAWN code.  This optional kustom specifier takes a default value that is NOT (as of sscanf 2.8) parsed by the given callback:
 
 ```pawn
-sscanf(params, "uK<playerstate>(PLAYER_STATE_NONE)", playerid, state);
+sscanf(params, "uK<playerstate>(0)", playerid, state);
 ```
 
-The new version of `sscanf2.inc` includes functions for `k<weapon>` and `k<vehicle>` allowing you to enter either the ID or name and get the ID back, but both are VERY basic at the moment and I expect other people will improve on them.
-
-Note that custom specifiers are not supported in either arrays or enumerations.
-
-Note also that custom specifiers always take a string input and always return a number, but this can be a Float, bool, or any other single cell tag type.
-
-The optional kustom specifier `K` takes a default value that is NOT (as of sscanf 2.8) parsed by the given callback:
+So in this example `999` is NOT a valid vehicle model, but if no other value is supplied then 999 will be returned, allowing you to differentiate between the user entering an invalid vehicle and not entering anything at all:
 
 ```
 K<vehicle>(999)
 ```
 
-`999` is NOT a valid vehicle model, but if no other value is supplied then 999 will be returned, allowing you to differentiate between the user entering an invalid vehicle and not entering anything at all.
+The new version of `sscanf2.inc` includes functions for `k<weapon>` and `k<vehicle>` allowing you to enter either the ID or name and get the ID back, but both are VERY basic at the moment and I expect other people will improve on them.
+
+Note that custom specifiers always take a string input and always return a number, but this can be a Float, bool, or any other single cell tag type.
 
 Also as of sscanf 2.8, `k` can be used in both arrays and enums.
 
