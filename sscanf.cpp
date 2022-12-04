@@ -2255,7 +2255,7 @@ public:
 
 	SemanticVersion componentVersion() const override
 	{
-		return SemanticVersion(0, 0, 1, 0);
+		return SemanticVersion(SSCANF_VERSION_MAJOR, SSCANF_VERSION_MINOR, SSCANF_VERSION_BUILD, 0);
 	}
 
 	void onLoad(ICore * c) override
