@@ -2111,4 +2111,5 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.13.3 - 04/12/2022
 
 * Add `@kustom()` decorator for kustom specifiers.
+* Use *subhook* to hook `amx_Register` and find `SetPlayerName`.
 
