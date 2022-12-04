@@ -965,7 +965,7 @@ The new version of `sscanf2.inc` includes functions for `k<weapon>` and `k<vehic
 
 Note that custom specifiers always take a string input and always return a number, but this can be a Float, bool, or any other single cell tag type.
 
-Also as of sscanf 2.8, `k` can be used in both arrays and enums.
+Also as of sscanf 2.8, `k` can be used in both arrays and enums.  Prior to sscanf 2.13.3 `@kustom()` was `SSCANF:`, but [this is bad for many reasons](https://github.com/pawn-lang/YSI-Includes/blob/5.x/annotations.md), but the old version still works of course (because backwards compatibility is important).
 
 ### Colours
 
@@ -1693,7 +1693,7 @@ A string or array has been given a length that is not a number.
 
 ### sscanf error: String/array must include a length, please add a destination size.
 
-Arrays are newer than strings, so never had an implementation not requiring a length, so there is no compatability problems in REQUIRING a length to be given.
+Arrays are newer than strings, so never had an implementation not requiring a length, so there is no compatibility problems in REQUIRING a length to be given.
 
 ### sscanf warning: Can't have nestled quiet sections.
 
@@ -2039,7 +2039,7 @@ the Initial Developer.  All Rights Reserved.
 
 ### sscanf 2.10.1 - 27/06/2020
 
-* Plugin backwards-compatability with older includes.
+* Plugin backwards compatibility with older includes.
 
 ### sscanf 2.10.2 - 28/06/2020
 
