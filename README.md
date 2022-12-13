@@ -615,7 +615,7 @@ This allows you to pass variable lengths if you don't want to use all of a strin
 
 ### Quiet
 
-The two new specifiers `{` and `}` are used for what are known as `quiet` strings.  These are strings which are read and checked, but not saved.  For example:
+The two new specifiers `{` and `}` are used for what are known as `quiet` specifiers.  These are inputs which are read and checked, but not saved.  For example:
 
 ```pawn
 sscanf("42 -100", "{i}i", var);
