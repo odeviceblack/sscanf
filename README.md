@@ -587,6 +587,8 @@ new int, arr[5][10], str[32];
 sscanf(params, "ia<s[*]>[*]s[*]", int, sizeof (arr), sizeof (arr[]), arr, 32, str);
 ```
 
+There are three main specifiers here - `i`, `a<s[*]>[*]`, and `s[*]`; and each is handled entirely independently.  So the first parameter (`int`) is for `i`, the next three (`sizeof (arr), sizeof (arr[]), arr`) are for `a<s[*]>[*]`, and the final two (`32, str`) are for `s[*]`.  The first and last are easy to understand, the second one not so much.  The sizes are in reverse order, outer to inner, so `sizeof (arr)` is for the `*` in the outer `a<...>[*]` and `sizeof (arr[])` is for the `*` in the inner `s[*]`  Then the destination variable is given after all information about the specifier has been derived.
+
 The same applies to strings in enums:
 
 ```pawn
@@ -599,7 +601,7 @@ enum E_EXAMPLE
 }
 
 new dest[E_EXAMPLE];
-sscanf(params, "e<fs[*]s[*]i>", _:STR_1 - _:FLOAT, 64, dest);
+sscanf(params, "e<fs[*]s[*]i>", _:STR_2 - _:STR_1, 64, dest);
 ```
 
 And to arrays of users (see below):
