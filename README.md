@@ -922,6 +922,12 @@ Note also that user arrays can't be combined with normal arrays or enums, but no
 The latest version of sscanf adds a new `k` specifier to allow you to define your own specifers in PAWN:
 
 ```pawn
+sscanf(params, "uk<playerstate>", playerid, state);
+```
+
+`k<playerstate>` allows you to type a number or the textual name of a player state.  To convert this string name to a value we need a conversion function:
+
+```pawn
 @kustom() playerstate(string[])
 {
     if ('0' <= string[0] <= '9')
@@ -943,13 +949,7 @@ The latest version of sscanf adds a new `k` specifier to allow you to define you
 }
 ```
 
-The code above, when added to the top level of your mode, will add the `playerstate` specifier, allowing you to do:
-
-```pawn
-sscanf(params, "uk<playerstate>", playerid, state);
-```
-
-With this a user can either type a number or the full name of a state and the function will convert the name or number to a number.
+The code above, when added to the top level of your mode, will add the `playerstate` specifier used in `k<playerstate>`.  With this a user can either type a number or the full name of a state and the function will convert the name or number to a number.
 
 This system supports optional custom specifiers (`K`) with no additional PAWN code.  This optional kustom specifier takes a default value that is NOT (as of sscanf 2.8) parsed by the given callback:
 
@@ -967,7 +967,7 @@ The new version of `sscanf2.inc` includes functions for `k<weapon>` and `k<vehic
 
 Note that custom specifiers always take a string input and always return a number, but this can be a Float, bool, or any other single cell tag type.
 
-Also as of sscanf 2.8, `k` can be used in both arrays and enums.  Prior to sscanf 2.13.3 `@kustom()` was `SSCANF:`, but [this is bad for many reasons](https://github.com/pawn-lang/YSI-Includes/blob/5.x/annotations.md), but the old version still works of course (because backwards compatibility is important).
+Also as of sscanf 2.8, `k` can be used in both arrays and enums.  Prior to sscanf 2.13.3 `@kustom()` was `SSCANF:`; [this is bad for many reasons](https://github.com/pawn-lang/YSI-Includes/blob/5.x/annotations.md) but the old version still works of course (because backwards compatibility is important).
 
 ### Colours
 
