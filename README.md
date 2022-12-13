@@ -47,7 +47,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 6.9 [Delimiters](#delimiters)
     * 6.10 [Optional specifiers](#optional-specifiers)
     * 6.11 [Users](#users)
-    * 6.12 [Custom (kustom) specifiers](#custom-(kustom)-specifiers)
+    * 6.12 [Custom (kustom) specifiers](#custom-kustom-specifiers)
     * 6.13 [Colours](#colours)
         * 6.13.1 [3 digits](#3-digits)
         * 6.13.2 [6 digits](#6-digits)
