@@ -1138,22 +1138,47 @@ bool
 void
 	SkipDefault(char ** const str)
 {
+	bool escape = false;
 	if (FindDefaultStart(str))
 	{
 		// Default value found - skip it.
-		do
+		for ( ; ; )
 		{
 			++(*str);
-		}
-		while (**str && **str != ')');
-		if (**str)
-		{
-			// Current pointer points to the close bracket, skip it.
-			++(*str);
-		}
-		else
-		{
-			SscanfWarning("Unclosed default value.");
+			switch (**str)
+			{
+			case '\0':
+				SscanfWarning("Unclosed default value.");
+				return;
+			case '\\':
+				escape = !escape;
+				break;
+			case '*':
+				if (escape)
+				{
+					escape = false;
+				}
+				else
+				{
+					// Got a variable default.
+				}
+				break;
+			case ')':
+				if (escape)
+				{
+					escape = false;
+				}
+				else
+				{
+					// Current pointer points to the close bracket, skip it.
+					++(*str);
+					return;
+				}
+				break;
+			default:
+				escape = false;
+				break;
+			}
 		}
 	}
 }

@@ -918,6 +918,18 @@ When combined with `U` and returning the default, the first slot is always exact
 
 Note also that user arrays can't be combined with normal arrays or enums, but normal single-return user specifiers still can be.
 
+Just like with array sizes you can use `*` to pass an additional variable for the default, so you can do:
+
+```pawn
+sscanf(params, "I(*)", INVALID_ID, output);
+```
+
+As with arrays the default value comes *before* the output value in the parameter list.  When combined with `[*]` the order is *default*, then *size*, then *output*:
+
+```pawn
+sscanf(params, "A<i>(*)[*]", DEFAULT_VALUE, ARRAY_SIZE, output);
+```
+
 ### Custom (kustom) specifiers
 
 The latest version of sscanf adds a new `k` specifier to allow you to define your own specifers in PAWN:
@@ -2119,4 +2131,5 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.13.4 - 20/12/2022
 
 * Update open.mp SDK
+* Added `(*)` for dynamic default values.
 
