@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.13.3
+ *  sscanf 2.13.4
  *
  *  Version: MPL 1.1
  *
@@ -40,7 +40,7 @@
  *      Emmet_, for his efforts in maintaining it for almost a year.
  */
 
-#include "SDK/amx.h"
+#include "amx/amx.h"
 
 #include "sscanf.h"
 #include "utils.h"

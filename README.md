@@ -164,6 +164,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 15.14 [sscanf 2.13.1 - 25/06/2022](#sscanf-2131---25062022)
     * 15.15 [sscanf 2.13.2 - 07/09/2022](#sscanf-2132---07092022)
     * 15.16 [sscanf 2.13.3 - 04/12/2022](#sscanf-2133---04122022)
+    * 15.17 [sscanf 2.13.4 - 20/12/2022](#sscanf-2134---20122022)
 
 ## Downloads
 
@@ -2114,4 +2115,8 @@ the Initial Developer.  All Rights Reserved.
 
 * Add `@kustom()` decorator for kustom specifiers.
 * Use *subhook* to hook `amx_Register` and find `SetPlayerName`.
+
+### sscanf 2.13.4 - 20/12/2022
+
+* Update open.mp SDK
 

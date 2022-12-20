@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.13.3
+ *  sscanf 2.13.4
  *
  *  Version: MPL 1.1
  *
@@ -42,8 +42,8 @@
 
 #pragma once
 
-#include "SDK/amx.h"
-#include "SDK/plugincommon.h"
+#include "amx/amx.h"
+#include "amx/plugincommon.h"
 
 bool
 	DoA(char ** defaults, char ** input, struct args_s & cptr, bool optional, bool doSave);

@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.13.3
+ *  sscanf 2.13.4
  *
  *  Version: MPL 1.1
  *
@@ -52,7 +52,7 @@
 #include "array.h"
 #include "enum.h"
 
-#include "SDK/plugincommon.h"
+#include "amx/plugincommon.h"
 #include <sdk.hpp>
 #include <Server/Components/Pawn/pawn.hpp>
 #include "subhook/subhook.h"
@@ -62,7 +62,7 @@
 
 #define SSCANF_VERSION_MAJOR 2
 #define SSCANF_VERSION_MINOR 13
-#define SSCANF_VERSION_BUILD 3
+#define SSCANF_VERSION_BUILD 4
 
 #define SSCANF_VERSION STRINGISE(SSCANF_VERSION_MAJOR) "." STRINGISE(SSCANF_VERSION_MINOR) "." STRINGISE(SSCANF_VERSION_BUILD)
 
@@ -2189,7 +2189,7 @@ SScanFComponent *
 	sscanfComponent = nullptr;
 
 // TODO: Subscribe to player events.
-class SScanFComponent final : public IComponent, public PawnEventHandler, public PlayerEventHandler
+class SScanFComponent final : public IComponent, public PawnEventHandler, public PlayerConnectEventHandler, public PlayerChangeEventHandler
 {
 private:
 	static ICore * core;
@@ -2262,7 +2262,8 @@ public:
 	{
 		core = c;
 		players = &core->getPlayers();
-		players->getEventDispatcher().addEventHandler(this);
+		players->getPlayerConnectDispatcher().addEventHandler(this);
+		players->getPlayerChangeDispatcher().addEventHandler(this);
 		logprintf = SScanFComponent::openmplog;
 		real_logprintf = logprintf;
 
@@ -2323,13 +2324,13 @@ public:
 	{
 	}
 
-	void onAmxLoad(void * amx) override
+	void onAmxLoad(IPawnScript* amx) override
 	{
 		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
-		amx_Register((AMX *)amx, sscanfOMPNatives, -1);
+		amx_Register(amx->GetAMX(), sscanfOMPNatives, -1);
 	}
 
-	void onAmxUnload(void * amx) override
+	void onAmxUnload(IPawnScript * amx) override
 	{
 	}
 
@@ -2351,7 +2352,8 @@ public:
 		}
 		if (players)
 		{
-			players->getEventDispatcher().removeEventHandler(this);
+			players->getPlayerConnectDispatcher().removeEventHandler(this);
+			players->getPlayerChangeDispatcher().removeEventHandler(this);
 		}
 		// Deinitialise the system.
 		g_iTrueMax = 0;

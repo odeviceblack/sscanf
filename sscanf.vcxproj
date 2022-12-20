@@ -74,6 +74,18 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -200,11 +212,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="amx\amx.h" />
+    <ClInclude Include="amx\getch.h" />
+    <ClInclude Include="amx\osdefs.h" />
+    <ClInclude Include="amx\plugincommon.h" />
     <ClInclude Include="args.h" />
-    <ClInclude Include="SDK\amx.h" />
-    <ClInclude Include="SDK\getch.h" />
-    <ClInclude Include="SDK\osdefs.h" />
-    <ClInclude Include="SDK\plugincommon.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="data.h" />
     <ClInclude Include="enum.h" />
@@ -213,12 +225,12 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="amx\amx.c" />
+    <ClCompile Include="amx\amxplugin.c" />
     <ClCompile Include="kustom.cpp" />
-    <ClCompile Include="SDK\amx.c" />
     <ClCompile Include="array.cpp" />
     <ClCompile Include="data.cpp" />
     <ClCompile Include="enum.cpp" />
-    <ClCompile Include="SDK\amxplugin.c" />
     <ClCompile Include="specifiers.cpp" />
     <ClCompile Include="sscanf.cpp" />
     <ClCompile Include="subhook\subhook.c" />
