@@ -89,8 +89,8 @@ int
 bool
 	GetLogical(char ** const input);
 
-void
-	SkipDefault(char ** const str);
+bool
+	SkipDefault(char ** const str, struct args_s & args);
 
 void
 	SkipDefaultEx(char ** const data);

@@ -930,6 +930,8 @@ As with arrays the default value comes *before* the output value in the paramete
 sscanf(params, "A<i>(*)[*]", DEFAULT_VALUE, ARRAY_SIZE, output);
 ```
 
+String defaults can use `\` to escape `)` or `*` within them if you want a string to contain those values.
+
 ### Custom (kustom) specifiers
 
 The latest version of sscanf adds a new `k` specifier to allow you to define your own specifers in PAWN:

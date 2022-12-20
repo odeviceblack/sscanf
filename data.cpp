@@ -1135,10 +1135,11 @@ bool
 	return false;
 }
 
-void
-	SkipDefault(char ** const str)
+bool
+	SkipDefault(char ** const str, struct args_s & args)
 {
 	bool escape = false;
+	bool defaultArg = false;
 	if (FindDefaultStart(str))
 	{
 		// Default value found - skip it.
@@ -1149,7 +1150,7 @@ void
 			{
 			case '\0':
 				SscanfWarning("Unclosed default value.");
-				return;
+				return defaultArg;
 			case '\\':
 				escape = !escape;
 				break;
@@ -1161,6 +1162,7 @@ void
 				else
 				{
 					// Got a variable default.
+					defaultArg = true;
 				}
 				break;
 			case ')':
@@ -1172,7 +1174,7 @@ void
 				{
 					// Current pointer points to the close bracket, skip it.
 					++(*str);
-					return;
+					return defaultArg;
 				}
 				break;
 			default:
