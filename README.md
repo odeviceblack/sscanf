@@ -932,6 +932,8 @@ sscanf(params, "A<i>(*)[*]", DEFAULT_VALUE, ARRAY_SIZE, output);
 
 String defaults can use `\` to escape `)` or `*` within them if you want a string to contain those values.
 
+However, currently neither arrays nor strings use the value from the `*` parameter, but both will still skip the parameter.
+
 ### Custom (kustom) specifiers
 
 The latest version of sscanf adds a new `k` specifier to allow you to define your own specifers in PAWN:
