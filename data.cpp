@@ -1135,11 +1135,11 @@ bool
 	return false;
 }
 
-bool
-	SkipDefault(char ** const str, struct args_s & args)
+int
+	SkipDefault(char ** const str)
 {
 	bool escape = false;
-	bool defaultArg = false;
+	int defaultArgs = 0;
 	if (FindDefaultStart(str))
 	{
 		// Default value found - skip it.
@@ -1150,7 +1150,7 @@ bool
 			{
 			case '\0':
 				SscanfWarning("Unclosed default value.");
-				return defaultArg;
+				return defaultArgs;
 			case '\\':
 				escape = !escape;
 				break;
@@ -1162,7 +1162,7 @@ bool
 				else
 				{
 					// Got a variable default.
-					defaultArg = true;
+					++defaultArgs;
 				}
 				break;
 			case ')':
@@ -1174,7 +1174,7 @@ bool
 				{
 					// Current pointer points to the close bracket, skip it.
 					++(*str);
-					return defaultArg;
+					return defaultArgs;
 				}
 				break;
 			default:
@@ -1183,58 +1183,6 @@ bool
 			}
 		}
 	}
-}
-
-void
-	SkipDefaultEx(char ** const data)
-{
-	// Skip the default value passed for optional parameters.
-	char *
-		str = *data;
-	if (*str == '(')
-	{
-		// Default value found - skip it.
-		bool
-			escape = false;
-		while (*str && (escape || *str != ')'))
-		{
-			if (*str == '\\')
-			{
-				// Invert the escape, they may do:
-				// S(a\)
-				// Where the default string is "a\", in which case we need a
-				// way to tell the system not to include the close bracket,
-				// which would be:
-				// S(a\\)
-				// Or, in real PAWN terms:
-				// S(a\\\\)
-				// Of course, they can also do:
-				// S(\\\\\\\\\\))
-				// To get a final string of "\\)".  Yes, you need FOUR slashes
-				// in a PAWN string to get just one in the output string.
-				escape = !escape;
-			}
-			else
-			{
-				escape = false;
-			}
-			++str;
-		}
-		if (*str)
-		{
-			// Current pointer points to the close bracket, skip it.
-			++str;
-		}
-		else
-		{
-			SscanfWarning("Unclosed default value.");
-		}
-	}
-	else
-	{
-		SscanfWarning("No default value found.");
-	}
-	*data = str;
 }
 
 void

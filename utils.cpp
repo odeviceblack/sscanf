@@ -387,7 +387,7 @@ bool
 	{
 		SscanfWarning("Unclosed default value.");
 	}
-	return true;
+	return false;
 }
 
 bool

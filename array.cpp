@@ -703,15 +703,14 @@ bool
 		if (**defaults == '(')
 		{
 			// Find the end of the options.  Based on
-			// SkipDefaultEx, but saving the start point.
+			// SkipDefault, but saving the start point.
 			++(*defaults);
 			SkipWhitespace(defaults);
 			// Got the start of the values.
-			opts = *defaults;
 			// Skip the defaults for now, we don't know the length yet.
-			//while (**defaults) // && **defaults != ')')
-			for ( ; ; )
+			for (; ; )
 			{
+				++(*defaults);
 				switch (**defaults)
 				{
 				case '\0':
@@ -719,21 +718,27 @@ bool
 				case '\\':
 					escape = !escape;
 					break;
-				case ')':
-					if (!escape)
+				case '*':
+					if (escape)
 					{
-						// End the loop after ")" if it isn't escaped.
+						escape = false;
+					}
+					break;
+				case ')':
+					if (escape)
+					{
+						escape = false;
+					}
+					else
+					{
+						// Current pointer points to the close bracket, skip it.
 						goto DoA_after_loop;
 					}
-					// FALLTHROUGH.
+					break;
 				default:
 					escape = false;
 					break;
 				}
-				// Don't need to check for escaped ")"s here as you can't have
-				// arrays of strings, which is the only place that would be.
-				// Only now we do...
-				++(*defaults);
 			}
 DoA_after_loop:
 			if (**defaults)

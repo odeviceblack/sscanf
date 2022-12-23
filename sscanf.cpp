@@ -214,12 +214,12 @@ AMX *
 	while (false)
 
 // Macros for the regular values.
-#define DO(m,n)                  \
-	{m b;                        \
-	if (Do##n(&string, &b)) {    \
-		SAVE_VALUE((cell)b);     \
-		break; }                 \
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);    \
+#define DO(m,n)                                           \
+	{m b;                                                 \
+	if (Do##n(&string, &b)) {                             \
+		SAVE_VALUE((cell)b);                              \
+		break; }                                          \
+	RestoreOpts(defaultOpts, defaultAlpha, defaultForms); \
 	return SSCANF_FAIL_RETURN; }
 
 #define DOV(m,n)                 \
@@ -227,12 +227,12 @@ AMX *
 	Do##n(&string, &b);          \
 	SAVE_VALUE((cell)b); }
 
-#define DOF(m,n)                 \
-	{m b;                        \
-	if (Do##n(&string, &b)) {    \
-		SAVE_VALUE_F(b)          \
-		break; }                 \
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);      \
+#define DOF(m,n)                                          \
+	{m b;                                                 \
+	if (Do##n(&string, &b)) {                             \
+		SAVE_VALUE_F(b)                                   \
+		break; }                                          \
+	RestoreOpts(defaultOpts, defaultAlpha, defaultForms); \
 	return SSCANF_FAIL_RETURN; }
 
 // Macros for the default values.  None of these have ifs as the return value
@@ -240,16 +240,18 @@ AMX *
 // mistakes of the coder - they will get warning messages if they get the
 // format wrong, and I don't know of any mistakes which aren't warned about
 // (admittedly a silly statement as if I did I would have fixed them).
-#define DE(m,n)                  \
-	{m b;                        \
-	Do##n##D(&format, &b);       \
-	SAVE_VALUE((cell)b);         \
+#define DE(m,n)                \
+	{m b;                      \
+	if (Do##n##D(&format, &b)) \
+		b = (m)*args.Next();   \
+	SAVE_VALUE((cell)b);       \
 	break; }
 
-#define DEF(m,n)                 \
-	{m b;                        \
-	Do##n##D(&format, &b);       \
-	SAVE_VALUE_F(b)              \
+#define DEF(m,n)                    \
+	{m b;                           \
+	if (Do##n##D(&format, &b))      \
+		b = amx_ctof(*args.Next()); \
+	SAVE_VALUE_F(b)                 \
 	break; }
 
 // Macros for the default values in the middle of a string so you can do:
@@ -513,7 +515,7 @@ static cell
 					break;
 				}
 				// Implicit "else".
-				SkipDefaultEx(&format);
+				SkipDefault(&format);
 				// FALLTHROUGH
 			case 's':
 				{
@@ -548,7 +550,7 @@ static cell
 					break;
 				}
 				// Implicit "else".
-				SkipDefaultEx(&format);
+				SkipDefault(&format);
 				// FALLTHROUGH
 			case 'z':
 				{

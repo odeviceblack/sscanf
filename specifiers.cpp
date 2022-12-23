@@ -1048,6 +1048,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	*ret = GetDec(input);
 	return GetReturnDefault(input);
 }
@@ -1058,6 +1062,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	*ret = GetNumber(input);
 	return GetReturnDefault(input);
@@ -1070,6 +1078,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	*ret = GetHex(input);
 	return GetReturnDefault(input);
 }
@@ -1080,6 +1092,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	int type;
 	*ret = GetColour(input, &type, gAlpha);
@@ -1094,6 +1110,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	*ret = GetOct(input);
 	return GetReturnDefault(input);
 }
@@ -1105,6 +1125,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	*ret = strtod(*input, input);
 	return GetReturnDefault(input);
 }
@@ -1115,6 +1139,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	*ret = **input;
 	++(*input);
@@ -1142,6 +1170,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	*ret = (int)GetBool(input);
 	return GetReturnDefault(input);
 }
@@ -1152,6 +1184,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	char *
 		string = *input;
@@ -1216,6 +1252,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	// Don't reallocate the memory, just set pointers to the current data and
 	// add nulls to terminate.
@@ -1287,6 +1327,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	if (gOptions & OLD_DEFAULT_NAME) DoU(input, ret, 0);
 	else DoN(input, ret);
 	return GetReturnDefault(input);
@@ -1298,6 +1342,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoQ(input, ret, 0);
 	else DoN(input, ret);
@@ -1311,6 +1359,10 @@ bool
 	{
 		return false;
 	}
+	if (**input == '*')
+	{
+		return true;
+	}
 	if (gOptions & OLD_DEFAULT_NAME) DoR(input, ret, 0);
 	else DoN(input, ret);
 	return GetReturnDefault(input);
@@ -1322,6 +1374,10 @@ bool
 	if (!FindDefaultStart(input))
 	{
 		return false;
+	}
+	if (**input == '*')
+	{
+		return true;
 	}
 	DoL(input, ret);
 	return GetReturnDefault(input);
