@@ -1041,7 +1041,7 @@ bool
 	return true;
 }
 
-bool
+int
 	DoID(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1056,7 +1056,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoND(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1071,7 +1071,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoHD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1086,7 +1086,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoMD(char ** input, unsigned int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1103,7 +1103,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoOD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1118,7 +1118,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoFD(char ** input, double * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1133,7 +1133,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoCD(char ** input, char * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1163,7 +1163,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoBD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1178,7 +1178,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoGD(char ** input, double * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1246,7 +1246,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoSD(char ** input, char ** ret, int * length, struct args_s & args)
 {
 	if (!FindDefaultStart(input))
@@ -1321,7 +1321,7 @@ bool
 	return 1;
 }
 
-bool
+int
 	DoUD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1337,7 +1337,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoQD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1353,7 +1353,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoRD(char ** input, int * ret)
 {
 	if (!FindDefaultStart(input))
@@ -1369,7 +1369,7 @@ bool
 	return GetReturnDefault(input);
 }
 
-bool
+int
 	DoLD(char ** input, bool * ret)
 {
 	if (!FindDefaultStart(input))

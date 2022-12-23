@@ -84,44 +84,44 @@ bool
 bool
 	DoR(char ** input, int * ret, unsigned int start);
 
-bool
+int
 	DoID(char ** input, int * ret);
 
-bool
+int
 	DoND(char ** input, int * ret);
 
-bool
+int
 	DoHD(char ** input, int * ret);
 
-bool
+int
 	DoMD(char ** input, unsigned int * ret);
 
-bool
+int
 	DoOD(char ** input, int * ret);
 
-bool
+int
 	DoFD(char ** input, double * ret);
 
-bool
+int
 	DoCD(char ** input, char * ret);
 
-bool
+int
 	DoBD(char ** input, int * ret);
 
-bool
+int
 	DoLD(char ** input, bool * ret);
 
-bool
+int
 	DoGD(char ** input, double * ret);
 
-bool
+int
 	DoSD(char ** input, char ** ret, int * length, struct args_s & args);
 
-bool
+int
 	DoUD(char ** input, int * ret);
 
-bool
+int
 	DoQD(char ** input, int * ret);
 
-bool
+int
 	DoRD(char ** input, int * ret);

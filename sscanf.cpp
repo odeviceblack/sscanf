@@ -533,8 +533,11 @@ static cell
 					break;
 				}
 				// Implicit "else".
-				if (SkipDefault(&format) == -1)
+				if (SkipDefault(&format))
+				{
+					SscanfError("(*) is not supported in strings/arrays yet.");
 					args.Next();
+				}
 				// FALLTHROUGH
 			case 's':
 				{
@@ -567,8 +570,11 @@ static cell
 					break;
 				}
 				// Implicit "else".
-				if (SkipDefault(&format) == -1)
+				if (SkipDefault(&format))
+				{
+					SscanfError("(*) is not supported in strings/arrays yet.");
 					args.Next();
+				}
 				// FALLTHROUGH
 			case 'z':
 				{
@@ -624,7 +630,7 @@ static cell
 					}
 					break;
 				}
-				if (SkipDefault(&format) == -1)
+				if (SkipDefault(&format))
 					args.Next();
 				// FALLTHROUGH
 			case 'u':
@@ -731,7 +737,7 @@ static cell
 					}
 					break;
 				}
-				if (SkipDefault(&format) == -1)
+				if (SkipDefault(&format))
 					args.Next();
 				// FALLTHROUGH
 			case 'q':
@@ -838,7 +844,7 @@ static cell
 					}
 					break;
 				}
-				if (SkipDefault(&format) == -1)
+				if (SkipDefault(&format))
 					args.Next();
 				// FALLTHROUGH
 			case 'r':

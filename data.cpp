@@ -1183,6 +1183,7 @@ bool
 			}
 		}
 	}
+	return 0;
 }
 
 void
