@@ -2324,13 +2324,13 @@ public:
 	{
 	}
 
-	void onAmxLoad(IPawnScript* amx) override
+	void onAmxLoad(IPawnScript& script) override
 	{
 		// The SA:MP version does extra bits with `SetPlayerName` etc.  This one doesn't. 
-		amx_Register(amx->GetAMX(), sscanfOMPNatives, -1);
+		amx_Register(script.GetAMX(), sscanfOMPNatives, -1);
 	}
 
-	void onAmxUnload(IPawnScript * amx) override
+	void onAmxUnload(IPawnScript& script) override
 	{
 	}
 
