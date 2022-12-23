@@ -1050,7 +1050,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = GetDec(input);
 	return GetReturnDefault(input);
@@ -1065,7 +1066,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = GetNumber(input);
 	return GetReturnDefault(input);
@@ -1080,7 +1082,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = GetHex(input);
 	return GetReturnDefault(input);
@@ -1095,7 +1098,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	int type;
 	*ret = GetColour(input, &type, gAlpha);
@@ -1112,7 +1116,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = GetOct(input);
 	return GetReturnDefault(input);
@@ -1127,7 +1132,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = strtod(*input, input);
 	return GetReturnDefault(input);
@@ -1142,7 +1148,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = **input;
 	++(*input);
@@ -1172,7 +1179,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	*ret = (int)GetBool(input);
 	return GetReturnDefault(input);
@@ -1187,7 +1195,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	char *
 		string = *input;
@@ -1330,7 +1339,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoU(input, ret, 0);
 	else DoN(input, ret);
@@ -1346,7 +1356,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoQ(input, ret, 0);
 	else DoN(input, ret);
@@ -1362,7 +1373,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoR(input, ret, 0);
 	else DoN(input, ret);
@@ -1378,7 +1390,8 @@ int
 	}
 	if (**input == '*')
 	{
-		return -1;
+		++(*input);
+		return -GetReturnDefault(input);
 	}
 	DoL(input, ret);
 	return GetReturnDefault(input);
