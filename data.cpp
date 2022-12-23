@@ -1135,7 +1135,7 @@ bool
 	return false;
 }
 
-int
+bool
 	SkipDefault(char ** const str)
 {
 	bool escape = false;
@@ -1150,7 +1150,7 @@ int
 			{
 			case '\0':
 				SscanfWarning("Unclosed default value.");
-				return defaultArgs;
+				return defaultArgs != 0;
 			case '\\':
 				escape = !escape;
 				break;
@@ -1174,7 +1174,7 @@ int
 				{
 					// Current pointer points to the close bracket, skip it.
 					++(*str);
-					return defaultArgs;
+					return defaultArgs != 0;
 				}
 				break;
 			default:

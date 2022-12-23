@@ -374,7 +374,7 @@ bool
 	return false;
 }
 
-bool
+int
 	GetReturnDefault(char ** input)
 {
 	// Check the end is a valid end.
@@ -387,7 +387,7 @@ bool
 	{
 		SscanfWarning("Unclosed default value.");
 	}
-	return false;
+	return 1;
 }
 
 bool

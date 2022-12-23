@@ -89,7 +89,7 @@ int
 bool
 	GetLogical(char ** const input);
 
-int
+bool
 	SkipDefault(char ** const str);
 
 void

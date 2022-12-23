@@ -1046,11 +1046,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = GetDec(input);
 	return GetReturnDefault(input);
@@ -1061,11 +1061,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = GetNumber(input);
 	return GetReturnDefault(input);
@@ -1076,11 +1076,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = GetHex(input);
 	return GetReturnDefault(input);
@@ -1091,11 +1091,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	int type;
 	*ret = GetColour(input, &type, gAlpha);
@@ -1108,11 +1108,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = GetOct(input);
 	return GetReturnDefault(input);
@@ -1123,11 +1123,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = strtod(*input, input);
 	return GetReturnDefault(input);
@@ -1138,11 +1138,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = **input;
 	++(*input);
@@ -1168,11 +1168,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	*ret = (int)GetBool(input);
 	return GetReturnDefault(input);
@@ -1183,11 +1183,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	char *
 		string = *input;
@@ -1251,11 +1251,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	// Don't reallocate the memory, just set pointers to the current data and
 	// add nulls to terminate.
@@ -1317,7 +1317,7 @@ bool
 	{
 		*outp = '\0';
 	}
-	return true;
+	return 1;
 }
 
 bool
@@ -1325,11 +1325,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoU(input, ret, 0);
 	else DoN(input, ret);
@@ -1341,11 +1341,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoQ(input, ret, 0);
 	else DoN(input, ret);
@@ -1357,11 +1357,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	if (gOptions & OLD_DEFAULT_NAME) DoR(input, ret, 0);
 	else DoN(input, ret);
@@ -1373,11 +1373,11 @@ bool
 {
 	if (!FindDefaultStart(input))
 	{
-		return false;
+		return 0;
 	}
 	if (**input == '*')
 	{
-		return true;
+		return -1;
 	}
 	DoL(input, ret);
 	return GetReturnDefault(input);

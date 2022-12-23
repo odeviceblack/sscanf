@@ -104,7 +104,7 @@ void
 bool
 	GetReturn(char ** input);
 
-bool
+int
 	GetReturnDefault(char ** input);
 
 void
