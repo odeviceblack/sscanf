@@ -268,22 +268,30 @@ AMX *
 // 
 // Note that optional parameters in the middle of a string only work with
 // explicit (i.e. not whitespace) delimiters.
-#define DX(m,n)                    \
-	if (IsDelimiter(*string)) {    \
-		m b;                       \
-		if (Do##n##D(&format, &b)) \
-			b = (m)*args.Next();   \
-		SAVE_VALUE((cell)b);       \
-		break; }                   \
-	if (SkipDefault(&format))      \
+#define DX(m,n)                        \
+	if (IsDelimiter(*string)) {        \
+		m b;                           \
+		switch (Do##n##D(&format, &b)) \
+		{							   \
+		case -1:					   \
+			b = (m)*args.Next();       \
+		case 1:						   \
+			SAVE_VALUE((cell)b);       \
+		}							   \
+		break; }                       \
+	if (SkipDefault(&format))          \
 		args.Next();
 
 #define DXF(m,n)                        \
 	if (IsDelimiter(*string)) {         \
 		m b;                            \
-		if (Do##n##D(&format, &b))      \
+		switch (Do##n##D(&format, &b))  \
+		{							    \
+		case -1:					    \
 			b = amx_ctof(*args.Next()); \
-		SAVE_VALUE_F(b)                 \
+		case 1:						    \
+			SAVE_VALUE_F(b);            \
+		}							    \
 		break; }                        \
 	if (SkipDefault(&format))           \
 		args.Next();
@@ -516,21 +524,16 @@ static cell
 						dest;
 					int
 						length;
-					switch (DoSD(&format, &dest, &length, args))
+					DoSD(&format, &dest, &length, args);
+					// Send the string to PAWN.
+					if (doSave)
 					{
-					case -1:
-						// Fallthrough.
-					case 1:
-						// Send the string to PAWN.
-						if (doSave)
-						{
-							amx_SetString(args.Next(), dest, 0, 0, length);
-						}
+						amx_SetString(args.Next(), dest, 0, 0, length);
 					}
 					break;
 				}
 				// Implicit "else".
-				if (SkipDefault(&format))
+				if (SkipDefault(&format) == -1)
 					args.Next();
 				// FALLTHROUGH
 			case 's':
@@ -555,21 +558,17 @@ static cell
 						dest;
 					int
 						length;
-					switch (DoSD(&format, &dest, &length, args))
+					DoSD(&format, &dest, &length, args);
+					// Send the string to PAWN.
+					if (doSave)
 					{
-					case -1:
-						// Fallthrough.
-					case 1:
-						// Send the string to PAWN.
-						if (doSave)
-						{
-							amx_SetString(args.Next(), dest, 1, 0, length);
-						}
+						amx_SetString(args.Next(), dest, 1, 0, length);
 					}
 					break;
 				}
 				// Implicit "else".
-				SkipDefault(&format);
+				if (SkipDefault(&format) == -1)
+					args.Next();
 				// FALLTHROUGH
 			case 'z':
 				{
@@ -594,8 +593,7 @@ static cell
 					switch (DoUD(&format, &b))
 					{
 					case -1:
-						// Fallthrough.
-					case 1:
+						b = *args.Next();
 					}
 					if (*format == '[')
 					{
@@ -626,7 +624,8 @@ static cell
 					}
 					break;
 				}
-				SkipDefault(&format);
+				if (SkipDefault(&format) == -1)
+					args.Next();
 				// FALLTHROUGH
 			case 'u':
 				if (*format == '[')
@@ -701,8 +700,7 @@ static cell
 					switch (DoQD(&format, &b))
 					{
 					case -1:
-						// Fallthrough.
-					case 1:
+						b = *args.Next();
 					}
 					if (*format == '[')
 					{
@@ -733,7 +731,8 @@ static cell
 					}
 					break;
 				}
-				SkipDefault(&format);
+				if (SkipDefault(&format) == -1)
+					args.Next();
 				// FALLTHROUGH
 			case 'q':
 				if (*format == '[')
@@ -808,8 +807,7 @@ static cell
 					switch (DoRD(&format, &b))
 					{
 					case -1:
-						// Fallthrough.
-					case 1:
+						b = *args.Next();
 					}
 					if (*format == '[')
 					{
@@ -840,7 +838,8 @@ static cell
 					}
 					break;
 				}
-				SkipDefault(&format);
+				if (SkipDefault(&format) == -1)
+					args.Next();
 				// FALLTHROUGH
 			case 'r':
 				if (*format == '[')

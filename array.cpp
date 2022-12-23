@@ -723,6 +723,11 @@ bool
 					{
 						escape = false;
 					}
+					else
+					{
+						SscanfError("(*) is not supported in strings/arrays yet.");
+						args.Next();
+					}
 					break;
 				case ')':
 					if (escape)
