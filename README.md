@@ -141,11 +141,15 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.2 [Alternates](#alternates)
     * 13.3 [Enums And Arrays](#enums-and-arrays)
     * 13.4 [Compilation](#compilation)
-* 14 [License](#license)
-    * 14.1 [Version: MPL 1.1](#version-mpl-11)
-    * 14.2 [Contributor(s):](#contributors)
-    * 14.3 [Special Thanks to:](#special-thanks-to)
-* 15 [Changelog](#changelog)
+* 14 [Building](#building)
+    * 14.1 [Getting The Code](#getting-the-code)
+    * 14.2 [Building On Windows](#building-on-windows)
+    * 14.3 [Building On Linux](#building-on-linux)
+* 15 [License](#license)
+    * 15.1 [Version: MPL 1.1](#version-mpl-11)
+    * 15.2 [Contributor(s):](#contributors)
+    * 15.3 [Special Thanks to:](#special-thanks-to)
+* 16 [Changelog](#changelog)
     * 15.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
     * 15.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
     * 15.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
@@ -1989,6 +1993,30 @@ sscanf(const input, const specifier, ...)
 {
 	return SSCANF_Run(input, SSCANF_Compile(specifier), ___(2));
 }
+```
+
+## Building
+
+If you want to compile sscanf for yourself.
+
+### Getting The Code
+
+You can clone the code using github.  Note that there are multiple submodules involved, so you are best using a recursive checkout:
+
+```
+git clone --recursive https://github.com/Y-Less/sscanf/
+```
+
+### Building On Windows
+
+Just open the included `sscanf.sln` and compile.
+
+### Building On Linux
+
+Type:
+
+```
+make
 ```
 
 ## License
