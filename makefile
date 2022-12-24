@@ -50,7 +50,7 @@ GPP = g++
 GCC = gcc
 SSCANF_OUTFILE = "sscanf.so"
 
-COMPILE_FLAGS = -m32 -fPIC -c -O2 -w -D LINUX -D PROJECT_NAME=\"sscanf\" -D HAVE_STDINT_H -D GLM_FORCE_SSE2 -D GLM_FORCE_QUAT_DATA_WXYZ -D NOMINMAX -D nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD -D span_CONFIG_SELECT_SPAN=span_SPAN_NONSTD -I ./robin-hood-hashing/src/include -I ./string-view-lite/include -I ./open.mp/include -I ./span-lite/include -I ./glm -I .
+COMPILE_FLAGS = -m32 -fPIC -c -O2 -w -D LINUX -D PROJECT_NAME=\"sscanf\" -D HAVE_STDINT_H -D GLM_FORCE_SSE2 -D GLM_FORCE_QUAT_DATA_WXYZ -D NOMINMAX -D nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD -D span_CONFIG_SELECT_SPAN=span_SPAN_NONSTD -I ./robin-hood-hashing/src/include -I ./string-view-lite/include -I ./open.mp/include -I ./span-lite/include -I ./glm -I ./amx -I .
 
 SSCANF = -D SSCANF $(COMPILE_FLAGS)
 
