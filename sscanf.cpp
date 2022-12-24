@@ -2044,7 +2044,7 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 {
 	subhook_remove(amx_Register_hook);
 	// If `number` is `-1` loop until a null entry.
-	for (int i = 0; number == -1 ? nativelist[i].name : i < number; ++i)
+	for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i < number; ++i)
 	{
 		if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
 		{
