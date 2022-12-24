@@ -60,7 +60,8 @@ clean:
 	-rm -f *~ *.o *.so
 
 SSCANF: clean
-	$(GPP) $(SSCANF) ./SDK/*.c
+	$(GPP) $(SSCANF) ./amx/*.c
+	$(GPP) $(SSCANF) ./subhook/subhook.c
 	$(GPP) $(SSCANF) *.cpp
 	$(GPP) -m32 -fPIC -shared -o $(SSCANF_OUTFILE) *.o
 
