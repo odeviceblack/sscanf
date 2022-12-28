@@ -100,9 +100,13 @@ E_SSCANF_OPTIONS
 	
 cell * args_s::Next()
 {
-	cell * cptr;
-	amx_GetAddr(Amx, Params[Pos++], &cptr);
-	return cptr;
+	if (HasMore())
+	{
+		cell * cptr;
+		amx_GetAddr(Amx, Params[Pos++], &cptr);
+		return cptr;
+	}
+	return NULL;
 };
 
 void args_s::Mark()
@@ -113,6 +117,11 @@ void args_s::Mark()
 void args_s::Restore()
 {
 	Pos = Marker;
+};
+
+bool args_s::HasMore()
+{
+	return Pos < Count;
 };
 
 void
@@ -1236,6 +1245,11 @@ int
 			// Length loaded from a parameter.
 			str = *input + 1;
 			length = *args.Next();
+			if (length <= 0)
+			{
+				length = 1;
+				SscanfError("Invalid data length.");
+			}
 		}
 		else
 		{
@@ -1243,7 +1257,7 @@ int
 			str = *input;
 			if (length <= 0)
 			{
-				length = 0;
+				length = 1;
 				SscanfError("Invalid data length.");
 			}
 		}
@@ -1280,7 +1294,7 @@ int
 	else
 	{
 		SscanfError("String/array must include a length, please add a destination size.");
-		return 0;
+		return 1;
 	}
 }
 

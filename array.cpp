@@ -727,6 +727,10 @@ bool
 					{
 						SscanfError("(*) is not supported in strings/arrays yet.");
 						args.Next();
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count 4.");
+						}
 					}
 					break;
 				case ')':
@@ -775,6 +779,15 @@ DoA_after_loop:
 	}
 	int
 		length = GetLength(defaults, args);
+	if (doSave)
+	{
+		// Nowhere to save the data.
+		if (!args.HasMore())
+		{
+			SscanfWarning("Format specifier does not match parameter count.");
+			return false;
+		}
+	}
 	// We MAY need to go over the arguments twice.  Once to insert defaults, once for real values.
 	// If we mark here and restore at the start of normal data it doesn't matter if we got defaults
 	// or not - if so this is correct, if not the mark/restore won't change anything.

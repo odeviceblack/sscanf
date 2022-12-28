@@ -249,6 +249,9 @@ static char
 	{							   \
 	case -1:					   \
 		b = (m)*args.Next();       \
+		if (!args.HasMore()) {     \
+			SscanfWarning("Format specifier does not match parameter count."); \
+			return SSCANF_FAIL_RETURN; } \
 	case 1:						   \
 		SAVE_VALUE((cell)b);       \
 	}							   \
@@ -260,6 +263,9 @@ static char
 	{							    \
 	case -1:					    \
 		b = amx_ctof(*args.Next()); \
+		if (!args.HasMore()) {     \
+			SscanfWarning("Format specifier does not match parameter count."); \
+			return SSCANF_FAIL_RETURN; } \
 	case 1:						    \
 		SAVE_VALUE_F(b);            \
 	}							    \
@@ -278,6 +284,9 @@ static char
 		{							   \
 		case -1:					   \
 			b = (m)*args.Next();       \
+			if (!args.HasMore()) {     \
+				SscanfWarning("Format specifier does not match parameter count."); \
+				return SSCANF_FAIL_RETURN; } \
 		case 1:						   \
 			SAVE_VALUE((cell)b);       \
 		}							   \
@@ -292,6 +301,9 @@ static char
 		{							    \
 		case -1:					    \
 			b = amx_ctof(*args.Next()); \
+			if (!args.HasMore()) {     \
+				SscanfWarning("Format specifier does not match parameter count."); \
+				return SSCANF_FAIL_RETURN; } \
 		case 1:						    \
 			SAVE_VALUE_F(b);            \
 		}							    \
@@ -360,7 +372,7 @@ static cell
 	Sscanf(AMX * amx, char * string, char * format, cell const * params, const int paramCount)
 {
 	struct args_s
-		args{ amx, params, 0, 0 };
+		args{ amx, params, 0, 0, paramCount };
 	// Check for CallRemoteFunction style null strings and correct.
 	if (string[0] == '\1' && string[1] == '\0')
 	{
@@ -390,7 +402,7 @@ static cell
 	g_aCurAMX = amx;
 	// Now do the main loop as long as there are variables to store the data in
 	// and input string remaining to get the data from.
-	while (*string && (args.Pos < paramCount || !doSave))
+	while (*string && (args.HasMore() || !doSave))
 	{
 		if (!*format)
 		{
@@ -401,9 +413,9 @@ static cell
 			// There is only two format specifiers, but four returns.  This may
 			// also be reached if there is too much input data, but that is
 			// considered OK as that is likely a user's fault.
-			if (args.Pos < paramCount)
+			if (args.HasMore())
 			{
-				SscanfWarning("Format specifier does not match parameter count 1.");
+				SscanfWarning("Format specifier does not match parameter count.");
 			}
 			if (!doSave)
 			{
@@ -533,6 +545,11 @@ static cell
 					// Send the string to PAWN.
 					if (doSave)
 					{
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 						amx_SetString(args.Next(), dest, 0, 0, length);
 					}
 					break;
@@ -555,6 +572,11 @@ static cell
 					// Send the string to PAWN.
 					if (doSave)
 					{
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 						amx_SetString(args.Next(), dest, 0, 0, length);
 					}
 				}
@@ -570,6 +592,11 @@ static cell
 					// Send the string to PAWN.
 					if (doSave)
 					{
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 						amx_SetString(args.Next(), dest, 1, 0, length);
 					}
 					break;
@@ -592,6 +619,11 @@ static cell
 					// Send the string to PAWN.
 					if (doSave)
 					{
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 						amx_SetString(args.Next(), dest, 1, 0, length);
 					}
 				}
@@ -605,6 +637,11 @@ static cell
 					{
 					case -1:
 						b = *args.Next();
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 					}
 					if (*format == '[')
 					{
@@ -623,6 +660,11 @@ static cell
 						}
 						else if (doSave)
 						{
+							if (!args.HasMore())
+							{
+								SscanfWarning("Format specifier does not match parameter count.");
+								return SSCANF_FAIL_RETURN;
+							}
 							cell *
 								cptr = args.Next();
 							*cptr++ = b;
@@ -712,6 +754,11 @@ static cell
 					{
 					case -1:
 						b = *args.Next();
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 					}
 					if (*format == '[')
 					{
@@ -730,6 +777,11 @@ static cell
 						}
 						else if (doSave)
 						{
+							if (!args.HasMore())
+							{
+								SscanfWarning("Format specifier does not match parameter count.");
+								return SSCANF_FAIL_RETURN;
+							}
 							cell *
 								cptr = args.Next();
 							*cptr++ = b;
@@ -819,6 +871,11 @@ static cell
 					{
 					case -1:
 						b = *args.Next();
+						if (!args.HasMore())
+						{
+							SscanfWarning("Format specifier does not match parameter count.");
+							return SSCANF_FAIL_RETURN;
+						}
 					}
 					if (*format == '[')
 					{
@@ -837,6 +894,11 @@ static cell
 						}
 						else if (doSave)
 						{
+							if (!args.HasMore())
+							{
+								SscanfWarning("Format specifier does not match parameter count.");
+								return SSCANF_FAIL_RETURN;
+							}
 							cell *
 								cptr = args.Next();
 							*cptr++ = b;
@@ -1115,12 +1177,12 @@ static cell
 	// We don't need code here to handle the case where args.Pos was reached,
 	// but the end of the string wasn't - if that's the case there's no
 	// problem as we just ignore excess string data.
-	while (args.Pos < paramCount || !doSave)
+	while (args.HasMore() || !doSave)
 	{
 		// Loop through if there's still parameters remaining.
 		if (!*format)
 		{
-			SscanfWarning("Format specifier does not match parameter count 2.");
+			SscanfWarning("Format specifier does not match parameter count.");
 			if (!doSave)
 			{
 				// Started a quiet section but never explicitly ended it.
@@ -1444,7 +1506,7 @@ static cell
 						else if (*format != '{')
 						{
 							// Fix the bad display bug.
-							SscanfWarning("Format specifier does not match parameter count 3: %c.", *format);
+							SscanfWarning("Format specifier does not match parameter count: %c.", *format);
 						}
 						// Only display it once.
 						break;
@@ -1457,7 +1519,7 @@ static cell
 						}
 						else
 						{
-							SscanfWarning("Format specifier does not match parameter count 4.");
+							SscanfWarning("Format specifier does not match parameter count.");
 							break;
 						}
 					}
@@ -1510,7 +1572,7 @@ static cell AMX_NATIVE_CALL
 	// by one (OBOE - Out By One Error) due to params[0] being the parameter
 	// count, not an actual parameter.
 	const int
-		paramCount = ((int)params[0] / 4) + 1;
+		paramCount = ((int)params[0] / sizeof (cell)) + 1;
 	// Could add a check for only 3 parameters here - I can't think of a time
 	// when you would not want any return values at all, but that doesn't mean
 	// they don't exist - you could just want to check but not save the format.
@@ -1589,7 +1651,7 @@ static cell AMX_NATIVE_CALL
 	// by one (OBOE - Out By One Error) due to params[0] being the parameter
 	// count, not an actual parameter.
 	const int
-		paramCount = ((int)params[0] / 4) + 1;
+		paramCount = ((int)params[0] / sizeof (cell)) + 1;
 	// Could add a check for only 3 parameters here - I can't think of a time
 	// when you would not want any return values at all, but that doesn't mean
 	// they don't exist - you could just want to check but not save the format.

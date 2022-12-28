@@ -50,8 +50,10 @@ struct args_s
 	cell const * Params;
 	int Pos;
 	int Marker;
+	int Count;
 
 	cell * Next();
 	void Mark();
 	void Restore();
+	bool HasMore();
 };
