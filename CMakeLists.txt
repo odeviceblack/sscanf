@@ -49,6 +49,9 @@ elseif(UNIX)
 		-DLINUX=1
 	)
 
+	set(CMAKE_C_FLAGS "-m32 -fPIC -O2 -w")
+	set(CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w")
+
 	add_library(${PROJECT_NAME} SHARED
 		amx/amx.c
 		amx/amxplugin.c
@@ -63,12 +66,5 @@ elseif(UNIX)
 		utils.cpp
 	)
 
-	target_compile_options(${PROJECT_NAME} SHARED
-		-m32
-		-fPIC
-		-c
-		-O2
-		-w
-	)
 endif()
 
