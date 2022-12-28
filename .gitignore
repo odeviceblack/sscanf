@@ -34,3 +34,4 @@
 
 *.VC.*
 /sscanf.vcxproj.user
+/build

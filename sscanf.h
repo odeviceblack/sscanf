@@ -60,11 +60,11 @@ typedef
 #define SSCANF_MAX_LENGTH (32)
 
 // 32 bit special float values.
-#define FLOAT_INFINITY          (0x7F800000)
-#define FLOAT_NEG_INFINITY      (0xFF800000)
-#define FLOAT_NAN               (0xFFFFFFFF)
-#define FLOAT_NAN_E             (0x7FFFFFFF)
-#define FLOAT_NEGATIVE_INFINITY (FLOAT_NEG_INFINITY)
+#define FLOAT_INFINITY          ((cell)0x7F800000)
+#define FLOAT_NEG_INFINITY      ((cell)0xFF800000)
+#define FLOAT_NAN               ((cell)0xFFFFFFFF)
+#define FLOAT_NAN_E             ((cell)0x7FFFFFFF)
+#define FLOAT_NEGATIVE_INFINITY ((cell)FLOAT_NEG_INFINITY)
 
 #define SscanfWarning(str,...) \
 	do																								                    \
@@ -86,7 +86,9 @@ bool SscanfErrLine();
 typedef int32_t cell;
 
 extern char
-	* gFormat,
+	* gFormat;
+
+extern const char
 	* gCallFile;
 
 extern int

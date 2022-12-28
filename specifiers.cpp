@@ -412,7 +412,6 @@ bool
 				// Partial matches.
 				while (val < g_iTrueMax)
 				{
-					size_t diff = strlen(name) - len;
 					if (*conn && strstrin(name, string, len))
 					{
 						*ret = val;

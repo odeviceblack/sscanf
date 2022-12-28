@@ -50,7 +50,7 @@ char *
 //char **
 //	g_pServer = NULL;
 
-static char
+static const char
 	* g_cDelim = " ",
 	* g_cTemp = 0;
 
@@ -155,7 +155,7 @@ bool
 	// multiple delimiters.  This should be the only place that this check is
 	// done now - use functions, not code!
 	//return ch == g_cDelim;
-	char *
+	char const *
 		nu = g_cDelim;
 	while (*nu)
 	{
@@ -171,7 +171,7 @@ bool
 }
 
 void
-	TempDelimiter(char * ch)
+	TempDelimiter(const char * ch)
 {
 	g_cTemp = g_cDelim;
 	g_cDelim = ch;

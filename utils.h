@@ -51,7 +51,7 @@ char *
 	GetPlayerName(int playerid);
 
 void
-	TempDelimiter(char * ch);
+	TempDelimiter(const char * ch);
 
 void
 	RestoreDelimiter();

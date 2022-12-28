@@ -168,6 +168,9 @@ AMX *
 		float f = (float)m; \
 		*args.Next() = amx_ftoc(f); }
 
+static char
+	emptyString[1] = { '\0' };
+
 // Based on amx_StrParam but using 0 length strings.  This can't be inline as
 // it uses alloca - it could be written to use malloc instead, but that would
 // require memory free code all over the place!
@@ -182,7 +185,7 @@ AMX *
 			else {                                                                           \
 				SscanfError("Unable to allocate memory.");                                   \
 				return SSCANF_FAIL_RETURN; } }                                               \
-		else (result) = ""; }                                                                \
+		else (result) = emptyString; }                                                       \
 	while (false)
 
 #define SAFE_STR_PARAM(amx,param,result)                                                     \
@@ -196,7 +199,7 @@ AMX *
 			else {                                                                           \
 				logprintf("sscanf error: Unable to allocate memory.");                       \
 				return SSCANF_FAIL_RETURN; } }                                               \
-		else (result) = ""; }                                                                \
+		else (result) = emptyString; }                                                       \
 	while (false)
 
 #define LENGTH_STR_PARAM(amx,param,result,length)                                            \
@@ -210,7 +213,7 @@ AMX *
 			else {                                                                           \
 				logprintf("sscanf error: Unable to allocate memory.");                       \
 				return SSCANF_FAIL_RETURN; } }                                               \
-		else (result) = ""; }                                                                \
+		else (result) = emptyString; }                                                       \
 	while (false)
 
 // Macros for the regular values.
@@ -306,7 +309,9 @@ cell
 	GetOptions(char *);
 
 char
-	* gFormat = 0,
+	* gFormat = 0;
+
+const char
 	* gCallFile = 0;
 
 int
@@ -329,9 +334,9 @@ bool SscanfErrLine()
 		amx_StrLen(gCallResolve, &length);
 		if (length > 0)
 		{
-			if ((gCallFile = (char *)malloc((length + 1))) != NULL)
+			if ((gCallFile = (const char *)malloc((length + 1))) != NULL)
 			{
-				amx_GetString(gCallFile, gCallResolve, false, length + 1);
+				amx_GetString((char *)gCallFile, gCallResolve, false, length + 1);
 			}
 			else
 			{
@@ -1516,9 +1521,10 @@ static cell AMX_NATIVE_CALL
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
-	char
-		* px = gFormat,
-		* pf = gCallFile;
+	char *
+		px = gFormat;
+	const char *
+		pf = gCallFile;
 	int
 		pl = gCallLine;
 	cell *
@@ -1541,7 +1547,7 @@ static cell AMX_NATIVE_CALL
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
-		free(gCallFile);
+		free((void *)gCallFile);
 	}
 	gCallResolve = pp;
 	gCallLine = pl;
@@ -1594,9 +1600,10 @@ static cell AMX_NATIVE_CALL
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
-	char
-		* px = gFormat,
-		* pf = gCallFile;
+	char*
+		px = gFormat;
+	const char *
+		pf = gCallFile;
 	int
 		pl = gCallLine;
 	cell *
@@ -1614,7 +1621,7 @@ static cell AMX_NATIVE_CALL
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
-		free(gCallFile);
+		free((void *)gCallFile);
 	}
 	gCallResolve = pp;
 	gCallLine = pl;
@@ -1633,9 +1640,10 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
-	char
-		* px = gFormat,
-		* pf = gCallFile;
+	char*
+		px = gFormat;
+	const char *
+		pf = gCallFile;
 	int
 		pl = gCallLine;
 	cell *
@@ -2241,13 +2249,10 @@ private:
 	{
 		// Convert from `logprintf` to `core->logLn`.
 		va_list params;
-		char string[128];
-
 		va_start(params, format);
-		vsprintf(string, format, params);
+		core->vlogLn(LogLevel::Message, format, params);
 		va_end(params);
 
-		core->logLn(LogLevel::Message, string);
 	}
 
 	void SaveName(IPlayer& player)
@@ -2356,7 +2361,6 @@ public:
 		}
 		else
 		{
-			StringView name = componentName();
 			core->logLn(LogLevel::Error, "sscanf error: Pawn component not loaded.");
 		}
 	}
