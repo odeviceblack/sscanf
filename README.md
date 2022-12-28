@@ -2044,7 +2044,7 @@ Change `Debug` to `Release` for final versions.
 
 ```bash
 cd docker
-.\build.sh
+UBUNTU_VERSION=18.04 .\build.sh
 ```
 
 You may need to set up some directories first:
