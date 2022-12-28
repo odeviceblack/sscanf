@@ -73,7 +73,7 @@ logprintf_t
 	real_logprintf;
 
 AMX_NATIVE
-	SetPlayerName;
+	SetPlayerName = NULL;
 
 typedef int AMXAPI(*amx_Register_t)(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number);
 
@@ -2051,17 +2051,23 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number)
 {
 	subhook_remove(amx_Register_hook);
-	// If `number` is `-1` loop until a null entry.
-	for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i < number; ++i)
+	if (SetPlayerName == NULL)
 	{
-		if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
+		// If `number` is `-1` loop until a null entry.
+		for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i < number; ++i)
 		{
-			// Found the original version, inject ours first.
-			AMX_NATIVE_INFO
-				native = { "SetPlayerName", n_SSCANF_SetPlayerName };
-			SetPlayerName = nativelist[i].func;
-			amx_Register(amx, &native, 1);
-			break;
+			if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
+			{
+				// Found the original version, inject ours first.
+				AMX_NATIVE_INFO
+					natives[2] = {
+						{ "SetPlayerName", n_SSCANF_SetPlayerName },
+						{ 0, 0 },
+					};
+				SetPlayerName = nativelist[i].func;
+				amx_Register(amx, natives, -1);
+				break;
+			}
 		}
 	}
 	int ret = amx_Register(amx, nativelist, number);

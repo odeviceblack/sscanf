@@ -2214,5 +2214,4 @@ the Initial Developer.  All Rights Reserved.
 
 * Move builds to CMake.
 * Add docker builds.
-* Fix `funcidx` bug in legacy plugin mode.
 
