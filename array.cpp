@@ -707,6 +707,7 @@ bool
 			++(*defaults);
 			SkipWhitespace(defaults);
 			// Got the start of the values.
+			opts = *defaults;
 			// Skip the defaults for now, we don't know the length yet.
 			for (; ; )
 			{

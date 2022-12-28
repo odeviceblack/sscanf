@@ -2214,4 +2214,5 @@ the Initial Developer.  All Rights Reserved.
 
 * Move builds to CMake.
 * Add docker builds.
+* Fix `[*]` again.
 
