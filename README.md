@@ -145,6 +145,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.1 [Getting The Code](#getting-the-code)
     * 14.2 [Building On Windows](#building-on-windows)
     * 14.3 [Building On Linux](#building-on-linux)
+    * 14.4 [Building With Docker](#building-with-docker)
 * 15 [License](#license)
     * 15.1 [Version: MPL 1.1](#version-mpl-11)
     * 15.2 [Contributor(s):](#contributors)
@@ -2007,17 +2008,60 @@ You can clone the code using github.  Note that there are multiple submodules in
 git clone --recursive https://github.com/Y-Less/sscanf/
 ```
 
+Note the use of the `--recursive` argument, because this repository contains submodules.  A useful setting when cloning recursive repos is:
+
+```bash
+git config --global url."git@github.com:".insteadOf "https://github.com/"
+```
+
+Which allows you to push `https://` repos you have permissions on.
+
 ### Building On Windows
 
-Just open the included `sscanf.sln` and compile.
+```bash
+mkdir build
+cd build
+cmake .. -A Win32 -T ClangCL
+```
+
+Open Visual Studio and build the solution.
 
 ### Building On Linux
 
-Type:
-
-```
+```bash
+mkdir build
+cd build
+# May need to configure this line.
+export CC=/usr/lib/llvm/13/bin/clang CXX=/usr/lib/llvm/13/bin/clang++
+cmake ..
 make
 ```
+
+Change `Debug` to `Release` for final versions.
+
+### Building With Docker
+
+```bash
+cd docker
+.\build.sh
+```
+
+You may need to set up some directories first:
+
+```bash
+mkdir build
+mkdir conan
+sudo chown 1000 build
+sudo chown 1000 conan
+```
+
+Or run the script as root:
+
+```bash
+sudo .\build.sh
+```
+
+The output is in `docker/build/`
 
 ## License
 
