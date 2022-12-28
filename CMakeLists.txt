@@ -49,14 +49,6 @@ elseif(UNIX)
 		-DLINUX=1
 	)
 
-	target_compile_options(${PROJECT_NAME} SHARED
-		-m32
-		-fPIC
-		-c
-		-O2
-		-w
-	)
-
 	add_library(${PROJECT_NAME} SHARED
 		amx/amx.c
 		amx/amxplugin.c
@@ -69,6 +61,14 @@ elseif(UNIX)
 		specifiers.cpp
 		sscanf.cpp
 		utils.cpp
+	)
+
+	target_compile_options(${PROJECT_NAME} SHARED
+		-m32
+		-fPIC
+		-c
+		-O2
+		-w
 	)
 endif()
 
