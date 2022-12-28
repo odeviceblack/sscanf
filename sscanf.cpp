@@ -2066,13 +2066,34 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 					};
 				SetPlayerName = nativelist[i].func;
 				amx_Register(amx, natives, -1);
+				// Register all the other natives before `SetPlayerName`.
+				for (int j = 0; j != i; ++j)
+				{
+					natives[0].name = nativelist[j].name;
+					natives[0].func= nativelist[j].func;
+					amx_Register(amx, natives, -1);
+				}
+				// Register all the other natives after `SetPlayerName`.
+				++i;
+				if (number == -1)
+				{
+					amx_Register(amx, nativelist + i, -1);
+				}
+				else if (i != number)
+				{
+					amx_Register(amx, nativelist + i, number - i);
+				}
 				break;
 			}
 		}
 	}
-	int ret = amx_Register(amx, nativelist, number);
+	else
+	{
+		// We already have `SetPlayerName`, don't search again just pass straight through.
+		amx_Register(amx, nativelist, number);
+	}
 	subhook_install(amx_Register_hook);
-	return ret;
+	return 0;
 }
 
 //----------------------------------------------------------
