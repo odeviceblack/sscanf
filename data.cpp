@@ -1145,7 +1145,6 @@ bool
 		// Default value found - skip it.
 		for ( ; ; )
 		{
-			++(*str);
 			switch (**str)
 			{
 			case '\0':
@@ -1181,6 +1180,7 @@ bool
 				escape = false;
 				break;
 			}
+			++(*str);
 		}
 	}
 	return 0;

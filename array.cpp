@@ -711,7 +711,6 @@ bool
 			// Skip the defaults for now, we don't know the length yet.
 			for (; ; )
 			{
-				++(*defaults);
 				switch (**defaults)
 				{
 				case '\0':
@@ -745,6 +744,7 @@ bool
 					escape = false;
 					break;
 				}
+				++(*defaults);
 			}
 DoA_after_loop:
 			if (**defaults)
