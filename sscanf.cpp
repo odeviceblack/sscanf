@@ -2054,17 +2054,18 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 	if (SetPlayerName == NULL)
 	{
 		// If `number` is `-1` loop until a null entry.
-		for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i < number; ++i)
+		for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i != number; ++i)
 		{
 			if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
 			{
+				// Save the pointer to the original function.
+				SetPlayerName = nativelist[i].func;
 				// Found the original version, inject ours first.
 				AMX_NATIVE_INFO
 					natives[2] = {
 						{ "SetPlayerName", n_SSCANF_SetPlayerName },
 						{ 0, 0 },
 					};
-				SetPlayerName = nativelist[i].func;
 				amx_Register(amx, natives, -1);
 				// Register all the other natives before `SetPlayerName`.
 				for (int j = 0; j != i; ++j)
@@ -2083,15 +2084,13 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 				{
 					amx_Register(amx, nativelist + i, number - i);
 				}
-				break;
+				subhook_install(amx_Register_hook);
+				return 0;
 			}
 		}
 	}
-	else
-	{
-		// We already have `SetPlayerName`, don't search again just pass straight through.
-		amx_Register(amx, nativelist, number);
-	}
+	// We already have `SetPlayerName`, don't search again just pass straight through.
+	amx_Register(amx, nativelist, number);
 	subhook_install(amx_Register_hook);
 	return 0;
 }
