@@ -499,8 +499,19 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  * well for improved error messages.
  * </remarks>
  */
+
+#if defined __PawnBuild
+	// On old compilers, only issue the warning at the call site.
+	#pragma warning push
+	#pragma warning disable 234
+#endif
+
 #pragma deprecated - include <sscanf2> first.
 forward sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
+
+#if defined __PawnBuild
+	#pragma warning pop
+#endif
 
 // For pawno native detection.
 /*
@@ -531,8 +542,19 @@ native sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
  * number as well for improved error messages.
  * </remarks>
  */
+
+#if defined __PawnBuild
+	// On old compilers, only issue the warning at the call site.
+	#pragma warning push
+	#pragma warning disable 234
+#endif
+
 #pragma deprecated - include <sscanf2> first.
 forward unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
+
+#if defined __PawnBuild
+	#pragma warning pop
+#endif
 
 // For pawno native detection.
 /*
@@ -1299,6 +1321,13 @@ stock SSCANF_GetSimilarValue(const input[], const candidates[][], const results[
  * otherwise again <c>-1</c> is returned.
  * </remarks>
  */
+
+#if defined __PawnBuild
+	// On old compilers, only issue the warning at the call site.
+	#pragma warning push
+	#pragma warning disable 234
+#endif
+
 #pragma deprecated Use `SSCANF_GetSimilarString` for more human results.
 stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates))
 {
@@ -1316,6 +1345,10 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
 	}
 	return closest;
 }
+
+#if defined __PawnBuild
+	#pragma warning pop
+#endif
 
 /**
  * <library>sscanf</library>
@@ -1336,6 +1369,13 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * function checks for this.
  * </remarks>
  */
+
+#if defined __PawnBuild
+	// On old compilers, only issue the warning at the call site.
+	#pragma warning push
+	#pragma warning disable 234
+#endif
+
 #pragma deprecated Use `SSCANF_GetSimilarValue` for more human results.
 stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results))
 {
@@ -1347,6 +1387,10 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	}
 	return results[closest];
 }
+
+#if defined __PawnBuild
+	#pragma warning pop
+#endif
 
 /**
  * <library>sscanf</library>
