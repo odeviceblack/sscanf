@@ -2110,9 +2110,12 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
 }
 
+#define CALL_HOOKED_REGISTER(a, n, c) \
+	(((amx_Register_t)subhook_get_trampoline(amx_Register_hook))(a, n, c))
+
 int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number)
 {
-	subhook_remove(amx_Register_hook);
+	//subhook_remove(amx_Register_hook);
 	int ret = AMX_ERR_NONE;
 	if (SetPlayerName == NULL)
 	{
@@ -2151,17 +2154,17 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 			(natives + count)->name = NULL;
 			(natives + idx)->func = n_SSCANF_SetPlayerName;
 			SetPlayerName = (nativelist + idx)->func;
-			ret = amx_Register(amx, natives, -1);
-			subhook_install(amx_Register_hook);
+			ret = CALL_HOOKED_REGISTER(amx, natives, -1);
+			//subhook_install(amx_Register_hook);
 			logprintf("found = %d, %d\n", idx, ret);
 			free(natives);
 			return ret;
 		}
 	}
 	// We already have `SetPlayerName`, don't search again just pass straight through.
-	ret = amx_Register(amx, nativelist, number);
+	ret = CALL_HOOKED_REGISTER(amx, nativelist, number);
 	logprintf("ret = %d\n", ret);
-	subhook_install(amx_Register_hook);
+	//subhook_install(amx_Register_hook);
 	return ret;
 }
 
