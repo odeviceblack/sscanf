@@ -2114,53 +2114,48 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 {
 	subhook_remove(amx_Register_hook);
 	int ret = AMX_ERR_NONE;
-	int err = AMX_ERR_NONE;
 	if (SetPlayerName == NULL)
 	{
 		// If `number` is `-1` loop until a null entry.
-		for (int i = 0; number == -1 ? nativelist[i].name != nullptr : i != number; ++i)
+		int idx = -1;
+		int count;
+		if (number == -1)
 		{
-			if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
+			count = 0;
+			for (int i = 0; nativelist[i].name != nullptr; ++i)
 			{
-				// Save the pointer to the original function.
-				SetPlayerName = nativelist[i].func;
-				// Found the original version, inject ours first.
-				AMX_NATIVE_INFO
-					natives[2] = {
-						{ "SetPlayerName", n_SSCANF_SetPlayerName },
-						{ 0, 0 },
-					};
-				// Always keep the most specific error.
-				if ((err = amx_Register(amx, natives, -1)) != AMX_ERR_NONE)
-					ret = AMX_ERR_NOTFOUND;
-				//logprintf("SetPlayerName err: %d\n", err);
-				logprintf("%s err: %d\n", natives[0].name, err);
-				// Register all the other natives before `SetPlayerName`.
-				for (int j = 0; j != i; ++j)
+				++count;
+				if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
 				{
-					natives[0].name = nativelist[j].name;
-					natives[0].func = nativelist[j].func;
-					if ((err = amx_Register(amx, natives, -1)) != AMX_ERR_NONE)
-						ret = AMX_ERR_NOTFOUND;
-					logprintf("%s err: %d\n", natives[0].name, err);
+					idx = i;
 				}
-				// Register all the other natives after `SetPlayerName`.
-				++i;
-				if (number == -1)
-				{
-					if ((err = amx_Register(amx, nativelist + i, -1)) != AMX_ERR_NONE)
-						ret = AMX_ERR_NOTFOUND;
-					logprintf("Rest1 (%s) err: %d\n", (nativelist + i)->name, err);
-				}
-				else if (i != number)
-				{
-					if ((err = amx_Register(amx, nativelist + i, number - i)) != AMX_ERR_NONE)
-						ret = AMX_ERR_NOTFOUND;
-					logprintf("Rest2 err: %d\n", err);
-				}
-				subhook_install(amx_Register_hook);
-				return ret;
 			}
+		}
+		else
+		{
+			count = number;
+			for (int i = 0; i != number; ++i)
+			{
+				if (strcmp(nativelist[i].name, "SetPlayerName") == 0)
+				{
+					idx = i;
+				}
+			}
+		}
+		if (idx != -1)
+		{
+			// Found `SetPlayerName`.  Make a copy of the natives data.
+			AMX_NATIVE_INFO* natives = (AMX_NATIVE_INFO*)malloc(sizeof (AMX_NATIVE_INFO) * (count + 1));
+			memcpy(natives, nativelist, sizeof(AMX_NATIVE_INFO) * (count + 1));
+			(natives + count)->func = NULL;
+			(natives + count)->name = NULL;
+			(natives + idx)->func = n_SSCANF_SetPlayerName;
+			SetPlayerName = (nativelist + idx)->func;
+			ret = amx_Register(amx, natives, -1);
+			subhook_install(amx_Register_hook);
+			logprintf("found = %d, %d\n", idx, ret);
+			free(natives);
+			return ret;
 		}
 	}
 	// We already have `SetPlayerName`, don't search again just pass straight through.
