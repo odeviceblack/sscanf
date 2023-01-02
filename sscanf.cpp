@@ -2113,6 +2113,8 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL
 int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int number)
 {
 	subhook_remove(amx_Register_hook);
+	int ret = AMX_ERR_NONE;
+	int err = AMX_ERR_NONE;
 	if (SetPlayerName == NULL)
 	{
 		// If `number` is `-1` loop until a null entry.
@@ -2128,33 +2130,44 @@ int AMXAPI SSCANF_Register(AMX* amx, const AMX_NATIVE_INFO* nativelist, int numb
 						{ "SetPlayerName", n_SSCANF_SetPlayerName },
 						{ 0, 0 },
 					};
-				amx_Register(amx, natives, -1);
+				// Always keep the most specific error.
+				if ((err = amx_Register(amx, natives, -1)) != AMX_ERR_NONE)
+					ret = AMX_ERR_NOTFOUND;
+				//logprintf("SetPlayerName err: %d\n", err);
+				logprintf("%s err: %d\n", natives[0].name, err);
 				// Register all the other natives before `SetPlayerName`.
 				for (int j = 0; j != i; ++j)
 				{
 					natives[0].name = nativelist[j].name;
-					natives[0].func= nativelist[j].func;
-					amx_Register(amx, natives, -1);
+					natives[0].func = nativelist[j].func;
+					if ((err = amx_Register(amx, natives, -1)) != AMX_ERR_NONE)
+						ret = AMX_ERR_NOTFOUND;
+					logprintf("%s err: %d\n", natives[0].name, err);
 				}
 				// Register all the other natives after `SetPlayerName`.
 				++i;
 				if (number == -1)
 				{
-					amx_Register(amx, nativelist + i, -1);
+					if ((err = amx_Register(amx, nativelist + i, -1)) != AMX_ERR_NONE)
+						ret = AMX_ERR_NOTFOUND;
+					logprintf("Rest1 (%s) err: %d\n", (nativelist + i)->name, err);
 				}
 				else if (i != number)
 				{
-					amx_Register(amx, nativelist + i, number - i);
+					if ((err = amx_Register(amx, nativelist + i, number - i)) != AMX_ERR_NONE)
+						ret = AMX_ERR_NOTFOUND;
+					logprintf("Rest2 err: %d\n", err);
 				}
 				subhook_install(amx_Register_hook);
-				return 0;
+				return ret;
 			}
 		}
 	}
 	// We already have `SetPlayerName`, don't search again just pass straight through.
-	amx_Register(amx, nativelist, number);
+	ret = amx_Register(amx, nativelist, number);
+	logprintf("ret = %d\n", ret);
 	subhook_install(amx_Register_hook);
-	return 0;
+	return ret;
 }
 
 //----------------------------------------------------------
