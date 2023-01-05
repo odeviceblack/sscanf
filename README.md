@@ -1,4 +1,4 @@
-# sscanf 2.13.7
+# sscanf 2.13.8
 
 ## Introduction
 
@@ -172,7 +172,8 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 15.17 [sscanf 2.13.4 - 20/12/2022](#sscanf-2134---20122022)
     * 15.18 [sscanf 2.13.5 - 28/12/2022](#sscanf-2135---28122022)
     * 15.19 [sscanf 2.13.6 - 28/12/2022](#sscanf-2136---28122022)
-    * 15.20 [sscanf 2.13.7 - 01/02/2023](#sscanf-2137---02012023)
+    * 15.20 [sscanf 2.13.7 - 02/01/2023](#sscanf-2137---02012023)
+    * 15.21 [sscanf 2.13.8 - 05/01/2023](#sscanf-2138---05012023)
 
 ## Downloads
 
@@ -2222,7 +2223,11 @@ the Initial Developer.  All Rights Reserved.
 
 * Fixed a crash with `[*]` when there aren't enough parameters.
 
-### sscanf 2.13.7 - 01/02/2023
+### sscanf 2.13.7 - 02/01/2023
 
 * Improve GDK plugin compatibility.
+
+### sscanf 2.13.8 - 05/01/2023
+
+* "Final" SDK update.
 
