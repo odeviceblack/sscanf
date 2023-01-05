@@ -17,14 +17,14 @@ copy ..\Release\sscanf.dll plugins\sscanf.dll
 
 mkdir pawno
 cd pawno
-mkdir includes
-copy ..\..\..\sscanf2.inc includes\sscanf2.inc
+mkdir include
+copy ..\..\..\sscanf2.inc include\sscanf2.inc
 cd ..
 
 mkdir qawno
 cd qawno
-mkdir includes
-copy ..\..\..\sscanf2.inc includes\sscanf2.inc
+mkdir include
+copy ..\..\..\sscanf2.inc include\sscanf2.inc
 cd ..
 
 7z.exe a -tzip windows.zip *
@@ -47,14 +47,14 @@ copy ..\Release\libsscanf.so plugins\sscanf.so
 
 mkdir pawno
 cd pawno
-mkdir includes
-copy ..\..\..\sscanf2.inc includes\sscanf2.inc
+mkdir include
+copy ..\..\..\sscanf2.inc include\sscanf2.inc
 cd ..
 
 mkdir qawno
 cd qawno
-mkdir includes
-copy ..\..\..\sscanf2.inc includes\sscanf2.inc
+mkdir include
+copy ..\..\..\sscanf2.inc include\sscanf2.inc
 cd ..
 
 7z.exe a -ttar -so -an * | 7z.exe a -si linux.tar.gz *
