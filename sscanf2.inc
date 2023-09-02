@@ -103,17 +103,24 @@
 
 /// <p/>
 
-#if !defined __PawnBuild
-	#define __PawnBuild 0
+#if defined __PawnBuild
+	#if __PawnBuild == 0
+		#undef __PawnBuild
+		#define __pawn_build 0
+	#else
+		#define __pawn_build __PawnBuild
+	#endif
+#else
+	#define __pawn_build 0
 #endif
 
 #define SSCANF_STATIC__
-#if __PawnBuild >= 11
+#if __pawn_build >= 11
 	// `const static` support.
 	#undef SSCANF_STATIC__
 	#define SSCANF_STATIC__ static
 #endif
-#if __PawnBuild == 0
+#if __pawn_build == 0
 	#if !defined SSCANF_NO_NICE_FEATURES
 		#error sscanf utilises community compiler features.  Use `#define SSCANF_NO_NICE_FEATURES` to live without (if you can call that living) or better yet download it here: github.com/pawn-lang/compiler/releases
 	#endif
@@ -503,7 +510,7 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
  * </remarks>
  */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	// On old compilers, only issue the warning at the call site.
 	#pragma warning push
 	#pragma warning disable 234
@@ -512,7 +519,7 @@ static stock SSCANF_Version(version[] = "", size = sizeof (version))
 #pragma deprecated - include <sscanf2> first.
 forward sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#pragma warning pop
 #endif
 
@@ -521,7 +528,7 @@ forward sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 native sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#define sscanf( SSCANF__(__file,__line,
 #else
 	// `-1` because the old compiler doesn't have `__line` so we can't know
@@ -546,7 +553,7 @@ native sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
  * </remarks>
  */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	// On old compilers, only issue the warning at the call site.
 	#pragma warning push
 	#pragma warning disable 234
@@ -555,7 +562,7 @@ native sscanf(const data[], const format[], {T_WEAPON, Float, _}:...);
 #pragma deprecated - include <sscanf2> first.
 forward unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#pragma warning pop
 #endif
 
@@ -564,7 +571,7 @@ forward unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
 native unformat(const data[], const format[], {T_WEAPON, Float, _}:...);
 */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#define unformat( SSCANF__(__file,__line,
 #else
 	// `-1` because the old compiler doesn't have `__line` so we can't know
@@ -873,7 +880,7 @@ static stock _SSCANF_IncludeStates() <_ALS : _ALS_go> {}
 /// Generic initialisation code called from a range of different init publics.
 /// </remarks>
 /// <!--
-#if __PawnBuild == 0 /// <p/>
+#if __pawn_build == 0 /// <p/>
 	forward SSCANF_RunInit(); /// <p/>
 	/// There's a bug in the old compiler with the pawndoc generation for
 	/// functions containing <c>state</c>.  This little trick starts an XML
@@ -1177,7 +1184,7 @@ forward OnCachedInit();
 #define SSCANF_Leave
 #define SSCANF_IsConnected
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#define extract%0->%1; EXTRN%1;UNFORMAT__(__file,__line,_:EXTRV:EXTRX:%0,""#,%1,,);
 #else
 	#define extract%0->%1; EXTRN%1;UNFORMAT__(SSCANF_EXT_,-1,_:EXTRV:EXTRX:%0,""#,%1,,);
@@ -1325,7 +1332,7 @@ stock SSCANF_GetSimilarValue(const input[], const candidates[][], const results[
  * </remarks>
  */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	// On old compilers, only issue the warning at the call site.
 	#pragma warning push
 	#pragma warning disable 234
@@ -1349,7 +1356,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
 	return closest;
 }
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#pragma warning pop
 #endif
 
@@ -1373,7 +1380,7 @@ stock SSCANF_GetClosestString(const input[], const candidates[][], threshold = c
  * </remarks>
  */
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	// On old compilers, only issue the warning at the call site.
 	#pragma warning push
 	#pragma warning disable 234
@@ -1391,7 +1398,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	return results[closest];
 }
 
-#if __PawnBuild > 4
+#if __pawn_build > 4
 	#pragma warning pop
 #endif
 
