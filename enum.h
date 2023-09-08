@@ -47,3 +47,4 @@
 
 bool
 	DoE(char ** defaults, char ** input, struct args_s & args, bool optional, bool doSave);
+

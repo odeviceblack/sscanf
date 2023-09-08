@@ -321,11 +321,9 @@ void
 		switch (value)
 		{
 		case 1:
-			logprintf = qlog;
 			gOptions = (E_SSCANF_OPTIONS)(gOptions | MATCH_NAME_FIRST);
 			break;
 		case 0:
-			logprintf = real_logprintf;
 			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~MATCH_NAME_FIRST);
 			break;
 		case -1:
@@ -461,7 +459,7 @@ char
 	}
 	else
 	{
-		SscanfWarning("No specified parameter found.");
+		SscanfWarning(14, "No specified parameter found.");
 		return ' ';
 	}
 }
@@ -1139,7 +1137,7 @@ bool
 	}
 	else
 	{
-		SscanfWarning("No default value found.");
+		SscanfWarning(12, "No default value found.");
 	}
 	return false;
 }
@@ -1157,7 +1155,7 @@ bool
 			switch (**str)
 			{
 			case '\0':
-				SscanfWarning("Unclosed default value.");
+				SscanfWarning(11, "Unclosed default value.");
 				return defaultArgs != 0;
 			case '\\':
 				escape = !escape;
@@ -1215,11 +1213,11 @@ void
 		// If we get here then the end of the string was reached before the
 		// valid end of the length.
 		*input = str;
-		SscanfWarning("Missing string length end.");
+		SscanfWarning(15, "Missing string length end.");
 	}
 	else
 	{
-		SscanfError("String/array must include a length, please add a destination size.");
+		SscanfError(19, "String/array must include a length, please add a destination size.");
 	}
 }
 
@@ -1274,7 +1272,7 @@ int
 		else if (*str)
 		{
 			// Invalid character: [numberX]
-			SscanfWarning("Invalid character in data length.");
+			SscanfWarning(18, "Invalid character in data length.");
 			// Loop through the string till we find an end to the size.
 			while (*(++str))
 			{
@@ -1287,13 +1285,13 @@ int
 			}
 		}
 		// Invalid end: [number
-		SscanfWarning("Missing length end.");
+		SscanfWarning(16, "Missing length end.");
 		*input = str;
 		return length;
 	}
 	else
 	{
-		SscanfError("String/array must include a length, please add a destination size.");
+		SscanfError(19, "String/array must include a length, please add a destination size.");
 		return 1;
 	}
 }
@@ -1407,3 +1405,4 @@ float
 	// Normalise the number of matching pairs and multiply.
 	return (1.0f - ((float)unique1 / (float)ngrams1)) * (1.0f - ((float)unique2 / (float)ngrams2));
 }
+

@@ -97,7 +97,7 @@ bool
 				if (opts == *defaults)
 				{
 					// No defaults found.
-					SscanfWarning("Empty default values.");
+					SscanfWarning(10, "Empty default values.");
 					opts = 0;
 				}
 				// Found a valid end.  Make it null for
@@ -109,12 +109,12 @@ bool
 			}
 			else
 			{
-				SscanfWarning("Unclosed default value.");
+				SscanfWarning(11, "Unclosed default value.");
 			}
 		}
 		else
 		{
-			SscanfWarning("No default value found.");
+			SscanfWarning(12, "No default value found.");
 		}
 		if (!input || IsStringEnd(**input))
 		{
@@ -131,7 +131,7 @@ bool
 						sprintf(func, "sscanf_%s", type);
 						if (amx_FindPublic(amx, func, &idx))
 						{
-							SscanfWarning("Could not find function SSCANF:%s.", type);
+							SscanfWarning(31, "Could not find function SSCANF:%s.", type);
 						}
 						else
 						{
@@ -167,7 +167,7 @@ bool
 	sprintf(func, "sscanf_%s", type);
 	if (amx_FindPublic(amx, func, &idx))
 	{
-		SscanfWarning("Could not find function SSCANF:%s.", type);
+		SscanfWarning(31, "Could not find function SSCANF:%s.", type);
 	}
 	else
 	{
@@ -253,3 +253,4 @@ bool
 	}
 	return true;
 }
+

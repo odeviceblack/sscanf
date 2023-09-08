@@ -115,3 +115,4 @@ bool
 
 const char *
 	FindFirstOf(const char *str, char ch);
+

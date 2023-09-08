@@ -826,6 +826,39 @@ stock const MATCH_NAME_SIMILARITY[] = "MATCH_NAME_SIMILARITY";
 /**
  * <library>sscanf</library>
  * <remarks>
+ * The <c>ERROR_CODE_IN_RET</c> option as a constant string so you can get
+ * compile-time spell checking on the name.  The return value from <c>sscanf</c>
+ * is <c>0</c> for no error, or the index of the specifier that failed.  If you
+ * get a failure you can call <c>SSCANF_GetLastError</c> to get the exact error
+ * code, or you can set this option to <c>true</c> to have the return value also
+ * include this error value in the return, ORed with the index.
+ * </remarks>
+ *
+ * <code>
+ *     SSCANF_Option(ERROR_CODE_IN_RET, 1); // Failures return `spec | code &lt;&lt; 16`. <br />
+ *     SSCANF_Option(ERROR_CODE_IN_RET, 0); // Failures return only the bad specifier index.
+ * </code>
+ */
+stock const ERROR_CODE_IN_RET[] = "ERROR_CODE_IN_RET";
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * The <c>WARNINGS_AS_ERRORS</c> option as a constant string so you can get
+ * compile-time spell checking on the name.  This setting allows <c>sscanf</c>
+ * to fail when a warning is given, as well as an error.
+ *
+ * <code>
+ *     SSCANF_Option(WARNINGS_AS_ERRORS, 1); // Warnings will cause `sscanf` to fail. <br />
+ *     SSCANF_Option(WARNINGS_AS_ERRORS, 0); // Warnings will not fail `sscanf` function calls.
+ * </code>
+ * </remarks>
+ */
+stock const WARNINGS_AS_ERRORS[] = "WARNINGS_AS_ERRORS";
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
  * Has sscanf been initialised at least once already in this script?  Avoids the
  * need to define <c>FILTERSCRIPT</c> by including <c>OnFilterScriptInit</c>
  * and <c>OnGameModeInit</c> (plus <c>OnNPCModeInit</c>) and seeing which one

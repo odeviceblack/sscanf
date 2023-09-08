@@ -47,3 +47,4 @@
 
 bool
 	DoA(char ** defaults, char ** input, struct args_s & cptr, bool optional, bool doSave);
+

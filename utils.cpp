@@ -385,7 +385,7 @@ int
 	}
 	else
 	{
-		SscanfWarning("Unclosed default value.");
+		SscanfWarning(11, "Unclosed default value.");
 	}
 	return 1;
 }
@@ -419,3 +419,4 @@ const char *
 	}
 	return str;
 }
+

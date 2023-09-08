@@ -183,7 +183,7 @@ static char
 			if (((result) = (char *)alloca((amx_length_ + 1) * sizeof (*(result)))) != NULL) \
 				amx_GetString((result), amx_cstr_, sizeof (*(result)) > 1, amx_length_ + 1); \
 			else {                                                                           \
-				SscanfError("Unable to allocate memory.");                                   \
+				SscanfError(43, "Unable to allocate memory.");                               \
 				return SSCANF_FAIL_RETURN; } }                                               \
 		else (result) = emptyString; }                                                       \
 	while (false)
@@ -198,6 +198,7 @@ static char
 				amx_GetString((result), amx_cstr_, sizeof (*(result)) > 1, amx_length_ + 1); \
 			else {                                                                           \
 				logprintf("sscanf error: Unable to allocate memory.");                       \
+				SetErrorCode(43);                                                            \
 				return SSCANF_FAIL_RETURN; } }                                               \
 		else (result) = emptyString; }                                                       \
 	while (false)
@@ -212,6 +213,7 @@ static char
 				amx_GetString((result), amx_cstr_, sizeof (*(result)) > 1, length + 1);      \
 			else {                                                                           \
 				logprintf("sscanf error: Unable to allocate memory.");                       \
+				SetErrorCode(43);                                                            \
 				return SSCANF_FAIL_RETURN; } }                                               \
 		else (result) = emptyString; }                                                       \
 	while (false)
@@ -250,7 +252,7 @@ static char
 	case -1:					   \
 		b = (m)*args.Next();       \
 		if (!args.HasMore()) {     \
-			SscanfWarning("Format specifier does not match parameter count."); \
+			SscanfWarning(47, "Format specifier does not match parameter count."); \
 			return SSCANF_FAIL_RETURN; } \
 	case 1:						   \
 		SAVE_VALUE((cell)b);       \
@@ -264,7 +266,7 @@ static char
 	case -1:					    \
 		b = amx_ctof(*args.Next()); \
 		if (!args.HasMore()) {     \
-			SscanfWarning("Format specifier does not match parameter count."); \
+			SscanfWarning(47, "Format specifier does not match parameter count."); \
 			return SSCANF_FAIL_RETURN; } \
 	case 1:						    \
 		SAVE_VALUE_F(b);            \
@@ -285,7 +287,7 @@ static char
 		case -1:					   \
 			b = (m)*args.Next();       \
 			if (!args.HasMore()) {     \
-				SscanfWarning("Format specifier does not match parameter count."); \
+				SscanfWarning(47, "Format specifier does not match parameter count."); \
 				return SSCANF_FAIL_RETURN; } \
 		case 1:						   \
 			SAVE_VALUE((cell)b);       \
@@ -302,7 +304,7 @@ static char
 		case -1:					    \
 			b = amx_ctof(*args.Next()); \
 			if (!args.HasMore()) {     \
-				SscanfWarning("Format specifier does not match parameter count."); \
+				SscanfWarning(47, "Format specifier does not match parameter count."); \
 				return SSCANF_FAIL_RETURN; } \
 		case 1:						    \
 			SAVE_VALUE_F(b);            \
@@ -353,6 +355,7 @@ bool SscanfErrLine()
 			else
 			{
 				logprintf("sscanf error: Unable to allocate memory.");
+				SetErrorCode(43);
 				gCallFile = "sscanf";
 				gCallLine = -1;
 				gCallResolve = 0;
@@ -415,12 +418,12 @@ static cell
 			// considered OK as that is likely a user's fault.
 			if (args.HasMore())
 			{
-				SscanfWarning("Format specifier does not match parameter count.");
+				SscanfWarning(47, "Format specifier does not match parameter count.");
 			}
 			if (!doSave)
 			{
 				// Started a quiet section but never explicitly ended it.
-				SscanfWarning("Unclosed quiet section.");
+				SscanfWarning(48, "Unclosed quiet section.");
 			}
 			RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 			return SSCANF_TRUE_RETURN;
@@ -496,13 +499,13 @@ static cell
 				else
 				{
 					// Already in a quiet section.
-					SscanfWarning("Can't have nestled quiet sections.");
+					SscanfWarning(20, "Can't have nestled quiet sections.");
 				}
 				continue;
 			case '}':
 				if (doSave)
 				{
-					SscanfWarning("Not in a quiet section.");
+					SscanfWarning(21, "Not in a quiet section.");
 				}
 				else
 				{
@@ -547,7 +550,7 @@ static cell
 					{
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 						amx_SetString(args.Next(), dest, 0, 0, length);
@@ -574,7 +577,7 @@ static cell
 					{
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 						amx_SetString(args.Next(), dest, 0, 0, length);
@@ -594,7 +597,7 @@ static cell
 					{
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 						amx_SetString(args.Next(), dest, 1, 0, length);
@@ -621,7 +624,7 @@ static cell
 					{
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 						amx_SetString(args.Next(), dest, 1, 0, length);
@@ -639,7 +642,7 @@ static cell
 						b = *args.Next();
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 					}
@@ -650,19 +653,19 @@ static cell
 						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
-							SscanfError("'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							SscanfError(55, "'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (len < 2)
 						{
-							SscanfError("'U(num)[len]' length under 2.");
+							SscanfError(56, "'U(num)[len]' length under 2.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (doSave)
 						{
 							if (!args.HasMore())
 							{
-								SscanfWarning("Format specifier does not match parameter count.");
+								SscanfWarning(47, "Format specifier does not match parameter count.");
 								return SSCANF_FAIL_RETURN;
 							}
 							cell *
@@ -687,7 +690,7 @@ static cell
 						len = GetLength(&format, args);
 					if (len < 2)
 					{
-						SscanfError("'u[len]' length under 2.");
+						SscanfError(57, "'u[len]' length under 2.");
 						return SSCANF_FAIL_RETURN;
 					}
 					else
@@ -756,7 +759,7 @@ static cell
 						b = *args.Next();
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 					}
@@ -767,19 +770,19 @@ static cell
 						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
-							SscanfError("'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							SscanfError(58, "'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (len < 2)
 						{
-							SscanfError("'Q(num)[len]' length under 2.");
+							SscanfError(59, "'Q(num)[len]' length under 2.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (doSave)
 						{
 							if (!args.HasMore())
 							{
-								SscanfWarning("Format specifier does not match parameter count.");
+								SscanfWarning(47, "Format specifier does not match parameter count.");
 								return SSCANF_FAIL_RETURN;
 							}
 							cell *
@@ -804,7 +807,7 @@ static cell
 						len = GetLength(&format, args);
 					if (len < 2)
 					{
-						SscanfError("'q[len]' length under 2.");
+						SscanfError(60, "'q[len]' length under 2.");
 						return SSCANF_FAIL_RETURN;
 					}
 					else
@@ -873,7 +876,7 @@ static cell
 						b = *args.Next();
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							return SSCANF_FAIL_RETURN;
 						}
 					}
@@ -884,19 +887,19 @@ static cell
 						if (gOptions & OLD_DEFAULT_NAME)
 						{
 							// Incompatible combination.
-							SscanfError("'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
+							SscanfError(61, "'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (len < 2)
 						{
-							SscanfError("'R(num)[len]' length under 2.");
+							SscanfError(62, "'R(num)[len]' length under 2.");
 							return SSCANF_FAIL_RETURN;
 						}
 						else if (doSave)
 						{
 							if (!args.HasMore())
 							{
-								SscanfWarning("Format specifier does not match parameter count.");
+								SscanfWarning(47, "Format specifier does not match parameter count.");
 								return SSCANF_FAIL_RETURN;
 							}
 							cell *
@@ -921,7 +924,7 @@ static cell
 						len = GetLength(&format, args);
 					if (len < 2)
 					{
-						SscanfError("'r[len]' length under 2.");
+						SscanfError(63, "'r[len]' length under 2.");
 						return SSCANF_FAIL_RETURN;
 					}
 					else
@@ -1130,7 +1133,7 @@ static cell
 					}
 					else
 					{
-						SscanfWarning("Unclosed string literal.");
+						SscanfWarning(24, "Unclosed string literal.");
 						char *
 							find = strstr(string, format);
 						if (!find)
@@ -1152,10 +1155,10 @@ static cell
 					continue;
 				}
 			case '%':
-				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				continue;
 			default:
-				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				SscanfWarning(9, "Unknown format specifier '%c', skipping.", *(format - 1));
 				continue;
 			}
 			// Loop cleanup - only skip one spacer so that we can detect
@@ -1182,11 +1185,11 @@ static cell
 		// Loop through if there's still parameters remaining.
 		if (!*format)
 		{
-			SscanfWarning("Format specifier does not match parameter count.");
+			SscanfWarning(47, "Format specifier does not match parameter count.");
 			if (!doSave)
 			{
 				// Started a quiet section but never explicitly ended it.
-				SscanfWarning("Unclosed quiet section.");
+				SscanfWarning(48, "Unclosed quiet section.");
 			}
 			RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 			return SSCANF_TRUE_RETURN;
@@ -1270,13 +1273,13 @@ static cell
 				else
 				{
 					// Already in a quiet section.
-					SscanfWarning("Can't have nestled quiet sections.");
+					SscanfWarning(20, "Can't have nestled quiet sections.");
 				}
 				break;
 			case '}':
 				if (doSave)
 				{
-					SscanfWarning("Not in a quiet section.");
+					SscanfWarning(21, "Not in a quiet section.");
 				}
 				else
 				{
@@ -1349,7 +1352,7 @@ static cell
 					}
 					else
 					{
-						SscanfWarning("Unclosed string literal.");
+						SscanfWarning(24, "Unclosed string literal.");
 					}
 				}
 				break;
@@ -1389,10 +1392,10 @@ static cell
 				GetMultiType(&format);
 				continue;
 			case '%':
-				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				break;
 			default:
-				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				SscanfWarning(9, "Unknown format specifier '%c', skipping.", *(format - 1));
 				break;
 			}
 			// Don't need any cleanup here.
@@ -1472,7 +1475,7 @@ static cell
 				}
 				else
 				{
-					SscanfWarning("Unclosed string literal.");
+					SscanfWarning(24, "Unclosed string literal.");
 					char *
 						find = strstr(string, format);
 					if (!find)
@@ -1501,12 +1504,12 @@ static cell
 					{
 						if (*format == '}')
 						{
-							SscanfWarning("Not in a quiet section.");
+							SscanfWarning(21, "Not in a quiet section.");
 						}
 						else if (*format != '{')
 						{
 							// Fix the bad display bug.
-							SscanfWarning("Format specifier does not match parameter count: %c.", *format);
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 						}
 						// Only display it once.
 						break;
@@ -1519,7 +1522,7 @@ static cell
 						}
 						else
 						{
-							SscanfWarning("Format specifier does not match parameter count.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 							break;
 						}
 					}
@@ -1532,7 +1535,7 @@ static cell
 	if (!doSave)
 	{
 		// Started a quiet section but never explicitly ended it.
-		SscanfWarning("Unclosed quiet section.");
+		SscanfWarning(48, "Unclosed quiet section.");
 	}
 	// No more parameters and no more format specifiers which could be read
 	// from - this is a valid return!
@@ -1595,7 +1598,7 @@ static cell AMX_NATIVE_CALL
 	gCallFile = 0;
 	gCallLine = -1;
 	gCallResolve = 0;
-	SscanfWarning("Include / plugin mismatch, please recompile your script for the latest features.");
+	SscanfWarning(49, "Include / plugin mismatch, please recompile your script for the latest features.");
 	// Set up function wide values.
 	// Get and check the main data.
 	// Pointer to the current format specifier.

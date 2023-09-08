@@ -126,16 +126,37 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 12.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
     * 12.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
     * 12.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-	* 12.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
-	* 12.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
-	* 12.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
-	* 12.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
-	* 12.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-	* 12.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
-	* 12.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
-	* 12.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
-	* 12.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setName-return)
-	* 12.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
+    * 12.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
+    * 12.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
+    * 12.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
+    * 12.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
+    * 12.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+    * 12.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
+    * 12.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+    * 12.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
+    * 12.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setname-return)
+    * 12.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
+    * 12.47 [sscanf error: Unable to allocate memory.](#sscanf-error-unable-to-allocate-memory)
+    * 12.48 [sscanf warning: User arrays are not supported in arrays.](#sscanf-warning-user-arrays-are-not-supported-in-arrays)
+    * 12.49 [sscanf warning: Invalid values in array defaults.](#sscanf-warning-invalid-values-in-array-defaults)
+    * 12.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
+    * 12.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
+    * 12.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
+    * 12.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include-plugin-mismatch-please-recompile-your-script for-the-latest-features)
+    * 12.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
+    * 12.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
+    * 12.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
+    * 12.57 [sscanf warning: A minus quiet section makes no sense.](#sscanf-warning-a-minus-quiet-section-makes-no-sense)
+    * 12.58 [sscanf warning: User arrays are not supported in enums.](#sscanf-warning-user-arrays-are-not-supported-in-enums)
+    * 12.59 [sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-u-name-len-is-incompatible-with-old_default_name)
+    * 12.60 [sscanf error: 'U(num)[len]' length under 2.](#sscanf-error-u-num-len-length-under-2)
+    * 12.61 [sscanf error: 'u[len]' length under 2.](#sscanf-error-u-len-length-under-2)
+    * 12.62 [sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-q-name-len-is-incompatible-with-old_default_name)
+    * 12.63 [sscanf error: 'Q(num)[len]' length under 2.](#sscanf-error-q-num-len-length-under-2)
+    * 12.64 [sscanf error: 'q[len]' length under 2.](#sscanf-error-q-len-length-under-2)
+    * 12.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
+    * 12.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
+    * 12.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
 * 13 [Future Plans](#future-plans)
     * 13.1 [Reserved Specifiers](#reserved-specifiers)
     * 13.2 [Alternates](#alternates)
@@ -1477,9 +1498,13 @@ http://www.microsoft.com/download/en...s.aspx?id=5555
 
 ### sscanf error: System not initialised
 
+*Error Code: 1*
+
 If you get this error, you need to make sure that you have recompiled ALL your scripts using the LATEST version of `sscanf2.inc`.  Older versions didn't really require this as they only had two natives - `sscanf` and `unformat`, the new version has some other functions - you don't need to worry about them, but you must use `sscanf2.inc` so that they are correctly called.  If you think you have done this and STILL get the error then try again - make sure you are using the correct version of PAWNO for example.
 
 ### sscanf warning: String buffer overflow.
+
+*Error Code: 2*
 
 This error comes up when people try and put too much data in to a string.  For example:
 
@@ -1500,6 +1525,8 @@ In this case `num` is still correctly set to `42`, but the warning is given for 
 Currently there is nothing you can do about this from a programming side (you can't even detect it - that is a problem I intend to address), as long as you specify how much data a user should enter this will simply discard the excess, or make the destination variable large enough to handle all cases.
 
 ### sscanf warning: Optional types invalid in array specifiers, consider using 'A'.
+
+*Error Code: 3*
 
 A specifier such as:
 
@@ -1523,6 +1550,8 @@ That will set the array to `5, 6, 7, 8, 9, 10, 11, 12, 13, 14` by default, incre
 
 ### sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.
 
+*Error Code: 4*
+
 Similar to the previous warning, A specifier such as:
 
 ```
@@ -1538,6 +1567,8 @@ E<if>(42, 11.0)
 This forces ALL the parts of an enum to be optional - anything less is not possible.
 
 ### sscanf error: Multi-dimensional arrays are not supported.
+
+*Error Code: 5*
 
 This is not allowed:
 
@@ -1555,6 +1586,8 @@ That will correctly set up the pointers for the system.
 
 ### sscanf error: Search strings are not supported in arrays.
 
+*Error Code: 6*
+
 This is not allowed (see the section on search strings):
 
 ```
@@ -1562,6 +1595,8 @@ a<'hello'i>[10]
 ```
 
 ### sscanf error: Delimiters are not supported in arrays.
+
+*Error Code: 7*
 
 This is not allowed:
 
@@ -1577,6 +1612,7 @@ p<,>a<i>[10]
 
 ### sscanf error: Quiet sections are not supported in arrays.
 
+*Error Code: 8*
 
 This is not allowed:
 
@@ -1592,9 +1628,13 @@ Instead use:
 
 ### sscanf error: Unknown format specifier '?'.
 
+*Error Code: 9*
+
 The given specifier is not known (this post contains a full list of all the specifiers near the bottom).
 
 ### sscanf warning: Empty default values.
+
+*Error Code: 10*
 
 An optional specifier has been set as (for example):
 
@@ -1612,6 +1652,8 @@ This does not apply to strings as they can be legitimately empty.
 
 ### sscanf warning: Unclosed default value.
 
+*Error Code: 11*
+
 You have a default value on an optional specifier that looks like:
 
 ```
@@ -1626,6 +1668,8 @@ I(42)
 
 ### sscanf warning: No default value found.
 
+*Error Code: 12*
+
 You have no default value on an optional specifier:
 
 ```
@@ -1639,6 +1683,8 @@ I(42)
 ```
 
 ### sscanf warning: Unenclosed specifier parameter.
+
+*Error Code: 13*
 
 You are using the old style:
 
@@ -1686,6 +1732,8 @@ This also applies to array types (`a<` vs `a<i>`), and will result in an invalid
 
 ### sscanf warning: No specified parameter found.
 
+*Error Code: 14*
+
 The format specifier just ends with:
 
 ```
@@ -1695,7 +1743,14 @@ p
 This also applies to array types (`a` vs `a<i>`).
 
 ### sscanf warning: Missing string length end.
+
+*Error Code: 15*
+
+See below.
+
 ### sscanf warning: Missing length end.
+
+*Error Code: 16*
 
 A string has been written as:
 
@@ -1713,17 +1768,25 @@ I.e. the length has not been closed.
 
 ### sscanf error: Invalid data length.
 
+*Error Code: 17*
+
 An invalid array or string size has been specified (0, negative, or not a number).
 
 ### sscanf error: Invalid character in data length.
+
+*Error Code: 18*
 
 A string or array has been given a length that is not a number.
 
 ### sscanf error: String/array must include a length, please add a destination size.
 
+*Error Code: 19*
+
 Arrays are newer than strings, so never had an implementation not requiring a length, so there is no compatibility problems in REQUIRING a length to be given.
 
 ### sscanf warning: Can't have nestled quiet sections.
+
+*Error Code: 20*
 
 You have tried writing something like this:
 
@@ -1735,6 +1798,8 @@ This has a quiet section (`{}`) inside another one, which makes no sense.
 
 ### sscanf warning: Not in a quiet section.
 
+*Error Code: 21*
+
 `}` was found with no corresponding `{`:
 
 ```
@@ -1742,6 +1807,8 @@ i}
 ```
 
 ### sscanf warning: Can't remove quiet in enum.
+
+*Error Code: 22*
 
 This is caused by specifiers such as:
 
@@ -1757,6 +1824,7 @@ Where the quiet section is started before the enum, but finishes part way throug
 
 ### sscanf error: Arrays are not supported in enums.
 
+*Error Code: 23*
 
 Basically, you can't do:
 
@@ -1774,6 +1842,8 @@ This is a little more awkward, but is actually more technically correct given ho
 
 ### sscanf warning: Unclosed string literal.
 
+*Error Code: 24*
+
 A specifier starts a string with `'`, but doesn't close it:
 
 ```
@@ -1782,9 +1852,13 @@ i'hello
 
 ### sscanf warning: sscanf specifiers do not require '%' before them.
 
+*Error Code: 25*
+
 `format` uses code such as `%d`, sscanf only needs `d`, and confusingly the C equivalent function (also called `sscanf`) DOES require `%`.  Sorry.
 
 ### sscanf error: Insufficient default values.
+
+*Error Code: 26*
 
 Default values for arrays can be partially specified and the remainder will be inferred from the pattern of the last two:
 
@@ -1806,11 +1880,19 @@ E<iiff>(0, 1)
 
 ### sscanf error: Options are not supported in enums.
 
+*Error Code: 27*
+
+The `?` specifier for local options must appear outside any other specifier.
+
 ### sscanf error: Options are not supported in arrays.
+
+*Error Code: 28*
 
 The `?` specifier for local options must appear outside any other specifier.
 
 ### sscanf error: No option value.
+
+*Error Code: 29*
 
 An option was specified with no value:
 
@@ -1820,6 +1902,8 @@ An option was specified with no value:
 
 ### sscanf error: Unknown option name.
 
+*Error Code: 30*
+
 The given option was not recognised.  Check spelling and case:
 
 ```
@@ -1828,22 +1912,55 @@ The given option was not recognised.  Check spelling and case:
 
 ### sscanf warning: Could not find function SSCANF:?.
 
+*Error Code: 31*
+
 A `k` specifier has been used, but the corresponding function could not be found.  If you think it is there check the spelling matches exactly - including the case.
 
 ### sscanf error: SSCANF_Init has incorrect parameters.
+
+*Error Code: 32*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ### sscanf error: SSCANF_Join has incorrect parameters.
+
+*Error Code: 33*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ### sscanf error: SSCANF_Leave has incorrect parameters.
+
+*Error Code: 34*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ### sscanf error: SSCANF_IsConnected has incorrect parameters.
+
+*Error Code: 35*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ### sscanf error: SSCANF_Version has incorrect parameters.
+
+*Error Code: 36*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ### sscanf error: SSCANF_Option has incorrect parameters.
+
+*Error Code: 37*
 
 You edited something in the sscanf2 include - undo it or redownload it.
 
 ### sscanf error: SetPlayerName has incorrect parameters.
 
+*Error Code: 38*
+
 You somehow managed to call `SetPlayerName` without passing all the parameters.  This can only happen by redefining the native declaration itself, so undo any edits to it.
 
 ### sscanf error: Missing required parameters.
+
+*Error Code: 39*
 
 `sscanf` itself was called without sufficient parameters.  I.e. the input and specifier strings are missing.  This can also happen when you edit the include itself to mess with the file/line macros.
 
@@ -1871,6 +1988,9 @@ main()
 To fix this, just include `<sscanf2>` before you use `sscanf`.
 
 ### `error 004: function "sscanf" is not implemented`
+
+See below.
+
 ### `error 004: function "sscanf" is not implemented - include <sscanf2> first.`
 
 These are the same error, the only difference being compilers and settings.  Obviously the more useful (second) error which tells you how to solve this problem.  Similar to [the previous error](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion) this happens when `sscanf` is used before being included, but in a slightly different way:
@@ -1906,15 +2026,237 @@ For more information on why, see [this compiler issue](https://github.com/pawn-l
 
 ### sscanf error: Pawn component not loaded.
 
+*Error Code: 40*
+
 When loading sscanf as a component on open.mp the Pawn component is also required.  Ensure `pawn.dll` or `pawn.so` is in the `components/` directory.
 
 ### sscanf warning: Unknown `player->setName()` return.
+
+*Error Code: 41*
 
 The open.mp sscanf component was probably built against an old version of the SDK.  Check for an updated version at https://www.github.com/Y-Less/sscanf/.
 
 ### sscanf error: This script was built with the component version of the include.
 
+*Error Code: 42*
+
 When compiling a script with the open.mp official includes the sscanf2 include file compiles different code, which assumes that the natives will be loaded as a component.  This error comes when the natives are loaded as a plugin instead, as certain features like `SSCANF_Init` are no longer required in the component case.  Move `sscanf.dll` or `sscanf.so` from the `plugins/` directory to the `components/` directory and remove the legacy plugin name from `plugins` (in server.cfg) or `pawn.legacy_plugins` (in config.json).
+
+### sscanf error: Unable to allocate memory.
+
+*Error Code: 43*
+
+You ran out of RAM.  Unfortunately there's not much that can be done about this error.  `sscanf` only allocates very small amounts of memory, and only temporarilly, so you must be *really* low to get this.
+
+### sscanf warning: User arrays are not supported in arrays.
+
+*Error Code: 44*
+
+This is not allowed:
+
+```
+a<u[5]>[10]
+```
+
+Instead use:
+
+```
+u[50]
+```
+
+### sscanf warning: Invalid values in array defaults.
+
+*Error Code: 45*
+
+The optional array default values do not parse to the given type.  For example you've provided floats instead of integers:
+
+```
+A<i>(6.6, 7.7)[10]
+```
+
+### sscanf warning: Excess array defaults found.
+
+*Error Code: 46*
+
+More optional array default values were given than needed:
+
+```
+A<i>(0, 1, 2, 3, 4, 5, 6)[3]
+```
+
+### sscanf warning: Format specifier does not match parameter count.
+
+*Error Code: 47*
+
+There are specifiers in the format string than there are destination parameters:
+
+```pawn
+sscanf(input, "iiiiiiii", a, b, c);
+```
+
+### sscanf warning: Unclosed quiet section.
+
+*Error Code: 48*
+
+A quiet section was opened but not closed:
+
+```
+{i
+```
+
+### sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.
+
+*Error Code: 49*
+
+Your mode was compiled using a (possibly very) old version of `sscanf2.inc`, which doesn't have the new natives or features.  However, the plugin does have those and can give far better diagnostics (such as error line numbers) if you recompile.
+
+### sscanf warning: A minus minus makes no sense.
+
+*Error Code: 50*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, you've used two in a row:
+
+```
+e<i--f>
+```
+
+### sscanf warning: A minus option makes no sense.
+
+*Error Code: 51*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, you've used `-` on an optional specifier, which means you don't care if it is there, and won't save it - just skip it entirely:
+
+```
+e<i-F(2.2)>
+```
+
+### sscanf warning: A minus delimiter makes no sense.
+
+*Error Code: 52*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, `p` isn't a specifier for reading in data, so there's no type to skip:
+
+```
+e<i-p<,>>
+```
+
+### sscanf warning: A minus quiet section makes no sense.
+
+*Error Code: 53*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  A quiet section reads in input but doesn't save it.  I guess these do make sense together in retrospect, but instead of doing:
+
+```
+e<i-{i}>
+```
+
+Do:
+
+```
+e<i-i{i}>
+```
+
+To skip data without writing it out.
+
+### sscanf warning: User arrays are not supported in enums.
+
+*Error Code: 54*
+
+You can't do this:
+
+```
+e<u[5]>
+```
+
+### sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.
+
+*Error Code: 55*
+
+Player arrays end the list of results with `INVALID_PLAYER_ID`.  `OLD_DEFAULT_NAME` checks if the given player is connected by name.  Therefore if you try combine these two features you may end the list early:
+
+```
+?<OLD_DEFAULT_NAME=1>U(Y_Less)[5]
+```
+
+### sscanf error: 'U(num)[len]' length under 2.
+
+*Error Code: 56*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+U(4)[1]
+```
+
+### sscanf error: 'u[len]' length under 2.
+
+*Error Code: 57*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+u[1]
+```
+
+### sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.
+
+*Error Code: 58*
+
+Player arrays end the list of results with `INVALID_PLAYER_ID`.  `OLD_DEFAULT_NAME` checks if the given player is connected by name.  Therefore if you try combine these two features you may end the list early:
+
+```
+?<OLD_DEFAULT_NAME=1>Q(Y_Less)[5]
+```
+
+### sscanf error: 'Q(num)[len]' length under 2.
+
+*Error Code: 59*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+Q(4)[1]
+```
+
+### sscanf error: 'q[len]' length under 2.
+
+*Error Code: 60*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+q[1]
+```
+
+### sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.
+
+*Error Code: 61*
+
+Player arrays end the list of results with `INVALID_PLAYER_ID`.  `OLD_DEFAULT_NAME` checks if the given player is connected by name.  Therefore if you try combine these two features you may end the list early:
+
+```
+?<OLD_DEFAULT_NAME=1>R(Y_Less)[5]
+```
+
+### sscanf error: 'R(num)[len]' length under 2.
+
+*Error Code: 62*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+R(4)[1]
+```
+
+### sscanf error: 'r[len]' length under 2.
+
+*Error Code: 63*
+
+Use arrays have a sentinel, i.e. they search for all matching users and end the list with `INVALID_PLAYER_ID`.  If the array size is smaller than `2` elements then the only value that can be returned is the sentinel, i.e. you won't get any useful results:
+
+```
+r[1]
+```
 
 ## Future Plans
 
@@ -2230,4 +2572,15 @@ the Initial Developer.  All Rights Reserved.
 ### sscanf 2.13.8 - 05/01/2023
 
 * "Final" SDK update.
+
+### sscanf 2.14.1 - 08/09/2023
+
+* Fixed a bug where setting `MATCH_NAME_FIRST` also disabled logging.
+* Re-introduced the return value of `sscanf` giving the index of the failed specifier.
+* `SSCANF_GetLastError` to get the error code in failure cases.
+* Added `WARNINGS_AS_ERRORS` option to treat warnings as errors.
+* Added `ERROR_CODE_IN_RET` option to return error codes along-side error indexes.
+* Stop defining `__PawnBuild` and use `__pawn_build` instead.
+* Add `E_SSCANF_ERROR` to define all error codes.
+* Add `SSCANF_ERROR` macro to combine specifier indexes and error codes for `ERROR_CODE_IN_RET`.
 

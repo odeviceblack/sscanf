@@ -51,6 +51,8 @@ enum E_SSCANF_OPTIONS
 	SSCANF_QUIET = 8,
 	OLD_DEFAULT_KUSTOM = 16,
 	MATCH_NAME_FIRST = 32,
+	ERROR_CODE_IN_RET = 64,
+	WARNINGS_AS_ERRORS = 128,
 };
 
 void
@@ -100,3 +102,4 @@ int
 
 bool
 	FindDefaultStart(char ** const str);
+

@@ -40,21 +40,37 @@
  *      Emmet_, for his efforts in maintaining it for almost a year.
  */
 
-#pragma once
+#include "error.h"
 
-#include "amx/amx.h"
+int
+	g_iErrorCode = 0,
+	g_iErrorSpecifier = 0; // No error.
 
-struct args_s
+int
+	GetErrorCode()
 {
-	AMX * Amx;
-	cell const * Params;
-	int Pos;
-	int Marker;
-	int Count;
+	if (g_iErrorSpecifier == 0)
+	{
+		return 0;
+	}
+	return g_iErrorCode;
+}
 
-	cell * Next();
-	void Mark();
-	void Restore();
-	bool HasMore();
-};
+void
+	SetErrorCode(int error)
+{
+	g_iErrorCode = error;
+}
+
+int
+	GetErrorSpecifier()
+{
+	return g_iErrorSpecifier;
+}
+
+void
+	SetErrorSpecifier(int spec)
+{
+	g_iErrorSpecifier = spec;
+}
 

@@ -113,7 +113,7 @@ extern logprintf_t
 	break;
 
 #define OPTIONAL_INVALID \
-	SscanfWarning("Optional types invalid in array specifiers, consider using 'A'.")
+	SscanfWarning(3, "Optional types invalid in array specifiers, consider using 'A'.")
 
 #define DX(m,n) \
 	OPTIONAL_INVALID;
@@ -274,7 +274,7 @@ int
 	case 'u':
 		if (*type == '[')
 		{
-			SscanfWarning("User arrays are not supported in arrays.");
+			SscanfWarning(44, "User arrays are not supported in arrays.");
 		}
 		if (defaults)
 		{
@@ -321,7 +321,7 @@ int
 	case 'q':
 		if (*type == '[')
 		{
-			SscanfWarning("User arrays are not supported in arrays.");
+			SscanfWarning(44, "User arrays are not supported in arrays.");
 		}
 		if (defaults)
 		{
@@ -368,7 +368,7 @@ int
 	case 'r':
 		if (*type == '[')
 		{
-			SscanfWarning("User arrays are not supported in arrays.");
+			SscanfWarning(44, "User arrays are not supported in arrays.");
 		}
 		if (defaults)
 		{
@@ -411,17 +411,17 @@ int
 		break;
 	case 'A':
 	case 'a':
-		SscanfError("Multi-dimensional arrays are not supported.");
+		SscanfError(5, "Multi-dimensional arrays are not supported.");
 		return SSCANF_FAIL_RETURN;
 	case '\'':
-		SscanfError("Search strings are not supported in arrays.");
+		SscanfError(6, "Search strings are not supported in arrays.");
 		return SSCANF_FAIL_RETURN;
 	case 'P':
 	case 'p':
-		SscanfError("Delimiters are not supported in arrays.");
+		SscanfError(7, "Delimiters are not supported in arrays.");
 		return SSCANF_FAIL_RETURN;
 	case '?':
-		SscanfError("Options are not supported in arrays.");
+		SscanfError(28, "Options are not supported in arrays.");
 		return SSCANF_FAIL_RETURN;
 	case 'k':
 		if (defaults)
@@ -589,10 +589,10 @@ int
 		//return SSCANF_FAIL_RETURN;
 	case '{':
 	case '}':
-		SscanfError("Quiet sections are not supported in arrays.");
+		SscanfError(8, "Quiet sections are not supported in arrays.");
 		return SSCANF_FAIL_RETURN;
 	default:
-		SscanfError("Unknown format specifier '%c'.", *(type - 1));
+		SscanfError(9, "Unknown format specifier '%c'.", *(type - 1));
 		return SSCANF_FAIL_RETURN;
 	}
 	// Save the end of the string.
@@ -604,7 +604,7 @@ int
 			if (*string)
 			{
 				// Error in format specifier.
-				SscanfWarning("Invalid values in array defaults.");
+				SscanfWarning(45, "Invalid values in array defaults.");
 			}
 			else
 			{
@@ -648,7 +648,7 @@ int
 		}
 		else if (*string)
 		{
-			SscanfWarning("Excess array defaults found.");
+			SscanfWarning(46, "Excess array defaults found.");
 		}
 	}
 	else
@@ -729,7 +729,7 @@ bool
 						args.Next();
 						if (!args.HasMore())
 						{
-							SscanfWarning("Format specifier does not match parameter count 4.");
+							SscanfWarning(47, "Format specifier does not match parameter count.");
 						}
 					}
 					break;
@@ -756,7 +756,7 @@ DoA_after_loop:
 				if (opts == *defaults && !(*type == 's' || *type == 'z' || *type == 'k'))
 				{
 					// No defaults found.
-					SscanfWarning("Empty default values.");
+					SscanfWarning(10, "Empty default values.");
 					optional = false;
 				}
 				// Found a valid end.  Make it null for
@@ -768,12 +768,12 @@ DoA_after_loop:
 			}
 			else
 			{
-				SscanfWarning("Unclosed default value.");
+				SscanfWarning(11, "Unclosed default value.");
 			}
 		}
 		else
 		{
-			SscanfWarning("No default value found.");
+			SscanfWarning(12, "No default value found.");
 			optional = false;
 		}
 	}
@@ -784,7 +784,7 @@ DoA_after_loop:
 		// Nowhere to save the data.
 		if (!args.HasMore())
 		{
-			SscanfWarning("Format specifier does not match parameter count.");
+			SscanfWarning(47, "Format specifier does not match parameter count.");
 			return false;
 		}
 	}
@@ -836,3 +836,4 @@ DoA_after_loop:
 	// Default fail - only gets here if there is no length.
 	return false;
 }
+

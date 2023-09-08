@@ -50,7 +50,6 @@ typedef
 typedef
 	char * (* GetServer_t)();
 
-#define SSCANF_FAIL_RETURN (-1)
 #define SSCANF_CONT_RETURN (((unsigned int)-1) >> 1)
 #define SSCANF_TRUE_RETURN (0)
 
@@ -66,19 +65,21 @@ typedef
 #define FLOAT_NAN_E             ((cell)0x7FFFFFFF)
 #define FLOAT_NEGATIVE_INFINITY ((cell)FLOAT_NEG_INFINITY)
 
-#define SscanfWarning(str,...) \
+#define SscanfWarning(code,str,...) \
 	do																								                    \
 	{																								                    \
 		if (SscanfErrLine()) logprintf("sscanf warning (%s:%d): " #str, gCallFile, gCallLine, ##__VA_ARGS__);           \
 		else logprintf("%s warning (`%s`): " #str, gCallFile, gFormat, ##__VA_ARGS__);		                            \
+		SetErrorCode(code);                                                                                             \
 	}																								                    \
 	while (0)
 
-#define SscanfError(str,...) \
+#define SscanfError(code,str,...) \
 	do																						                            \
 	{																						                            \
 		if (SscanfErrLine()) logprintf("sscanf error (%s:%d): " #str, gCallFile, gCallLine, ##__VA_ARGS__);             \
 		else logprintf("%s error (`%s`): " #str, gCallFile, gFormat, ##__VA_ARGS__);	                                \
+		SetErrorCode(code);                                                                                             \
 	}																						                            \
 	while (0)
 

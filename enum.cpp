@@ -83,7 +83,7 @@ extern logprintf_t
 	return SSCANF_FAIL_RETURN; }
 
 #define OPTIONAL_INVALID \
-	SscanfWarning("Optional types invalid in enum specifiers, consider using 'E'.")
+	SscanfWarning(4, "Optional types invalid in enum specifiers, consider using 'E'.")
 
 #define DX(m,n) \
 	OPTIONAL_INVALID;
@@ -188,13 +188,13 @@ int
 				else if (cptr)
 				{
 					// Already in a quiet section.
-					SscanfWarning("Can't have nestled quiet sections.");
+					SscanfWarning(20, "Can't have nestled quiet sections.");
 				}
 				continue;
 			case '}':
 				if (doSave)
 				{
-					SscanfWarning("Not in a quiet section.");
+					SscanfWarning(21, "Not in a quiet section.");
 				}
 				else
 				{
@@ -204,7 +204,7 @@ int
 					}
 					else
 					{
-						SscanfWarning("Can't remove quiet in enum.");
+						SscanfWarning(22, "Can't remove quiet in enum.");
 					}
 				}
 				continue;
@@ -335,7 +335,7 @@ int
 			case 'u':
 				if (*format == '[')
 				{
-					SscanfWarning("User arrays are not supported in enums.");
+					SscanfWarning(54, "User arrays are not supported in enums.");
 					SkipLength(&format);
 				}
 				#define DoU(m,n) DoU(m,n,0)
@@ -355,7 +355,7 @@ int
 			case 'q':
 				if (*format == '[')
 				{
-					SscanfWarning("User arrays are not supported in enums.");
+					SscanfWarning(54, "User arrays are not supported in enums.");
 					SkipLength(&format);
 				}
 				#define DoQ(m,n) DoQ(m,n,0)
@@ -375,7 +375,7 @@ int
 			case 'r':
 				if (*format == '[')
 				{
-					SscanfWarning("User arrays are not supported in enums.");
+					SscanfWarning(54, "User arrays are not supported in enums.");
 					SkipLength(&format);
 				}
 				#define DoR(m,n) DoR(m,n,0)
@@ -468,7 +468,7 @@ int
 					}
 					else
 					{
-						SscanfWarning("Unclosed string literal.");
+						SscanfWarning(24, "Unclosed string literal.");
 						char *
 							find = strstr(string, format);
 						if (!find)
@@ -482,10 +482,10 @@ int
 				}
 				break;
 			case '?':
-				SscanfError("Options are not supported in enums.");
+				SscanfError(27, "Options are not supported in enums.");
 				return SSCANF_FAIL_RETURN;
 			case '%':
-				SscanfWarning("sscanf specifiers do not require '%' before them.");
+				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				continue;
 			case '-':
 				{
@@ -527,12 +527,12 @@ int
 						break;
 					case 'P':
 					case 'p':
-						SscanfWarning("A minus delimiter makes no sense.");
+						SscanfWarning(52, "A minus delimiter makes no sense.");
 						len = 0;
 						break;
 					case '{':
 					case '}':
-						SscanfWarning("A minus quiet section makes no sense.");
+						SscanfWarning(53, "A minus quiet section makes no sense.");
 						len = 0;
 						break;
 					case 'U':
@@ -571,19 +571,19 @@ int
 						len = GetLength(&format, args);
 						break;
 					case '?':
-						SscanfWarning("A minus option makes no sense.");
+						SscanfWarning(51, "A minus option makes no sense.");
 						len = 0;
 						break;
 					case '%':
-						SscanfWarning("sscanf specifiers do not require '%' before them.");
+						SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 						len = 0;
 						break;
 					case '-':
-						SscanfWarning("A minus minus makes no sense.");
+						SscanfWarning(50, "A minus minus makes no sense.");
 						len = 0;
 						break;
 					default:
-						SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+						SscanfWarning(9, "Unknown format specifier '%c', skipping.", *(format - 1));
 						len = 0;
 						break;
 					}
@@ -594,7 +594,7 @@ int
 				}
 				break;
 			default:
-				SscanfWarning("Unknown format specifier '%c', skipping.", *(format - 1));
+				SscanfWarning(9, "Unknown format specifier '%c', skipping.", *(format - 1));
 				continue;
 			}
 			// Loop cleanup - only skip one spacer so that we can detect
@@ -669,7 +669,7 @@ bool
 				if (opts == *defaults)
 				{
 					// No defaults found.
-					SscanfWarning("Empty default values.");
+					SscanfWarning(10, "Empty default values.");
 					optional = false;
 				}
 				// Found a valid end.  Make it null for
@@ -681,7 +681,7 @@ bool
 			}
 			else
 			{
-				SscanfWarning("Unclosed default value.");
+				SscanfWarning(11, "Unclosed default value.");
 			}
 			if (optional)
 			{
@@ -720,7 +720,7 @@ bool
 		}
 		else
 		{
-			SscanfWarning("No default value found.");
+			SscanfWarning(12, "No default value found.");
 			optional = false;
 		}
 	}
@@ -755,3 +755,4 @@ bool
 	}
 	return true;
 }
+

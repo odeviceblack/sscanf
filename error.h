@@ -42,19 +42,15 @@
 
 #pragma once
 
-#include "amx/amx.h"
+extern int
+	GetErrorCode();
 
-struct args_s
-{
-	AMX * Amx;
-	cell const * Params;
-	int Pos;
-	int Marker;
-	int Count;
+extern void
+	SetErrorCode(int error);
 
-	cell * Next();
-	void Mark();
-	void Restore();
-	bool HasMore();
-};
+extern int
+	GetErrorSpecifier();
+
+extern void
+	SetErrorSpecifier(int spec);
 
