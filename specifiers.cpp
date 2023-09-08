@@ -1263,7 +1263,7 @@ int
 	}
 	if (**input == '*')
 	{
-		SscanfError("(*) is not supported in strings/arrays yet.");
+		SscanfError(64, "(*) is not supported in strings/arrays yet.");
 		args.Next();
 	}
 	// Don't reallocate the memory, just set pointers to the current data and

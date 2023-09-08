@@ -391,12 +391,12 @@ int
 				break;
 			case 'A':
 			case 'a':
-				SscanfError("Arrays are not supported in enums.");
+				SscanfError(23, "Arrays are not supported in enums.");
 				*input = string;
 				return SSCANF_FAIL_RETURN;
 			case 'E':
 			case 'e':
-				SscanfError("Enums are not supported in enums.");
+				SscanfError(67, "Enums are not supported in enums.");
 				*input = string;
 				return SSCANF_FAIL_RETURN;
 			case '\'':
@@ -555,7 +555,7 @@ int
 					case 'E':
 						OPTIONAL_INVALID;
 					case 'e':
-						SscanfError("Enums are not supported in enums.");
+						SscanfError(67, "Enums are not supported in enums.");
 						*input = string;
 						return SSCANF_FAIL_RETURN;
 					case 'Z':
@@ -707,7 +707,7 @@ bool
 				case SSCANF_TRUE_RETURN:
 					break;
 				case SSCANF_CONT_RETURN:
-					SscanfError("Insufficient default values.");
+					SscanfError(26, "Insufficient default values.");
 					// FALLTHROUGH
 				default:
 					RestoreDelimiter();

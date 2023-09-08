@@ -725,7 +725,7 @@ bool
 					}
 					else
 					{
-						SscanfError("(*) is not supported in strings/arrays yet.");
+						SscanfError(64, "(*) is not supported in strings/arrays yet.");
 						args.Next();
 						if (!args.HasMore())
 						{

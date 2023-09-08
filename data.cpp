@@ -156,7 +156,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -178,7 +178,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -200,7 +200,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -232,7 +232,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -246,7 +246,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 		else
@@ -264,7 +264,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 		else
@@ -290,7 +290,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -312,7 +312,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -340,7 +340,7 @@ void
 			}
 			else
 			{
-				SscanfError("No option value.");
+				SscanfError(29, "No option value.");
 			}
 		}
 	}
@@ -375,7 +375,7 @@ void
 	}
 	else
 	{
-		SscanfError("Unknown option name.");
+		SscanfError(30, "Unknown option name.");
 	}
 }
 
@@ -425,7 +425,7 @@ cell
 	}
 	else
 	{
-		SscanfError("Unknown option name.");
+		SscanfError(30, "Unknown option name.");
 	}
 	return -1;
 }
@@ -453,7 +453,7 @@ char
 	}
 	if (tmp)
 	{
-		SscanfError("Unenclosed specifier parameter.", tmp);
+		SscanfError(13, "Unenclosed specifier parameter.", tmp);
 		++(*format);
 		return ' ';
 	}
@@ -517,12 +517,12 @@ char *
 		}
 		else
 		{
-			SscanfError("Unclosed specifier parameters.");
+			SscanfError(65, "Unclosed specifier parameters.");
 		}
 	}
 	else
 	{
-		SscanfError("No specified parameters found.");
+		SscanfError(66, "No specified parameters found.");
 	}
 	*format = cur;
 	return 0;
@@ -1246,7 +1246,7 @@ int
 			if (length <= 0)
 			{
 				length = 1;
-				SscanfError("Invalid data length.");
+				SscanfError(17, "Invalid data length.");
 			}
 		}
 		else
@@ -1256,7 +1256,7 @@ int
 			if (length <= 0)
 			{
 				length = 1;
-				SscanfError("Invalid data length.");
+				SscanfError(17, "Invalid data length.");
 			}
 		}
 		if (bracketed && *str == ')')

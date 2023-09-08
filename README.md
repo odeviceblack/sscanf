@@ -157,6 +157,10 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 12.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
     * 12.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
     * 12.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
+    * 12.68 [sscanf error: (*) is not supported in strings/arrays yet.](#sscanf-error-is-not-supported-in-strings-arrays-yet)
+    * 12.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
+    * 12.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
+    * 12.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
 * 13 [Future Plans](#future-plans)
     * 13.1 [Reserved Specifiers](#reserved-specifiers)
     * 13.2 [Alternates](#alternates)
@@ -2257,6 +2261,54 @@ Use arrays have a sentinel, i.e. they search for all matching users and end the 
 ```
 r[1]
 ```
+
+### sscanf error: (*) is not supported in strings/arrays yet.
+
+*Error Code: 64*
+
+You can't use `*` to pass default string values in additional parameters:
+
+```pawn
+sscanf(input, "A<s>(*)[5]", "default", output)
+```
+
+### sscanf error: Unclosed specifier parameters.
+
+*Error Code: 65*
+
+Some parameter was not closed by `>`:
+
+```
+e<iiif
+```
+
+### sscanf error: No specified parameters found.
+
+*Error Code: 66*
+
+Some parameter was not opened by `<`:
+
+```
+eiiif>
+```
+
+### sscanf error: Enums are not supported in enums.
+
+*Error Code: 67*
+
+Basically, you can't do:
+
+```
+e<fe<iii>f>
+```
+
+You can, however, still do:
+
+```
+e<fiiif>
+```
+
+Nested enums compile to the same as a single flat enum.  It may make less sense compared to the code, but is at least easier to write.
 
 ## Future Plans
 
