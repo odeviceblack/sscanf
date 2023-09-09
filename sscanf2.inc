@@ -241,6 +241,13 @@ const SSCANF_VERSION_BCD = SSCANF_VERSION;
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 #define @kustom()%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 
+// The check for `SSCANF_GetClosestString` ensures that this is the first
+// compiler pass and thus the check for `sscanf` only finds earlier definitions
+// not our later fake definition made purely for documentation purposes.
+#if defined sscanf && !defined SSCANF_GetClosestString
+	#error sscanf already defined, or used before inclusion.
+#endif
+
 /// <p/>
 
 /**
@@ -285,12 +292,42 @@ static stock SScanFError:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
 #define SSCANF_ERROR_NOT_FOUND                 (SScanFError:8)
 #define SSCANF_ERROR_NO_ALTS                   (SScanFError:9)
 
-// The check for `SSCANF_GetClosestString` ensures that this is the first
-// compiler pass and thus the check for `sscanf` only finds earlier definitions
-// not our later fake definition made purely for documentation purposes.
-#if defined sscanf && !defined SSCANF_GetClosestString
-	#error sscanf already defined, or used before inclusion.
-#endif
+/**
+ * <library>sscanf</library>
+ * <param name="specifier">The index of the problem specifier.</param>
+ * <param name="error">The code or category of the potential problem.</param>
+ * <remarks>
+ * Combine a specifier index and error code together for use as a return value
+ * from <c>sscanf</c>.
+ * </remarks>
+ */
+forward SSCANF_ERROR(specifier, SScanFError:error);
+
+#define SSCANF_ERROR(%0,%1) (((_:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%1)))<<16)|(%0))
+
+// Allows for all these variations:
+//
+//   SSCANF_ERROR(3, NATIVE)
+//   SSCANF_ERROR(3, SSCANF_ERROR_EXCESS)
+//   SSCANF_ERROR(3, 1001)
+//   SSCANF_ERROR(3, SScanFError:3)
+//
+// However, the tags aren't checked, because there are two allowed, and that's
+// hard to do in a macro.
+#define @ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%00%1))) ((%00%1)))
+#define @ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%01%1))) ((%01%1)))
+#define @ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%02%1))) ((%02%1)))
+#define @ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%03%1))) ((%03%1)))
+#define @ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%04%1))) ((%04%1)))
+#define @ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%05%1))) ((%05%1)))
+#define @ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%06%1))) ((%06%1)))
+#define @ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%07%1))) ((%07%1)))
+#define @ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%08%1))) ((%08%1)))
+#define @ss_9:@ss_S:((SSCANF_ERROR_%09%1))) ((%09%1)))
+#define @ss_S:((SSCANF_ERROR_%0SSCANF_ERROR_%1))) ((SSCANF_ERROR_%1)))
+
+// Consume spaces.
+#define SSCANF_ERROR_%0\32 SSCANF_ERROR_
 
 /**
  * <library>sscanf</library>
