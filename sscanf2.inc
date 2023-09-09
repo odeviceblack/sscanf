@@ -262,7 +262,7 @@ const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * for ease of processing.
  * </remarks>
  */
-enum SScanFError:MAX_SSCANF_ERRORS
+enum sscanf_error:MAX_SSCANF_ERRORS
 {
 	UNKNOWN_SSCANF_ERROR = -1,
 	SSCANF_ERROR_NONE,
@@ -276,21 +276,21 @@ enum SScanFError:MAX_SSCANF_ERRORS
 	SSCANF_ERROR_NOT_FOUND,
 	SSCANF_ERROR_NO_ALTS,
 }
-static stock SScanFError:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
+static stock sscanf_error:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
 
 // We use both `enum` and `#define` together so that `#emit` and arrays will
 // both work.  See the open.mp documentation for more details.
-#define UNKNOWN_SSCANF_ERROR                   (SScanFError:-1)
-#define SSCANF_ERROR_NONE                      (SScanFError:0)
-#define SSCANF_ERROR_NATIVE                    (SScanFError:1)
-#define SSCANF_ERROR_SPECIFIER                 (SScanFError:2)
-#define SSCANF_ERROR_INVALID                   (SScanFError:3)
-#define SSCANF_ERROR_MISSING                   (SScanFError:4)
-#define SSCANF_ERROR_EXCESS                    (SScanFError:5)
-#define SSCANF_ERROR_COLOUR                    (SScanFError:6)
-#define SSCANF_ERROR_OVERFLOW                  (SScanFError:7)
-#define SSCANF_ERROR_NOT_FOUND                 (SScanFError:8)
-#define SSCANF_ERROR_NO_ALTS                   (SScanFError:9)
+#define UNKNOWN_SSCANF_ERROR                   (sscanf_error:-1)
+#define SSCANF_ERROR_NONE                      (sscanf_error:0)
+#define SSCANF_ERROR_NATIVE                    (sscanf_error:1)
+#define SSCANF_ERROR_SPECIFIER                 (sscanf_error:2)
+#define SSCANF_ERROR_INVALID                   (sscanf_error:3)
+#define SSCANF_ERROR_MISSING                   (sscanf_error:4)
+#define SSCANF_ERROR_EXCESS                    (sscanf_error:5)
+#define SSCANF_ERROR_COLOUR                    (sscanf_error:6)
+#define SSCANF_ERROR_OVERFLOW                  (sscanf_error:7)
+#define SSCANF_ERROR_NOT_FOUND                 (sscanf_error:8)
+#define SSCANF_ERROR_NO_ALTS                   (sscanf_error:9)
 
 /**
  * <library>sscanf</library>
