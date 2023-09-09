@@ -1551,6 +1551,7 @@ static cell
 static cell AMX_NATIVE_CALL
 	n_old_sscanf(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
@@ -1632,6 +1633,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_sscanf(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
@@ -1744,6 +1746,7 @@ void
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Init(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] != 3 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Init has incorrect parameters.");
@@ -1786,6 +1789,7 @@ static void
 static cell AMX_NATIVE_CALL
 	n_SSCANF_IsConnected(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	cell playerid;
 
 	playerid = params[1];
@@ -1804,6 +1808,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Join(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] != 3 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Join has incorrect parameters.");
@@ -1826,6 +1831,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Leave(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] != 1 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Leave has incorrect parameters.");
@@ -1847,6 +1853,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Option(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] == 1 * sizeof (cell))
 	{
 		// Get.
@@ -1875,6 +1882,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Version(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] == 2 * sizeof(cell))
 	{
 		// Return the version as a string.
@@ -1905,6 +1913,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_SetPlayerName(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
@@ -1922,10 +1931,12 @@ static cell AMX_NATIVE_CALL
 		SetErrorCode(38);
 		return 0;
 	}
-	cell return_val = SetPlayerName(amx, params);
-	if (return_val == 1) // name has been successfully set
+	cell ret = SetPlayerName(amx, params);
+	if (ret == 1) // Name has been successfully set.
+	{
 		DoName(amx, params[1], params[2]);
-	return return_val;
+	}
+	return ret;
 }
 
 #if !defined min
@@ -1938,6 +1949,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_Levenshtein(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] != 2 * sizeof(cell))
 	{
 		logprintf("sscanf error: SSCANF_Levenshtein has incorrect parameters.");
@@ -2000,6 +2012,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_TextSimilarity(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	if (params[0] != 2 * sizeof(cell))
 	{
 		logprintf("sscanf error: SSCANF_TextSimilarity has incorrect parameters.");
@@ -2098,6 +2111,7 @@ static cell AMX_NATIVE_CALL
 static cell AMX_NATIVE_CALL
 	n_SSCANF_NOP(AMX * amx, cell const * params)
 {
+	SetErrorCode(0);
 	return 1;
 }
 
@@ -2394,6 +2408,7 @@ public:
 	static cell AMX_NATIVE_CALL
 		n_OMP_Init(AMX * amx, cell const * params)
 	{
+		SetErrorCode(0);
 		if (params[0] != 3 * sizeof (cell))
 		{
 			logprintf("sscanf error: SSCANF_Init has incorrect parameters.");

@@ -49,16 +49,16 @@ int
 int
 	GetErrorCode()
 {
-	if (g_iErrorSpecifier == 0)
-	{
-		return 0;
-	}
 	return g_iErrorCode;
 }
 
 void
 	SetErrorCode(int error)
 {
+	if (error == 0)
+	{
+		g_iErrorSpecifier = 0;
+	}
 	g_iErrorCode = error;
 }
 
