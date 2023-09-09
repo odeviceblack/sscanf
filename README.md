@@ -87,6 +87,8 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 9.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
     * 9.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
     * 9.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
+    * 9.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
+    * 9.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
 * 10 [`extract`](#extract)
 * 11 [Similarity](#similarity)
 * 12 [Errors/Warnings](#errorswarnings)
@@ -1359,6 +1361,14 @@ Exclude the default `k<weapon>` kustom specifier from being compiled when this i
 ### `SSCANF_NO_NICE_FEATURES`
 
 Several sscanf features, such as file and line numbers in errors, only work on the new compiler.  If you want to use the old compiler you'll get an error because those nice features won't work.  If you want to compile anyway without those features you need to define this symbol before inclusion.
+
+### `SSCANF_GetLastError();`
+
+Gets the error code set by the most recent call to any other sscanf function.  Calling this function does <b>not</b> clear the error, unlike some other implementations.  To do that call `SSCANF_ClearLastError`.
+
+### `SSCANF_ClearLastError();`
+
+Resets the error code from any previous *sscanf* function call.  Note that calling any other function also resets this value, but with more side-effects.
 
 ## `extract`
 

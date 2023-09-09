@@ -318,6 +318,26 @@ stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
 
 /**
  * <library>sscanf</library>
+ * <remarks>
+ * Gets the error code set by the most recent call to any other <b>sscanf</b>
+ * function.  Calling this function does <b>not</b> clear the error, unlike some
+ * other implementations.  To do that call <c>SSCANF_ClearLastError</c>.
+ * </remarks>
+ */
+native SSCANF_GetLastError();
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * Resets the error code from any previous <b>sscanf</b> function call.  Note
+ * that calling any other function also resets this value, but with more
+ * side-effects.
+ * </remarks>
+ */
+native SSCANF_ClearLastError();
+
+/**
+ * <library>sscanf</library>
  * <param name="string1">The first string to compare.</param>
  * <param name="string2">The second string to compare.</param>
  * <remarks>
