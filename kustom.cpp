@@ -158,6 +158,7 @@ bool
 	}
 	else if (!input || IsStringEnd(**input))
 	{
+		SetErrorCode(1004);
 		return false;
 	}
 	char

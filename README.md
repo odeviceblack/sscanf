@@ -142,7 +142,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 12.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
     * 12.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
     * 12.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
-    * 12.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include-plugin-mismatch-please-recompile-your-script for-the-latest-features)
+    * 12.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include--plugin-mismatch-please-recompile-your-script for-the-latest-features)
     * 12.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
     * 12.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
     * 12.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
@@ -2309,6 +2309,84 @@ e<fiiif>
 ```
 
 Nested enums compile to the same as a single flat enum.  It may make less sense compared to the code, but is at least easier to write.
+
+## Error Returns
+
+### Additional Codes
+
+Error codes under 1000 relate to printed messages, and are documented along-side their messages in [Section 12](#errorswarnings).  Error codes above 1000 are regular failures:
+
+* *1001* - A colour was given, but it doesn't match an allowed format:
+
+```pawn
+sscanf(input, "?<SSCANF_COLOUR_FORMS=12>m", "#112233", colour);
+```
+
+* *1003* - The search string was not found in the input:
+
+```pawn
+sscanf("some input", "'hello'");
+```
+
+* *1004* - Arguably the most basic failure - not enough input:
+
+```pawn
+sscanf("6", "ii", a, b);
+```
+
+* *1011* - An int was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "i", output);
+```
+
+* *1012* - A number was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "n", output);
+```
+
+* *1013* - A hex was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "h", output);
+```
+
+* *1014* - A colour was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "m", output);
+```
+
+* *1015* - An octal was wanted, but the input didn't match:
+
+```pawn
+sscanf("0xFF", "o", output);
+```
+
+* *1016* - A float was wanted, but the input didn't match:
+
+```pawn
+sscanf("NAN", "f", output);
+```
+
+* *1017* - A character was wanted, but the input didn't match:
+
+```pawn
+sscanf("long", "c", output);
+```
+
+* *1018* - A binary was wanted, but the input didn't match:
+
+```pawn
+sscanf("44", "b", output);
+```
+
+* *1019* - An extended (IEEE 754) float was wanted, but the input didn't match:
+
+```pawn
+sscanf("IsANumber", "g", output);
+```
 
 ## Future Plans
 

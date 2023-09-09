@@ -50,6 +50,7 @@ typedef
 typedef
 	char * (* GetServer_t)();
 
+#define SSCANF_FAIL_RETURN (-1)
 #define SSCANF_CONT_RETURN (((unsigned int)-1) >> 1)
 #define SSCANF_TRUE_RETURN (0)
 

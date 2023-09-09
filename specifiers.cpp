@@ -77,21 +77,36 @@ bool
 	DoI(char ** input, int * ret)
 {
 	*ret = GetDec(input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1011);
+	return false;
 }
 
 bool
 	DoN(char ** input, int * ret)
 {
 	*ret = GetNumber(input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1012);
+	return false;
 }
 
 bool
 	DoH(char ** input, int * ret)
 {
 	*ret = GetHex(input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1013);
+	return false;
 }
 
 bool
@@ -101,21 +116,41 @@ bool
 	// Colours.
 	*ret = GetColour(input, &type, gAlpha);
 	// Check the given form is allowed.
-	return (gForms & type) && GetReturn(input);
+	if (!(gForms & type))
+	{
+		SetErrorCode(1001);
+		return false;
+	}
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1014);
+	return false;
 }
 
 bool
 	DoO(char ** input, int * ret)
 {
 	*ret = GetOct(input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1015);
+	return false;
 }
 
 bool
 	DoF(char ** input, double * ret)
 {
 	*ret = strtod(*input, input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1016);
+	return false;
 }
 
 bool
@@ -137,7 +172,12 @@ bool
 			++(*input);
 		}
 	}
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1017);
+	return false;
 }
 
 bool
@@ -151,7 +191,12 @@ bool
 	DoB(char ** input, int * ret)
 {
 	*ret = (int)GetBool(input);
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1018);
+	return false;
 }
 
 bool
@@ -211,7 +256,12 @@ bool
 		*ret = strtod(string, input);
 		break;
 	}
-	return GetReturn(input);
+	if (GetReturn(input))
+	{
+		return true;
+	}
+	SetErrorCode(1019);
+	return false;
 }
 
 bool

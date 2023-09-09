@@ -1118,6 +1118,7 @@ static cell
 						{
 							// Didn't find the string
 							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
 						// Found the string.  Update the current string
@@ -1139,6 +1140,7 @@ static cell
 						if (!find)
 						{
 							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
 						string = find + (write - format);
@@ -1387,6 +1389,7 @@ static cell
 				// things, and the more important thing is that the user
 				// didn't enter the correct data.
 				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+				SetErrorCode(1004);
 				return SSCANF_FAIL_RETURN;
 			case '?':
 				GetMultiType(&format);
@@ -1460,6 +1463,7 @@ static cell
 					{
 						// Didn't find the string
 						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+						SetErrorCode(1003);
 						return SSCANF_FAIL_RETURN;
 					}
 					// Found the string.  Update the current string
@@ -1481,6 +1485,7 @@ static cell
 					if (!find)
 					{
 						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+						SetErrorCode(1003);
 						return SSCANF_FAIL_RETURN;
 					}
 					string = find + (write - format);
@@ -1549,6 +1554,7 @@ static cell AMX_NATIVE_CALL
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
+		SetErrorCode(1);
 		return SSCANF_FAIL_RETURN;
 	}
 	// Friendly note, the most complex set of specifier additions is:
@@ -1583,6 +1589,7 @@ static cell AMX_NATIVE_CALL
 	if (paramCount < (2 + 1))
 	{
 		logprintf("sscanf error: Missing required parameters.");
+		SetErrorCode(39);
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
@@ -1628,6 +1635,7 @@ static cell AMX_NATIVE_CALL
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
+		SetErrorCode(1);
 		return SSCANF_FAIL_RETURN;
 	}
 	// Friendly note, the most complex set of specifier additions is:
@@ -1662,6 +1670,7 @@ static cell AMX_NATIVE_CALL
 	if (paramCount < (4 + 1))
 	{
 		logprintf("sscanf error: Missing required parameters.");
+		SetErrorCode(39);
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
@@ -1702,6 +1711,7 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
+		SetErrorCode(1);
 		return SSCANF_FAIL_RETURN;
 	}
 	// Bacup up the file/line data for nested calls.
@@ -1890,6 +1900,7 @@ static cell AMX_NATIVE_CALL
 	if (g_iTrueMax == 0)
 	{
 		logprintf("sscanf error: System not initialised.");
+		SetErrorCode(1);
 		return 0;
 	}
 	// Hook ALL AMXs, even if they don't use sscanf, by working at the plugin

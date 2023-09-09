@@ -453,6 +453,7 @@ int
 						{
 							// Didn't find the string.
 							*input = string;
+							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
 						// Found the string.  Update the current string
@@ -474,6 +475,7 @@ int
 						if (!find)
 						{
 							*input = string;
+							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
 						string = find + (write - format);
