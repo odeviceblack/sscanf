@@ -134,11 +134,11 @@
  */
 #if defined GetDistanceFromMeToPoint
 	// NPC script.
-	static stock SSCANF_NPC = 1;
+	const SSCANF_NPC = 1;
 	#define SSCANF_NPC (1)
 	#pragma library sscanf
 #else
-	static stock SSCANF_NPC = 0;
+	const SSCANF_NPC = 0;
 	#define SSCANF_NPC (0)
 #endif
 
@@ -148,7 +148,7 @@
  * The sscanf major version number.
  * </remarks>
  */
-static stock SSCANF_VERSION_MAJOR =  2;
+const SSCANF_VERSION_MAJOR =  2;
 #define SSCANF_VERSION_MAJOR  2
 
 /**
@@ -157,7 +157,7 @@ static stock SSCANF_VERSION_MAJOR =  2;
  * The sscanf minor version number.
  * </remarks>
  */
-static stock SSCANF_VERSION_MINOR = 13;
+const SSCANF_VERSION_MINOR = 13;
 #define SSCANF_VERSION_MINOR 13
 
 /**
@@ -166,7 +166,7 @@ static stock SSCANF_VERSION_MINOR = 13;
  * The sscanf build number.
  * </remarks>
  */
-static stock SSCANF_VERSION_BUILD = 8;
+const SSCANF_VERSION_BUILD = 8;
 #define SSCANF_VERSION_BUILD  8
 
 /**
@@ -175,7 +175,7 @@ static stock SSCANF_VERSION_BUILD = 8;
  * The sscanf version as a string.  E.g. <c>"2.8.1"</c>.
  * </remarks>
  */
-static stock SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD;
+stock const SSCANF_VERSION_STRING[] = #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD;
 #define SSCANF_VERSION_STRING #SSCANF_VERSION_MAJOR "." #SSCANF_VERSION_MINOR "." #SSCANF_VERSION_BUILD
 
 /**
@@ -220,6 +220,7 @@ forward BCD(number);
  * </remarks>
  */
 const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD);
+#define SSCANF_VERSION (BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERSION_BUILD))
 
 /**
  * <library>sscanf</library>
@@ -233,11 +234,48 @@ const SSCANF_VERSION = BCD(SSCANF_VERSION_MAJOR.SSCANF_VERSION_MINOR.SSCANF_VERS
  * </code>
  * </remarks>
  */
-stock const SSCANF_VERSION_BCD = SSCANF_VERSION;
+const SSCANF_VERSION_BCD = SSCANF_VERSION;
+#define SSCANF_VERSION_BCD SSCANF_VERSION
 
 #define sscanf_%0\32; sscanf_
 #define SSCANF:%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
 #define @kustom()%0(%1) forward sscanf_%0(%1);public sscanf_%0(%1)
+
+/// <p/>
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * There are almost 100 different unique error codes, but many of them can often
+ * be dealt with in the same way.  For example - <em><b>1011</b> - An int was
+ * wanted, but the input didn't match</em> and <em><b>1012</b> - A number was
+ * wanted, but the input didn't match</em> can probably usually use the same
+ * result processing (especially since they can never be returned by the same
+ * specifier).  Hence the errors are grouped together in to a few large groups
+ * for ease of processing.
+ * </remarks>
+ */
+enum SScanFError:MAX_SSCANF_ERRORS
+{
+	SSCANF_ERROR_NONE,
+	SSCANF_ERROR_NATIVE,
+	SSCANF_ERROR_SPECIFIER,
+	SSCANF_ERROR_INVALID,
+	SSCANF_ERROR_MISSING,
+	SSCANF_ERROR_EXCESS,
+	SSCANF_ERROR_LOGICAL
+}
+static stock SScanFError:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
+
+// We use both `enum` and `#define` together so that `#emit` and arrays will
+// both work.  See the open.mp documentation for more details.
+#define SSCANF_ERROR_NONE                      (SScanFError:0)
+#define SSCANF_ERROR_NATIVE                    (SScanFError:1)
+#define SSCANF_ERROR_SPECIFIER                 (SScanFError:2)
+#define SSCANF_ERROR_INVALID                   (SScanFError:3)
+#define SSCANF_ERROR_MISSING                   (SScanFError:4)
+#define SSCANF_ERROR_EXCESS                    (SScanFError:5)
+#define SSCANF_ERROR_LOGICAL                   (SScanFError:6)
 
 // The check for `SSCANF_GetClosestString` ensures that this is the first
 // compiler pass and thus the check for `sscanf` only finds earlier definitions
@@ -335,6 +373,21 @@ native SSCANF_GetLastError();
  * </remarks>
  */
 native SSCANF_ClearLastError();
+
+/**
+ * <library>sscanf</library>
+ * <param name="error">The exact error code.</param>
+ * <remarks>
+ * There are almost 100 different unique error codes, but many of them can often
+ * be dealt with in the same way.  For example - <em><b>1011</b> - An int was
+ * wanted, but the input didn't match</em> and <em><b>1012</b> - A number was
+ * wanted, but the input didn't match</em> can probably usually use the same
+ * result processing (especially since they can never be returned by the same
+ * specifier).  Hence the errors are grouped together in to a few large groups
+ * for ease of processing.
+ * </remarks>
+ */
+native SScanFError:SSCANF_GetErrorCategory(error);
 
 /**
  * <library>sscanf</library>

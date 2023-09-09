@@ -2431,6 +2431,18 @@ sscanf("44", "b", output);
 sscanf("IsANumber", "g", output);
 ```
 
+### Error Categories
+
+There are almost 100 different unique error codes, but many of them can often be dealt with in the same way.  For example - "***1011* - An int was wanted, but the input didn't match**" and "***1012* - A number was wanted, but the input didn't match**" can probably usually use the same result processing (especially since they can never be returned by the same specifier).  Hence the errors are grouped together in to a few large groups for ease of processing.  These categories are:
+
+* `SSCANF_ERROR_NONE` - Not an error.
+* `SSCANF_ERROR_NATIVE` - A generic problem with calling a native, such as invalid parameters or out of memory.
+* `SSCANF_ERROR_SPECIFIER` - The specifier itself is wrong in some way.  This is always a coding error.
+* `SSCANF_ERROR_INVALID` - The parsed input was present, but invalid.  For example `hello` for an integer.
+* `SSCANF_ERROR_MISSING` - Required input data was missing.
+* `SSCANF_ERROR_EXCESS` - There was too much input data (with `!`).
+* `SSCANF_ERROR_LOGICAL` - The data was present and parsed, but rejected for another reason.  This includes colour styles not in use, and string buffer overflows (with warnings as errors).  An invalid player given for `u` would in theory be in this category, but that is dealt with otherwise.
+
 ## Future Plans
 
 ### Reserved Specifiers
