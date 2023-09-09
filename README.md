@@ -35,6 +35,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
 * 5 [Tutorials](#tutorials)
     * 5.1 [`/sendcash` Command](#sendcash-command)
     * 5.2 [INI Parser](#ini-parser)
+    * 5.3 [Error Detection](#error-detection)
 * 6 [Specifiers](#specifiers)
     * 6.1 [Strings](#strings)
     * 6.2 [Packed Strings](#packed-strings)
@@ -63,9 +64,14 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 7.8 [SSCANF_ARGB:](#sscanf_argb)
     * 7.9 [MATCH_NAME_FIRST:](#match_name_first)
     * 7.10 [MATCH_NAME_SIMILARITY:](#match_name_similarity)
+    * 7.11 [ERROR_CODE_IN_RET:](#error_code_in_ret)
+    * 7.12 [WARNINGS_AS_ERRORS:](#warnings_as_errors)
+    * 7.13 [ERROR_CATEGORY_ONLY:](#error_category_only)
 * 8 [`extract`](#extract)
 * 9 [Similarity](#similarity)
 * 10 [Error Returns](#error-retuns)
+    * 10.1 [Additional Codes](#additional-codes)
+    * 10.2 [Error Categories](#error-categories)
 * 11 [All Specifiers](#all-specifiers)
 * 12 [Full API](#full-api)
     * 12.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
@@ -92,6 +98,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 12.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
     * 12.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
     * 12.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
+    * 12.24 [`sscanf_error:SSCANF_GetErrorCategory(error);`](#sscanf_errorsscanf_geterrorcategoryerror)
 * 13 [Errors/Warnings](#errorswarnings)
     * 13.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
     * 13.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
@@ -312,7 +319,7 @@ To use sscanf in an NPC mode save the plugin as `amxsscanf.dll` (on Windows) or 
 Send some of your money to another player.  This command allows you to specify the target player using their name or ID so you can type `/sendcash Y_Less 500` to send me $500 (*hint hint...*), or `/sendcash 27 12` to send $12 to whoever player ID 27 is.  Note that if a player has a numeric name such as `69` you will have to use their ID only, typing that name will always select the player with ID 69, not the player with name "69":
 
 ```pawn
-YCMD:sendcash(playerid, params[], help)
+@cmd() sendcash(playerid, params[], help)
 {
 	if (help)
 	{
@@ -371,6 +378,78 @@ bool:ReadINIString(const filename[], const key[], &value)
 	}
 	fclose(f);
 	return false;
+}
+```
+
+### Error Detection
+
+We can write a command and use error returns to know exactly what happened when the user entered something wrong.  See the section on [Error Returns](#error-returns) for more information on what all the values mean.  This will expand the earlier `/sendcash` command with even more checks:
+
+```pawn
+@cmd() sendcash(playerid, params[], help)
+{
+	if (help)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "Send money to another player.  Usage: /sendcash <name/id> <amount> [optional reason]");
+		return 1;
+	}
+	new targetid, money, reason;
+	SSCANF_Option(ERROR_CATEGORY_ONLY, 1);
+	switch (sscanf(params, "?<ERROR_CODE_IN_RET=1>?<WARNINGS_AS_ERRORS=1>uiS[16]()", targetid, money, reason))
+	{
+		case SSCANF_ERROR(3, MISSING):
+		{
+			SendClientMessage(playerid, COLOUR_HELP, "No player specified.");
+			return 1;
+		}
+		case SSCANF_ERROR(3, INVALID):
+		{
+			SendClientMessage(playerid, COLOUR_HELP, "Invalid player specified.");
+			return 1;
+		}
+		case SSCANF_ERROR(4, MISSING):
+		{
+			SendClientMessage(playerid, COLOUR_HELP, "No amount specified.");
+			return 1;
+		}
+		case SSCANF_ERROR(4, INVALID):
+		{
+			SendClientMessage(playerid, COLOUR_HELP, "Invalid amount specified.");
+			return 1;
+		}
+		case SSCANF_ERROR(5, OVERFLOW):
+		{
+			SendClientMessage(playerid, COLOUR_HELP, "Reason too long, please shorten it.");
+			return 1;
+		}
+	}
+	if (targetid == INVALID_PLAYER_ID)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "Unknown target player.");
+		return 1;
+	}
+	if (money < 0)
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "You can't steal money.");
+		return 1;
+	}
+	if (money > GetPlayerMoney(playerid))
+	{
+		SendClientMessage(playerid, COLOUR_HELP, "You don't have enough money.");
+		return 1;
+	}
+	GivePlayerMoney(playerid, -money);
+	GivePlayerMoney(targetid, money);
+	SendClientMessage(playerid, COLOUR_HELP, "You sent money.");
+	if (IsNull(reason))
+	{
+		SendClientMessage(targetid, COLOUR_HELP, "You receieved money.");
+	}
+	else
+	{
+		SendClientMessage(targetid, COLOUR_HELP, "You receieved money because: %s.", reason);
+	}
+	return 1;
 }
 ```
 
@@ -1202,10 +1281,6 @@ SSCANF_Option(SSCANF_ARGB, 1); // Set 3- and 6-digit colour outputs to `AARRGGBB
 SSCANF_Option(SSCANF_ARGB, 0); // Set 3- and 6-digit colour outputs to `RRGGBBAA` (default).
 ```
 
-### MATCH_NAME_FIRST:
-
-Will return the first match to a name input, instead of the best.  So if there are players `Bob255` and `Bob7`, and the input is `Bob`, then the result will depend on ID order.  This matches the old behaviour.
-
 ### MATCH_NAME_SIMILARITY:
 
 Use the same text similarity metrics as in kustom matchers to find the best name match to a given input.  The value given is the cutoff threshold for matches.  A value of `-1` disables this setting:
@@ -1219,6 +1294,18 @@ Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0`
 ```pawn
 new Float:similarity = Float:SSCANF_Option(MATCH_NAME_SIMILARITY);
 ```
+
+### ERROR_CODE_IN_RET:
+
+The return value from `sscanf` is `0` for no error, or the index of the specifier that failed.  If you get a failure you can call `SSCANF_GetLastError` to get the exact error code, or you can set this option to `true` to have the return value also include this error value in the return, ORed with the index.
+
+### WARNINGS_AS_ERRORS:
+
+This setting allows `sscanf` to fail when a warning is given, as well as an error.
+
+### ERROR_CATEGORY_ONLY:
+
+When `ERROR_CODE_IN_RET` is enabled returns the error category instead of the exact error code.
 
 ## `extract`
 
@@ -1354,6 +1441,87 @@ similarity = 0.7
 A similarity is always between `0.0` (totally different) and `1.0` (absolutely identical), and many functions will return the string from a list with the highest similarity.  So `k<vehicle>` will find the vehicle with the best similarity to the given input.  However, this doesn't always make sense.  If the input is `"dkaoiingsjk"`, that is obviously not any sane vehicle, but it still has a similarity rating to every vehicle name; the ratings will be very low, but one must be the highest (it is the `"Sandking"`, with a similarity rating of `0.228571`).  Just calling the similarity functions blindly will thus always return a result, even if that result is gibberish, thus the functions also optionally accept a *threshold*, a similarity value that the result must be better than.  So for the above example passing a threshold of `0.5` would result in no valid vehicle being returned.
 
 ## Error Returns
+
+When everything is fine, `sscanf` returns `0` - meaning "no error".  When it isn't fine the return value will tell you exactly where and what the error was.  By default the return value is just the index (plus one) of the specifier that failed:
+
+```pawn
+index = sscanf("bad input", "ii", a, b); // Returns `1`
+```
+
+Here the return value is `1` because the first `i` failed to parse a number.  Normally this should be index `0`, but that would mean "no error", so we must increase the offset by one.  If the first specifier passes but the second one fails, then the return value will be `2`:
+
+```pawn
+index = sscanf("45 input", "ii", a, b); // Returns `2`
+```
+
+The same is true for missing data instead of bad data:
+
+```pawn
+index = sscanf("45", "ii", a, b); // Returns `2`
+```
+
+If you want more information about exactly what went wrong you can request this using `SSCANF_GetLastError`:
+
+```pawn
+index = sscanf("45", "ii", a, b); // Returns `2`
+if (index)
+{
+	error = SSCANF_GetLastError(); // Returns `1004` ("out of input")
+}
+```
+
+The error codes will persist internally as the "last" error until a new sscanf function is called (with the exception of `SSCANF_GetLastError`, hence why `SSCANF_ClearLastError` also exists to reset this value without any other side-effects).
+
+Alternatively you can set an option for `sscanf` to return both the index and error code together:
+
+```pawn
+SSCANF_Option(ERROR_CODE_IN_RET, 1);
+
+error = sscanf("45 hello", "ii", a, b); // Returns `SSCANF_ERROR(2, 1011)`
+error = sscanf("45", "ii", a, b); // Returns `SSCANF_ERROR(2, 1004)`
+```
+
+Now instead of returning just `2` to indicate the index of the specifier at which the error was encountered; the call also returns an error code representing exactly what the problem was.  `1004` means "out of input".  All the other possible codes are documented in this file in the sections [Errors/Warnings](#errorswarnings) and [Additional Codes](#additional-codes).
+
+If you want slighty more information than just the index, but also not quite as much information as the exact error code you can use the error categories instead.  These categories group the (currently around eighty) error codes in to a few manageable subdivisions.  See [Error Categories](#error-categories) for the full list.  Use `SSCANF_GetErrorCategory` to get this reduced information:
+
+```pawn
+index = sscanf("45", "ii", a, b); // Returns `2`
+if (index)
+{
+	error = SSCANF_GetLastError(); // Returns `1004` ("out of input")
+	category = SSCANF_GetErrorCategory(error); // Returns `SSCANF_ERROR_MISSING`
+}
+```
+
+Or again, using options in the previous example:
+
+```pawn
+SSCANF_Option(ERROR_CODE_IN_RET, 1);
+SSCANF_Option(ERROR_CATEGORY_ONLY, 1);
+
+error = sscanf("45 hello", "ii", a, b); // Returns `SSCANF_ERROR(2, SSCANF_ERROR_INVALID)`
+error = sscanf("45", "ii", a, b); // Returns `SSCANF_ERROR(2, SSCANF_ERROR_MISSING)`
+```
+
+The `SSCANF_ERROR` macro is slightly clever and allows you to avoid a tiny bit of repetition when using categories:
+
+```pawn
+SSCANF_Option(ERROR_CODE_IN_RET, 1);
+SSCANF_Option(ERROR_CATEGORY_ONLY, 1);
+
+error = sscanf("45 hello", "ii", a, b); // Returns `SSCANF_ERROR(2, INVALID)`
+error = sscanf("45", "ii", a, b); // Returns `SSCANF_ERROR(2, MISSING)`
+```
+
+sscanf has both "errors", which stop processing, and "warnings", which can be continued on from but may give strange results.  The distinction is currently a little blurred since some errors actually continue like warnings (so should be renamed).  The error system will not report warnings, including things like `sscanf warning: String buffer overflow.`.  By default.  This can be changed with yet a third setting:
+
+```pawn
+new str[8]
+error = sscanf("a very long string", "?<ERROR_CODE_IN_RET=1>?<ERROR_CATEGORY_ONLY=1>?<WARNINGS_AS_ERRORS=1>?<SSCANF_QUIET=1>s[8]", str);
+```
+
+This code will return an error of `SSCANF_ERROR(5, OVERFLOW)` and will not (thanks to `SSCANF_QUIET`) print anything in the console.  This problem can finally be dealt with entirely in-code.  Note that the index here is `5`, not `1`, because EVERY specifier counts towards this offset.  There are four `?` specifiers in the string, hence the `s` is `5`.
 
 ### Additional Codes
 
@@ -1638,6 +1806,10 @@ Gets the error code set by the most recent call to any other sscanf function.  C
 ### `SSCANF_ClearLastError();`
 
 Resets the error code from any previous *sscanf* function call.  Note that calling any other function also resets this value, but with more side-effects.
+
+### `sscanf_error:SSCANF_GetErrorCategory(error);`
+
+There are almost 100 different unique error codes, but many of them can often be dealt with in the same way.  For example - **`1011` - An int was wanted, but the input didn't match** and **`1012` - A number was wanted, but the input didn't match** can probably usually use the same result processing (especially since they can never be returned by the same specifier).  Hence the errors are grouped together in to a few large groups for ease of processing.
 
 ## Errors/Warnings
 
@@ -2794,6 +2966,6 @@ the Initial Developer.  All Rights Reserved.
 * Added `WARNINGS_AS_ERRORS` option to treat warnings as errors.
 * Added `ERROR_CODE_IN_RET` option to return error codes along-side error indexes.
 * Stop defining `__PawnBuild` and use `__pawn_build` instead.
-* Add `E_SSCANF_ERROR` to define all error codes.
+* Add `sscanf_error` to define all error codes.
 * Add `SSCANF_ERROR` macro to combine specifier indexes and error codes for `ERROR_CODE_IN_RET`.
 

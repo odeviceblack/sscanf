@@ -977,8 +977,9 @@ stock const WARNINGS_AS_ERRORS[] = "WARNINGS_AS_ERRORS";
 /**
  * <library>sscanf</library>
  * <remarks>
- * When <c>ERROR_CODE_IN_RET</c> is enabled returns the error category instead
- * of the exact error code.
+ * The <c>ERROR_CATEGORY_ONLY</c> option as a constant string so you can get
+ * compile-time spell checking on the name.  When <c>ERROR_CODE_IN_RET</c> is
+ * enabled returns the error category instead of the exact error code.
  *
  * <code>
  *     SSCANF_Option(ERROR_CATEGORY_ONLY, 1); // `sscanf` failures will return `sscanf_error:`<br />
