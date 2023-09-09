@@ -1747,6 +1747,7 @@ static cell AMX_NATIVE_CALL
 	if (params[0] != 3 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Init has incorrect parameters.");
+		SetErrorCode(32);
 		g_iTrueMax = 0;
 		return 0;
 	}
@@ -1790,6 +1791,7 @@ static cell AMX_NATIVE_CALL
 	playerid = params[1];
 	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
+		SetErrorCode(1008);
 		return 0;
 	}
 	if (g_iConnected[playerid] != 0)
@@ -1805,12 +1807,14 @@ static cell AMX_NATIVE_CALL
 	if (params[0] != 3 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Join has incorrect parameters.");
+		SetErrorCode(33);
 		return 0;
 	}
 	cell
 		playerid = params[1];
 	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
+		SetErrorCode(1002);
 		return 0;
 	}
 	++g_iConnected[playerid];
@@ -1825,12 +1829,14 @@ static cell AMX_NATIVE_CALL
 	if (params[0] != 1 * sizeof (cell))
 	{
 		logprintf("sscanf error: SSCANF_Leave has incorrect parameters.");
+		SetErrorCode(34);
 		return 0;
 	}
 	int
 		playerid = params[1];
 	if (playerid < 0 || playerid >= (int)g_iTrueMax)
 	{
+		SetErrorCode(1005);
 		return 0;
 	}
 	// To be correct for multiple scripts with loads and unloads (unloadfs).
@@ -1861,6 +1867,7 @@ static cell AMX_NATIVE_CALL
 	else
 	{
 		logprintf("sscanf error: SSCANF_Option has incorrect parameters.");
+		SetErrorCode(37);
 		return 0;
 	}
 }
@@ -1882,6 +1889,7 @@ static cell AMX_NATIVE_CALL
 	else if (params[0] != 0 * sizeof(cell))
 	{
 		logprintf("sscanf error: SSCANF_Version has incorrect parameters.");
+		SetErrorCode(36);
 		return 0;
 	}
 	// Return the version in BCD.
@@ -1911,6 +1919,7 @@ static cell AMX_NATIVE_CALL
 	if (params[0] != 2 * sizeof (cell))
 	{
 		logprintf("sscanf error: SetPlayerName has incorrect parameters.");
+		SetErrorCode(38);
 		return 0;
 	}
 	cell return_val = SetPlayerName(amx, params);
@@ -1957,6 +1966,7 @@ static cell AMX_NATIVE_CALL
 		matrix = (int *)malloc(sizeof(int) * (len1 + 1) * (len2 + 1));
 	if (matrix == NULL)
 	{
+		SetErrorCode(1006);
 		return 0;
 	}
 	int step = len2 + 1;
@@ -1993,6 +2003,7 @@ static cell AMX_NATIVE_CALL
 	if (params[0] != 2 * sizeof(cell))
 	{
 		logprintf("sscanf error: SSCANF_TextSimilarity has incorrect parameters.");
+		SetErrorCode(68);
 		return 0x7FFFFFFF;
 	}
 	// Get the two strings to compare.
@@ -2075,6 +2086,7 @@ static cell AMX_NATIVE_CALL
 	if (ngrams1 < 1 || ngrams2 < 1)
 	{
 		// There just aren't enough letters to compare.
+		SetErrorCode(1007);
 		return 0;
 	}
 	// Normalise the number of matching pairs and multiply.
@@ -2385,6 +2397,7 @@ public:
 		if (params[0] != 3 * sizeof (cell))
 		{
 			logprintf("sscanf error: SSCANF_Init has incorrect parameters.");
+			SetErrorCode(32);
 			g_iTrueMax = 0;
 			return 0;
 		}

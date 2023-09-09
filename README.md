@@ -161,6 +161,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 12.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
     * 12.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
     * 12.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
+    * 12.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
 * 13 [Future Plans](#future-plans)
     * 13.1 [Reserved Specifiers](#reserved-specifiers)
     * 13.2 [Alternates](#alternates)
@@ -2310,6 +2311,12 @@ e<fiiif>
 
 Nested enums compile to the same as a single flat enum.  It may make less sense compared to the code, but is at least easier to write.
 
+### sscanf error: SSCANF_TextSimilarity has incorrect parameters.
+
+*Error Code: 68*
+
+You edited something in the sscanf2 include - undo it or redownload it.
+
 ## Error Returns
 
 ### Additional Codes
@@ -2322,6 +2329,12 @@ Error codes under 1000 relate to printed messages, and are documented along-side
 sscanf(input, "?<SSCANF_COLOUR_FORMS=12>m", "#112233", colour);
 ```
 
+* *1002* - `SSCANF_Join` was called with an invalid player ID:
+
+```pawn
+SSCANF_Join(134234);
+```
+
 * *1003* - The search string was not found in the input:
 
 ```pawn
@@ -2332,6 +2345,26 @@ sscanf("some input", "'hello'");
 
 ```pawn
 sscanf("6", "ii", a, b);
+```
+
+* *1005* - `SSCANF_Leave` was called with an invalid player ID:
+
+```pawn
+SSCANF_Leave(134234);
+```
+
+* *1006* - The matrix was not allocated correctly in `SSCANF_Levenshtein`.
+
+* *1007* - The text compared with `SSCANF_TextSimilarity` is too short:
+
+```pawn
+SSCANF_TextSimilarity("a", "b");
+```
+
+* *1008* - `SSCANF_IsConnected` was called with an invalid player ID:
+
+```pawn
+SSCANF_IsConnected(134234);
 ```
 
 * *1011* - An int was wanted, but the input didn't match:
