@@ -224,7 +224,6 @@ static char
 	if (Do##n(&string, &b)) {                             \
 		SAVE_VALUE((cell)b);                              \
 		break; }                                          \
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms); \
 	return SSCANF_FAIL_RETURN; }
 
 #define DOV(m,n)                 \
@@ -237,7 +236,6 @@ static char
 	if (Do##n(&string, &b)) {                             \
 		SAVE_VALUE_F(b)                                   \
 		break; }                                          \
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms); \
 	return SSCANF_FAIL_RETURN; }
 
 // Macros for the default values.  None of these have ifs as the return value
@@ -382,11 +380,6 @@ static cell
 		string[0] = '\0';
 	}
 	// Save the default options so we can have local modifications.
-	int
-		defaultAlpha = gAlpha,
-		defaultForms = gForms;
-	E_SSCANF_OPTIONS
-		defaultOpts = gOptions;
 	InitialiseDelimiter();
 	// Skip leading space.
 	SkipWhitespace(&string);
@@ -425,7 +418,6 @@ static cell
 				// Started a quiet section but never explicitly ended it.
 				SscanfWarning(48, "Unclosed quiet section.");
 			}
-			RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 			return SSCANF_TRUE_RETURN;
 		}
 		else if (IsWhitespace(*format))
@@ -434,6 +426,7 @@ static cell
 		}
 		else
 		{
+			IncErrorSpecifier();
 			switch (*format++)
 			{
 			case 'L':
@@ -988,14 +981,12 @@ static cell
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'a':
 				if (DoA(&format, &string, args, false, doSave))
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'E':
 				// We need the default values here.
@@ -1003,14 +994,12 @@ static cell
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'e':
 				if (DoE(&format, &string, args, false, doSave))
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'K':
 			{
@@ -1038,7 +1027,6 @@ static cell
 						break;
 					}
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			}
 			case 'k':
@@ -1061,7 +1049,6 @@ static cell
 						break;
 					}
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			}
 			case '\'':
@@ -1117,7 +1104,6 @@ static cell
 						if (!find)
 						{
 							// Didn't find the string
-							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
@@ -1139,7 +1125,6 @@ static cell
 							find = strstr(string, format);
 						if (!find)
 						{
-							RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 							SetErrorCode(1003);
 							return SSCANF_FAIL_RETURN;
 						}
@@ -1193,7 +1178,6 @@ static cell
 				// Started a quiet section but never explicitly ended it.
 				SscanfWarning(48, "Unclosed quiet section.");
 			}
-			RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 			return SSCANF_TRUE_RETURN;
 		}
 		else if (IsWhitespace(*format))
@@ -1203,6 +1187,7 @@ static cell
 		else
 		{
 			// Do the main switch again.
+			IncErrorSpecifier();
 			switch (*format++)
 			{
 			case 'L':
@@ -1238,14 +1223,12 @@ static cell
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'E':
 				if (DoE(&format, NULL, args, true, doSave))
 				{
 					break;
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case 'K':
 				if (doSave)
@@ -1265,7 +1248,6 @@ static cell
 						break;
 					}
 				}
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				return SSCANF_FAIL_RETURN;
 			case '{':
 				if (doSave)
@@ -1388,7 +1370,6 @@ static cell
 				// doesn't matter - the coder should have tested for those
 				// things, and the more important thing is that the user
 				// didn't enter the correct data.
-				RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 				SetErrorCode(1004);
 				return SSCANF_FAIL_RETURN;
 			case '?':
@@ -1410,6 +1391,7 @@ static cell
 		{
 			if (*format == '\'')
 			{
+				IncErrorSpecifier();
 				// Allow trailing string literals.
 				++format;
 				char
@@ -1462,7 +1444,6 @@ static cell
 					if (!find)
 					{
 						// Didn't find the string
-						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 						SetErrorCode(1003);
 						return SSCANF_FAIL_RETURN;
 					}
@@ -1484,7 +1465,6 @@ static cell
 						find = strstr(string, format);
 					if (!find)
 					{
-						RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 						SetErrorCode(1003);
 						return SSCANF_FAIL_RETURN;
 					}
@@ -1496,6 +1476,7 @@ static cell
 			{
 				if (!IsWhitespace(*format))
 				{
+					IncErrorSpecifier();
 					// Only print this warning if the remaining characters are
 					// not spaces - spaces are allowed, and sometimes required,
 					// on the ends of formats (e.g. to stop the final 's'
@@ -1544,7 +1525,6 @@ static cell
 	}
 	// No more parameters and no more format specifiers which could be read
 	// from - this is a valid return!
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 	return SSCANF_TRUE_RETURN;
 }
 
@@ -1616,7 +1596,31 @@ static cell AMX_NATIVE_CALL
 	char *
 		string;
 	STR_PARAM(amx, params[1], string);
-	cell ret = Sscanf(amx, string, gFormat, params + 3, paramCount - 3);
+	int
+		defaultAlpha = gAlpha,
+		defaultForms = gForms;
+	E_SSCANF_OPTIONS
+		defaultOpts = gOptions;
+	cell
+		ret = Sscanf(amx, string, gFormat, params + 3, paramCount - 3);
+	if (ret || (gOptions & WARNINGS_AS_ERRORS))
+	{
+		ret = GetErrorSpecifier();
+		// Error.
+		if ((gOptions & ERROR_CODE_IN_RET))
+		{
+			// Add the code.
+			if ((gOptions & ERROR_CATEGORY_ONLY))
+			{
+				ret |= GetErrorCategory(GetErrorCode()) << 16;
+			}
+			else
+			{
+				ret |= GetErrorCode() << 16;
+			}
+		}
+	}
+	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
@@ -1693,7 +1697,31 @@ static cell AMX_NATIVE_CALL
 	char *
 		string;
 	STR_PARAM(amx, params[3], string);
-	cell ret = Sscanf(amx, string, gFormat, params + 5, paramCount - 5);
+	int
+		defaultAlpha = gAlpha,
+		defaultForms = gForms;
+	E_SSCANF_OPTIONS
+		defaultOpts = gOptions;
+	cell
+		ret = Sscanf(amx, string, gFormat, params + 5, paramCount - 5);
+	if (ret || (gOptions & WARNINGS_AS_ERRORS))
+	{
+		ret = GetErrorSpecifier();
+		// Error.
+		if ((gOptions & ERROR_CODE_IN_RET))
+		{
+			// Add the code.
+			if ((gOptions & ERROR_CATEGORY_ONLY))
+			{
+				ret |= GetErrorCategory(GetErrorCode()) << 16;
+			}
+			else
+			{
+				ret |= GetErrorCode() << 16;
+			}
+		}
+	}
+	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
@@ -1728,7 +1756,31 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 	gFormat = format;
 	gCallFile = file;
 	gCallLine = line;
-	cell ret = Sscanf(amx, string, gFormat, params, paramCount);
+	int
+		defaultAlpha = gAlpha,
+		defaultForms = gForms;
+	E_SSCANF_OPTIONS
+		defaultOpts = gOptions;
+	cell
+		ret = Sscanf(amx, string, gFormat, params, paramCount);
+	if (ret || (gOptions & WARNINGS_AS_ERRORS))
+	{
+		ret = GetErrorSpecifier();
+		// Error.
+		if ((gOptions & ERROR_CODE_IN_RET))
+		{
+			// Add the code.
+			if ((gOptions & ERROR_CATEGORY_ONLY))
+			{
+				ret |= GetErrorCategory(GetErrorCode()) << 16;
+			}
+			else
+			{
+				ret |= GetErrorCode() << 16;
+			}
+		}
+	}
+	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
 	// Restore and free the error data, if it wasn't constant.
 	gCallResolve = pp;
 	gCallLine = pl;

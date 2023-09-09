@@ -182,6 +182,72 @@ void
 			}
 		}
 	}
+	else if (!strincmp(name, "ERROR_CODE_IN_RET", 17))
+	{
+		switch (value)
+		{
+		case 1:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | ERROR_CODE_IN_RET);
+			break;
+		case 0:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~ERROR_CODE_IN_RET);
+			break;
+		case -1:
+			if (*(name + 17) == '=')
+			{
+				if (*(name + 19) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~ERROR_CODE_IN_RET);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | ERROR_CODE_IN_RET);
+			}
+			else
+			{
+				SscanfError(29, "No option value.");
+			}
+		}
+	}
+	else if (!strincmp(name, "WARNINGS_AS_ERRORS", 18))
+	{
+		switch (value)
+		{
+		case 1:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | WARNINGS_AS_ERRORS);
+			break;
+		case 0:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~WARNINGS_AS_ERRORS);
+			break;
+		case -1:
+			if (*(name + 18) == '=')
+			{
+				if (*(name + 19) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~WARNINGS_AS_ERRORS);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | WARNINGS_AS_ERRORS);
+			}
+			else
+			{
+				SscanfError(29, "No option value.");
+			}
+		}
+	}
+	else if (!strincmp(name, "ERROR_CATEGORY_ONLY", 19))
+	{
+		switch (value)
+		{
+		case 1:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions | ERROR_CATEGORY_ONLY);
+			break;
+		case 0:
+			gOptions = (E_SSCANF_OPTIONS)(gOptions & ~ERROR_CATEGORY_ONLY);
+			break;
+		case -1:
+			if (*(name + 19) == '=')
+			{
+				if (*(name + 20) == '0') gOptions = (E_SSCANF_OPTIONS)(gOptions & ~ERROR_CATEGORY_ONLY);
+				else gOptions = (E_SSCANF_OPTIONS)(gOptions | ERROR_CATEGORY_ONLY);
+			}
+			else
+			{
+				SscanfError(29, "No option value.");
+			}
+		}
+	}
 	else if (!strincmp(name, "CELLMIN_ON_MATCHES", 18))
 	{
 		switch (value)
@@ -398,6 +464,18 @@ cell
 	else if (!strincmp(name, "SSCANF_QUIET", 12))
 	{
 		return (gOptions & SSCANF_QUIET) != SSCANF_OPTIONS_NONE;
+	}
+	else if (!strincmp(name, "ERROR_CODE_IN_RET", 17))
+	{
+		return (gOptions & ERROR_CODE_IN_RET) != SSCANF_OPTIONS_NONE;
+	}
+	else if (!strincmp(name, "WARNINGS_AS_ERRORS", 18))
+	{
+		return (gOptions & WARNINGS_AS_ERRORS) != SSCANF_OPTIONS_NONE;
+	}
+	else if (!strincmp(name, "ERROR_CATEGORY_ONLY", 19))
+	{
+		return (gOptions & ERROR_CATEGORY_ONLY) != SSCANF_OPTIONS_NONE;
 	}
 	else if (!strincmp(name, "SSCANF_ALPHA", 12))
 	{

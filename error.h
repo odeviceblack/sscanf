@@ -52,7 +52,7 @@ extern int
 	GetErrorSpecifier();
 
 extern void
-	SetErrorSpecifier(int specifier);
+	IncErrorSpecifier();
 
 extern int
 	GetErrorCategory(int error);

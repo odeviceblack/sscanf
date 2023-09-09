@@ -44,7 +44,8 @@
 
 int
 	g_iErrorCode = 0,
-	g_iErrorSpecifier = 0; // No error.
+	g_iErrorSpecifier = 0,
+	g_iCurrentSpecifier = 0;
 
 int
 	GetErrorCode()
@@ -57,9 +58,15 @@ void
 {
 	if (error == 0)
 	{
+		g_iErrorCode = 0;
 		g_iErrorSpecifier = 0;
+		g_iCurrentSpecifier = 0;
 	}
-	g_iErrorCode = error;
+	else
+	{
+		g_iErrorCode = error;
+		g_iErrorSpecifier = g_iCurrentSpecifier;
+	}
 }
 
 int
@@ -69,9 +76,9 @@ int
 }
 
 void
-	SetErrorSpecifier(int specifier)
+	IncErrorSpecifier()
 {
-	g_iErrorSpecifier = specifier;
+	++g_iCurrentSpecifier;
 }
 
 int
