@@ -52,5 +52,8 @@ extern int
 	GetErrorSpecifier();
 
 extern void
-	SetErrorSpecifier(int spec);
+	SetErrorSpecifier(int specifier);
+
+extern int
+	GetErrorCategory(int error);
 

@@ -257,25 +257,33 @@ const SSCANF_VERSION_BCD = SSCANF_VERSION;
  */
 enum SScanFError:MAX_SSCANF_ERRORS
 {
+	UNKNOWN_SSCANF_ERROR = -1,
 	SSCANF_ERROR_NONE,
 	SSCANF_ERROR_NATIVE,
 	SSCANF_ERROR_SPECIFIER,
 	SSCANF_ERROR_INVALID,
 	SSCANF_ERROR_MISSING,
 	SSCANF_ERROR_EXCESS,
-	SSCANF_ERROR_LOGICAL
+	SSCANF_ERROR_COLOUR,
+	SSCANF_ERROR_OVERFLOW,
+	SSCANF_ERROR_NOT_FOUND,
+	SSCANF_ERROR_NO_ALTS,
 }
 static stock SScanFError:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
 
 // We use both `enum` and `#define` together so that `#emit` and arrays will
 // both work.  See the open.mp documentation for more details.
+#define UNKNOWN_SSCANF_ERROR                   (SScanFError:-1)
 #define SSCANF_ERROR_NONE                      (SScanFError:0)
 #define SSCANF_ERROR_NATIVE                    (SScanFError:1)
 #define SSCANF_ERROR_SPECIFIER                 (SScanFError:2)
 #define SSCANF_ERROR_INVALID                   (SScanFError:3)
 #define SSCANF_ERROR_MISSING                   (SScanFError:4)
 #define SSCANF_ERROR_EXCESS                    (SScanFError:5)
-#define SSCANF_ERROR_LOGICAL                   (SScanFError:6)
+#define SSCANF_ERROR_COLOUR                    (SScanFError:6)
+#define SSCANF_ERROR_OVERFLOW                  (SScanFError:7)
+#define SSCANF_ERROR_NOT_FOUND                 (SScanFError:8)
+#define SSCANF_ERROR_NO_ALTS                   (SScanFError:9)
 
 // The check for `SSCANF_GetClosestString` ensures that this is the first
 // compiler pass and thus the check for `sscanf` only finds earlier definitions
@@ -908,7 +916,7 @@ stock const MATCH_NAME_SIMILARITY[] = "MATCH_NAME_SIMILARITY";
  * </remarks>
  *
  * <code>
- *     SSCANF_Option(ERROR_CODE_IN_RET, 1); // Failures return `spec | code &lt;&lt; 16`. <br />
+ *     SSCANF_Option(ERROR_CODE_IN_RET, 1); // Failures return `spec | code &lt;&lt; 16`.<br />
  *     SSCANF_Option(ERROR_CODE_IN_RET, 0); // Failures return only the bad specifier index.
  * </code>
  */
@@ -922,12 +930,26 @@ stock const ERROR_CODE_IN_RET[] = "ERROR_CODE_IN_RET";
  * to fail when a warning is given, as well as an error.
  *
  * <code>
- *     SSCANF_Option(WARNINGS_AS_ERRORS, 1); // Warnings will cause `sscanf` to fail. <br />
+ *     SSCANF_Option(WARNINGS_AS_ERRORS, 1); // Warnings will cause `sscanf` to fail.<br />
  *     SSCANF_Option(WARNINGS_AS_ERRORS, 0); // Warnings will not fail `sscanf` function calls.
  * </code>
  * </remarks>
  */
 stock const WARNINGS_AS_ERRORS[] = "WARNINGS_AS_ERRORS";
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * When <c>ERROR_CODE_IN_RET</c> is enabled returns the error category instead
+ * of the exact error code.
+ *
+ * <code>
+ *     SSCANF_Option(ERROR_CATEGORY_ONLY, 1); // `sscanf` failures will return `SScanFError:`<br />
+ *     SSCANF_Option(ERROR_CATEGORY_ONLY, 0); // `sscanf` failures will return the exact error.
+ * </code>
+ * </remarks>
+ */
+stock const ERROR_CATEGORY_ONLY[] = "ERROR_CATEGORY_ONLY";
 
 /**
  * <library>sscanf</library>

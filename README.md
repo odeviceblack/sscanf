@@ -2103,7 +2103,7 @@ A<i>(0, 1, 2, 3, 4, 5, 6)[3]
 
 *Error Code: 47*
 
-There are specifiers in the format string than there are destination parameters:
+There are more (or fewer) specifiers in the format string than there are destination parameters:
 
 ```pawn
 sscanf(input, "iiiiiiii", a, b, c);
@@ -2377,6 +2377,18 @@ SSCANF_TextSimilarity("a", "b");
 SSCANF_IsConnected(134234);
 ```
 
+* *1009* - Excess data seen, with a specifier ending `!`.
+
+```pawn
+sscanf("4 5 6", "ii!", a, b);
+```
+
+* *1010* - No matching alternate found:
+
+```pawn
+sscanf("0x11 0x22", "ii|bb", variant, a, b, c, d);
+```
+
 * *1011* - An int was wanted, but the input didn't match:
 
 ```pawn
@@ -2441,7 +2453,12 @@ There are almost 100 different unique error codes, but many of them can often be
 * `SSCANF_ERROR_INVALID` - The parsed input was present, but invalid.  For example `hello` for an integer.
 * `SSCANF_ERROR_MISSING` - Required input data was missing.
 * `SSCANF_ERROR_EXCESS` - There was too much input data (with `!`).
-* `SSCANF_ERROR_LOGICAL` - The data was present and parsed, but rejected for another reason.  This includes colour styles not in use, and string buffer overflows (with warnings as errors).  An invalid player given for `u` would in theory be in this category, but that is dealt with otherwise.
+* `SSCANF_ERROR_COLOUR` - A colour was parsed, but was not one of the accepted formats.
+* `SSCANF_ERROR_OVERFLOW` - The infamous "string buffer overflow" warning.  Enable warnings as errors to get this in code.
+* `SSCANF_ERROR_NOT_FOUND` - The search string (`''`) wasn't found.
+* `SSCANF_ERROR_NO_ALTS` - None of the alternatives (`|`) matched.
+
+You may notice that the last few "groups" are very small compared to the others, but they cover issues that are both unique and easy to rectify in code.
 
 ## Future Plans
 

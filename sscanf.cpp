@@ -2134,6 +2134,7 @@ AMX_NATIVE_INFO
 			{"SSCANF_Version", n_SSCANF_Version},
 			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
 			{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
+			{"SSCANF_GetErrorCategory", n_SSCANF_GetErrorCategory},
 			{0, 0}
 		};
 
@@ -2581,6 +2582,7 @@ AMX_NATIVE_INFO
 	{"SSCANF_Version", n_SSCANF_Version},
 	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
 	{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
+	{"SSCANF_GetErrorCategory", n_SSCANF_GetErrorCategory},
 	{0, 0}
 };
 
