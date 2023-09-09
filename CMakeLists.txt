@@ -44,6 +44,7 @@ if(MSVC)
 		specifiers.cpp
 		sscanf.cpp
 		utils.cpp
+		error.cpp
 	)
 elseif(UNIX)
 	add_definitions(

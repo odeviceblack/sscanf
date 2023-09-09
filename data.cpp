@@ -1335,7 +1335,7 @@ float
 		unique2 = 0,
 		ngrams1 = -1,
 		ngrams2 = -1;
-	for (int i = 0; (ch = *string1++); ++i)
+	while ((ch = *string1++))
 	{
 		// This code only looks at numbers and letters, and ignores case.
 		if ('0' <= ch && ch <= '9')
@@ -1362,7 +1362,7 @@ float
 			++unique1;
 		}
 	}
-	for (int i = 0; (ch = *string2++); ++i)
+	while ((ch = *string2++))
 	{
 		// This code only looks at numbers and letters, and ignores case.
 		if ('0' <= ch && ch <= '9')

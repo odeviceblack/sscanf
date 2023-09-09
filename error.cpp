@@ -96,6 +96,7 @@ int
 	case 43:
 	case 49:
 	case 68:
+	case 69:
 	case 1002:
 	case 1005:
 	case 1006:
@@ -175,7 +176,7 @@ int
 		return 7;
 	case 1003:
 		return 8;
-	case 1010;
+	case 1010:
 		return 9;
 	default:
 		return -1;
