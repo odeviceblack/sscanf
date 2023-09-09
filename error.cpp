@@ -109,7 +109,7 @@ int
 	case 1006:
 	case 1007:
 	case 1008:
-		return 1;
+		return 65536;
 	case 3:
 	case 4:
 	case 5:
@@ -162,7 +162,7 @@ int
 	case 65:
 	case 66:
 	case 67:
-		return 2;
+		return 131072;
 	case 1011:
 	case 1012:
 	case 1013:
@@ -172,19 +172,19 @@ int
 	case 1017:
 	case 1018:
 	case 1019:
-		return 3;
+		return 196608;
 	case 1004:
-		return 4;
+		return 262144;
 	case 1009:
-		return 5;
+		return 327680;
 	case 1001:
-		return 6;
+		return 393216;
 	case 2:
-		return 7;
+		return 458752;
 	case 1003:
-		return 8;
+		return 524288;
 	case 1010:
-		return 9;
+		return 589824;
 	default:
 		return -1;
 	}

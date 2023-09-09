@@ -262,11 +262,11 @@ const SSCANF_VERSION_BCD = SSCANF_VERSION;
  * for ease of processing.
  * </remarks>
  */
-enum sscanf_error:MAX_SSCANF_ERRORS
+enum sscanf_error:SSCANF_ERRORS__ (+= 65536)
 {
 	UNKNOWN_SSCANF_ERROR = -1,
 	SSCANF_ERROR_NONE,
-	SSCANF_ERROR_NATIVE,
+	SSCANF_ERROR_NATIVE = 65536,
 	SSCANF_ERROR_SPECIFIER,
 	SSCANF_ERROR_INVALID,
 	SSCANF_ERROR_MISSING,
@@ -274,23 +274,23 @@ enum sscanf_error:MAX_SSCANF_ERRORS
 	SSCANF_ERROR_COLOUR,
 	SSCANF_ERROR_OVERFLOW,
 	SSCANF_ERROR_NOT_FOUND,
-	SSCANF_ERROR_NO_ALTS,
+	SSCANF_ERROR_NO_ALTS
 }
-static stock sscanf_error:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
+static stock sscanf_error:_@SSCANF_ERROR() { return SSCANF_ERRORS__; }
 
 // We use both `enum` and `#define` together so that `#emit` and arrays will
 // both work.  See the open.mp documentation for more details.
 #define UNKNOWN_SSCANF_ERROR                   (sscanf_error:-1)
-#define SSCANF_ERROR_NONE                      (sscanf_error:0)
-#define SSCANF_ERROR_NATIVE                    (sscanf_error:1)
-#define SSCANF_ERROR_SPECIFIER                 (sscanf_error:2)
-#define SSCANF_ERROR_INVALID                   (sscanf_error:3)
-#define SSCANF_ERROR_MISSING                   (sscanf_error:4)
-#define SSCANF_ERROR_EXCESS                    (sscanf_error:5)
-#define SSCANF_ERROR_COLOUR                    (sscanf_error:6)
-#define SSCANF_ERROR_OVERFLOW                  (sscanf_error:7)
-#define SSCANF_ERROR_NOT_FOUND                 (sscanf_error:8)
-#define SSCANF_ERROR_NO_ALTS                   (sscanf_error:9)
+#define SSCANF_ERROR_NONE                      (sscanf_error:0)      // 0 << 16
+#define SSCANF_ERROR_NATIVE                    (sscanf_error:65536)  // 1 << 16
+#define SSCANF_ERROR_SPECIFIER                 (sscanf_error:131072) // 2 << 16
+#define SSCANF_ERROR_INVALID                   (sscanf_error:196608) // 3 << 16
+#define SSCANF_ERROR_MISSING                   (sscanf_error:262144) // 4 << 16
+#define SSCANF_ERROR_EXCESS                    (sscanf_error:327680) // 5 << 16
+#define SSCANF_ERROR_COLOUR                    (sscanf_error:393216) // 6 << 16
+#define SSCANF_ERROR_OVERFLOW                  (sscanf_error:458752) // 7 << 16
+#define SSCANF_ERROR_NOT_FOUND                 (sscanf_error:524288) // 8 << 16
+#define SSCANF_ERROR_NO_ALTS                   (sscanf_error:589824) // 9 << 16
 
 /**
  * <library>sscanf</library>
@@ -301,30 +301,30 @@ static stock sscanf_error:_@SSCANF_ERROR() { return MAX_SSCANF_ERRORS; }
  * from <c>sscanf</c>.
  * </remarks>
  */
-forward SSCANF_ERROR(specifier, SScanFError:error);
+forward SSCANF_ERROR(specifier, sscanf_error:error);
 
-#define SSCANF_ERROR(%0,%1) (((_:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%1)))<<16)|(%0))
+#define SSCANF_ERROR(%0,%1) (((_:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%1)))<<16)|(((_:(SSCANF_ERROR_%1))>>>16)<<16)|(%0))
 
 // Allows for all these variations:
 //
 //   SSCANF_ERROR(3, NATIVE)
 //   SSCANF_ERROR(3, SSCANF_ERROR_EXCESS)
 //   SSCANF_ERROR(3, 1001)
-//   SSCANF_ERROR(3, SScanFError:3)
+//   SSCANF_ERROR(3, sscanf_error:262144)
 //
 // However, the tags aren't checked, because there are two allowed, and that's
 // hard to do in a macro.
-#define @ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%00%1))) ((%00%1)))
-#define @ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%01%1))) ((%01%1)))
-#define @ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%02%1))) ((%02%1)))
-#define @ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%03%1))) ((%03%1)))
-#define @ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%04%1))) ((%04%1)))
-#define @ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%05%1))) ((%05%1)))
-#define @ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%06%1))) ((%06%1)))
-#define @ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%07%1))) ((%07%1)))
-#define @ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%08%1))) ((%08%1)))
-#define @ss_9:@ss_S:((SSCANF_ERROR_%09%1))) ((%09%1)))
-#define @ss_S:((SSCANF_ERROR_%0SSCANF_ERROR_%1))) ((SSCANF_ERROR_%1)))
+#define @ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%00%1)))<<16)|(((_:(%9)) ((%00%1)))<<16)|(((_:(%00%1))
+#define @ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%01%1)))<<16)|(((_:(%9)) ((%01%1)))<<16)|(((_:(%01%1))
+#define @ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%02%1)))<<16)|(((_:(%9)) ((%02%1)))<<16)|(((_:(%02%1))
+#define @ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%03%1)))<<16)|(((_:(%9)) ((%03%1)))<<16)|(((_:(%03%1))
+#define @ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%04%1)))<<16)|(((_:(%9)) ((%04%1)))<<16)|(((_:(%04%1))
+#define @ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%05%1)))<<16)|(((_:(%9)) ((%05%1)))<<16)|(((_:(%05%1))
+#define @ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%06%1)))<<16)|(((_:(%9)) ((%06%1)))<<16)|(((_:(%06%1))
+#define @ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%07%1)))<<16)|(((_:(%9)) ((%07%1)))<<16)|(((_:(%07%1))
+#define @ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%08%1)))<<16)|(((_:(%9)) ((%08%1)))<<16)|(((_:(%08%1))
+#define @ss_9:@ss_S:((SSCANF_ERROR_%09%1)))<<16)|(((_:(%9)) ((%09%1)))<<16)|(((_:(%09%1))
+#define @ss_S:((SSCANF_ERROR_%0SSCANF_ERROR_%1)))<<16)|(((_:(%9)) ((SSCANF_ERROR_%1)))<<16)|(((_:(SSCANF_ERROR_%1))
 
 // Consume spaces.
 #define SSCANF_ERROR_%0\32 SSCANF_ERROR_
@@ -432,7 +432,7 @@ native SSCANF_ClearLastError();
  * for ease of processing.
  * </remarks>
  */
-native SScanFError:SSCANF_GetErrorCategory(error);
+native sscanf_error:SSCANF_GetErrorCategory(error);
 
 /**
  * <library>sscanf</library>
@@ -981,7 +981,7 @@ stock const WARNINGS_AS_ERRORS[] = "WARNINGS_AS_ERRORS";
  * of the exact error code.
  *
  * <code>
- *     SSCANF_Option(ERROR_CATEGORY_ONLY, 1); // `sscanf` failures will return `SScanFError:`<br />
+ *     SSCANF_Option(ERROR_CATEGORY_ONLY, 1); // `sscanf` failures will return `sscanf_error:`<br />
  *     SSCANF_Option(ERROR_CATEGORY_ONLY, 0); // `sscanf` failures will return the exact error.
  * </code>
  * </remarks>
