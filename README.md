@@ -53,6 +53,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
         * 6.13.1 [3 digits](#3-digits)
         * 6.13.2 [6 digits](#6-digits)
         * 6.13.3 [8 digits](#8-digits)
+    * 6.14 [End Of Input](#end-of-input)
 * 7 [Options](#options)
     * 7.1 [OLD_DEFAULT_NAME:](#old_default_name)
     * 7.2 [MATCH_NAME_PARTIAL:](#match_name_partial)
@@ -1141,6 +1142,22 @@ More invalid examples:
 
 8-digit colours are the simplest - the alpha is specified explicitly and there are only two possible input forms - `0x` prefix and no prefix.  I.e. either `0x88995566` or `88995566`.
 
+### End Of Input
+
+The `!` specifier must come at the end of a specifier and makes the match much stricter.  This will pass:
+
+```pawn
+sscanf("4 5 6 7 8", "iii", a, b, c);
+```
+
+This will not:
+
+```pawn
+sscanf("4 5 6 7 8", "iii!", a, b, c);
+```
+
+The `!` at the end checks that there is no input (except whitespace) remaining.
+
 ## Options
 
 The latest version of sscanf introduces several options that can be used to customise the way in which sscanf operates.  There are two ways of setting these options - globally and locally:
@@ -1707,6 +1724,8 @@ For quick reference, here is a list of ALL the specifiers and their use:
 |  `}`                                     |  Close quiet section                   |
 |  `%`                                     |  Deprecated optional specifier prefix  |
 |  `?`                                     |  Local options specifier               |
+|  `!`                                     |  Strict end of input check             |
+|  `|`                                     |  Alterates (not yet implemented)       |
 
 ## Full API
 
