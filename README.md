@@ -63,145 +63,148 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 7.8 [SSCANF_ARGB:](#sscanf_argb)
     * 7.9 [MATCH_NAME_FIRST:](#match_name_first)
     * 7.10 [MATCH_NAME_SIMILARITY:](#match_name_similarity)
-* 8 [All Specifiers](#all-specifiers)
-* 9 [Full API](#full-api)
-    * 9.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
-    * 9.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
-    * 9.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
-    * 9.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
-    * 9.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
-    * 9.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
-    * 9.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
-    * 9.8 [`SSCANF_Version();`](#sscanf_version)
-    * 9.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
-    * 9.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
-    * 9.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
-    * 9.12 [`Float:SSCANF_TextSimilarity(const string1[], const string2[]);`](#floatsscanf_textsimilarityconst-string1-const-string2)
-    * 9.13 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
-    * 9.14 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
-    * 9.15 [`SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`](#sscanf_getsimilarstringconst-input-const-candidates-floatthreshold--0111111-count--sizeof-candidates)
-    * 9.16 [`SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getsimilarvalueconst-input-const-candidates-const-results-fail--cellmin-floatthreshold--0111111-count--sizeof-candidates-check--sizeof-results)
-    * 9.17 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
-    * 9.18 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
-    * 9.19 [`SSCANF_VERSION`](#sscanf_version-1)
-    * 9.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
-    * 9.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
-    * 9.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
-    * 9.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
-    * 9.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
-* 10 [`extract`](#extract)
-* 11 [Similarity](#similarity)
-* 12 [Errors/Warnings](#errorswarnings)
-    * 12.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
-    * 12.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
-    * 12.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
-    * 12.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
-    * 12.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
-    * 12.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
-    * 12.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
-    * 12.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
-    * 12.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
-    * 12.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
-    * 12.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
-    * 12.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
-    * 12.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
-    * 12.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
-    * 12.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
-    * 12.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
-    * 12.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
-    * 12.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
-    * 12.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
-    * 12.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
-    * 12.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
-    * 12.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
-    * 12.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
-    * 12.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
-    * 12.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
-    * 12.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
-    * 12.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
-    * 12.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
-    * 12.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
-    * 12.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
-    * 12.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
-    * 12.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
-    * 12.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
-    * 12.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
-    * 12.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
-    * 12.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-    * 12.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
-    * 12.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
-    * 12.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
-    * 12.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
-    * 12.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-    * 12.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
-    * 12.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
-    * 12.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
-    * 12.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setname-return)
-    * 12.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
-    * 12.47 [sscanf error: Unable to allocate memory.](#sscanf-error-unable-to-allocate-memory)
-    * 12.48 [sscanf warning: User arrays are not supported in arrays.](#sscanf-warning-user-arrays-are-not-supported-in-arrays)
-    * 12.49 [sscanf warning: Invalid values in array defaults.](#sscanf-warning-invalid-values-in-array-defaults)
-    * 12.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
-    * 12.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
-    * 12.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
-    * 12.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include--plugin-mismatch-please-recompile-your-script for-the-latest-features)
-    * 12.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
-    * 12.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
-    * 12.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
-    * 12.57 [sscanf warning: A minus quiet section makes no sense.](#sscanf-warning-a-minus-quiet-section-makes-no-sense)
-    * 12.58 [sscanf warning: User arrays are not supported in enums.](#sscanf-warning-user-arrays-are-not-supported-in-enums)
-    * 12.59 [sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-u-name-len-is-incompatible-with-old_default_name)
-    * 12.60 [sscanf error: 'U(num)[len]' length under 2.](#sscanf-error-u-num-len-length-under-2)
-    * 12.61 [sscanf error: 'u[len]' length under 2.](#sscanf-error-u-len-length-under-2)
-    * 12.62 [sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-q-name-len-is-incompatible-with-old_default_name)
-    * 12.63 [sscanf error: 'Q(num)[len]' length under 2.](#sscanf-error-q-num-len-length-under-2)
-    * 12.64 [sscanf error: 'q[len]' length under 2.](#sscanf-error-q-len-length-under-2)
-    * 12.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
-    * 12.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
-    * 12.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
-    * 12.68 [sscanf error: (*) is not supported in strings/arrays yet.](#sscanf-error-is-not-supported-in-strings-arrays-yet)
-    * 12.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
-    * 12.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
-    * 12.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
-    * 12.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
-* 13 [Future Plans](#future-plans)
-    * 13.1 [Reserved Specifiers](#reserved-specifiers)
-    * 13.2 [Alternates](#alternates)
-    * 13.3 [Enums And Arrays](#enums-and-arrays)
-    * 13.4 [Compilation](#compilation)
-* 14 [Building](#building)
-    * 14.1 [Getting The Code](#getting-the-code)
-    * 14.2 [Building On Windows](#building-on-windows)
-    * 14.3 [Building On Linux](#building-on-linux)
-    * 14.4 [Building With Docker](#building-with-docker)
-* 15 [License](#license)
-    * 15.1 [Version: MPL 1.1](#version-mpl-11)
-    * 15.2 [Contributor(s):](#contributors)
-    * 15.3 [Special Thanks to:](#special-thanks-to)
-* 16 [Changelog](#changelog)
-    * 15.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
-    * 15.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
-    * 15.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
-    * 15.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
-    * 15.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
-    * 15.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
-    * 15.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
-    * 15.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
-    * 15.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
-    * 15.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
-    * 15.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
-    * 15.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
-    * 15.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
-    * 15.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
-    * 15.13 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
-    * 15.14 [sscanf 2.13.1 - 25/06/2022](#sscanf-2131---25062022)
-    * 15.15 [sscanf 2.13.2 - 07/09/2022](#sscanf-2132---07092022)
-    * 15.16 [sscanf 2.13.3 - 04/12/2022](#sscanf-2133---04122022)
-    * 15.17 [sscanf 2.13.4 - 20/12/2022](#sscanf-2134---20122022)
-    * 15.18 [sscanf 2.13.5 - 28/12/2022](#sscanf-2135---28122022)
-    * 15.19 [sscanf 2.13.6 - 28/12/2022](#sscanf-2136---28122022)
-    * 15.20 [sscanf 2.13.7 - 02/01/2023](#sscanf-2137---02012023)
-    * 15.21 [sscanf 2.13.8 - 05/01/2023](#sscanf-2138---05012023)
+* 8 [`extract`](#extract)
+* 9 [Similarity](#similarity)
+* 10 [Error Returns](#error-retuns)
+* 11 [All Specifiers](#all-specifiers)
+* 12 [Full API](#full-api)
+    * 12.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
+    * 12.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
+    * 12.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
+    * 12.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
+    * 12.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
+    * 12.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
+    * 12.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
+    * 12.8 [`SSCANF_Version();`](#sscanf_version)
+    * 12.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
+    * 12.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
+    * 12.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
+    * 12.12 [`Float:SSCANF_TextSimilarity(const string1[], const string2[]);`](#floatsscanf_textsimilarityconst-string1-const-string2)
+    * 12.13 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
+    * 12.14 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
+    * 12.15 [`SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`](#sscanf_getsimilarstringconst-input-const-candidates-floatthreshold--0111111-count--sizeof-candidates)
+    * 12.16 [`SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getsimilarvalueconst-input-const-candidates-const-results-fail--cellmin-floatthreshold--0111111-count--sizeof-candidates-check--sizeof-results)
+    * 12.17 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
+    * 12.18 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
+    * 12.19 [`SSCANF_VERSION`](#sscanf_version-1)
+    * 12.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
+    * 12.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
+    * 12.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
+    * 12.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
+    * 12.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
+* 13 [Errors/Warnings](#errorswarnings)
+    * 13.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
+    * 13.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
+    * 13.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
+    * 13.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
+    * 13.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
+    * 13.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
+    * 13.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
+    * 13.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
+    * 13.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
+    * 13.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
+    * 13.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
+    * 13.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
+    * 13.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
+    * 13.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
+    * 13.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
+    * 13.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
+    * 13.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
+    * 13.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
+    * 13.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
+    * 13.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
+    * 13.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
+    * 13.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
+    * 13.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
+    * 13.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
+    * 13.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
+    * 13.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
+    * 13.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
+    * 13.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
+    * 13.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
+    * 13.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
+    * 13.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
+    * 13.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
+    * 13.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
+    * 13.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
+    * 13.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
+    * 13.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
+    * 13.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
+    * 13.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
+    * 13.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
+    * 13.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
+    * 13.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+    * 13.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
+    * 13.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+    * 13.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
+    * 13.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setname-return)
+    * 13.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
+    * 13.47 [sscanf error: Unable to allocate memory.](#sscanf-error-unable-to-allocate-memory)
+    * 13.48 [sscanf warning: User arrays are not supported in arrays.](#sscanf-warning-user-arrays-are-not-supported-in-arrays)
+    * 13.49 [sscanf warning: Invalid values in array defaults.](#sscanf-warning-invalid-values-in-array-defaults)
+    * 13.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
+    * 13.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
+    * 13.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
+    * 13.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include--plugin-mismatch-please-recompile-your-script for-the-latest-features)
+    * 13.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
+    * 13.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
+    * 13.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
+    * 13.57 [sscanf warning: A minus quiet section makes no sense.](#sscanf-warning-a-minus-quiet-section-makes-no-sense)
+    * 13.58 [sscanf warning: User arrays are not supported in enums.](#sscanf-warning-user-arrays-are-not-supported-in-enums)
+    * 13.59 [sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-u-name-len-is-incompatible-with-old_default_name)
+    * 13.60 [sscanf error: 'U(num)[len]' length under 2.](#sscanf-error-u-num-len-length-under-2)
+    * 13.61 [sscanf error: 'u[len]' length under 2.](#sscanf-error-u-len-length-under-2)
+    * 13.62 [sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-q-name-len-is-incompatible-with-old_default_name)
+    * 13.63 [sscanf error: 'Q(num)[len]' length under 2.](#sscanf-error-q-num-len-length-under-2)
+    * 13.64 [sscanf error: 'q[len]' length under 2.](#sscanf-error-q-len-length-under-2)
+    * 13.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
+    * 13.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
+    * 13.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
+    * 13.68 [sscanf error: (*) is not supported in strings/arrays yet.](#sscanf-error-is-not-supported-in-strings-arrays-yet)
+    * 13.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
+    * 13.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
+    * 13.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
+    * 13.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
+    * 13.73 [sscanf error: SSCANF_GetErrorCategory has incorrect parameters.](#sscanf-error-sscanf_geterrorgategory-has-incorrect-parameters)
+* 14 [Future Plans](#future-plans)
+    * 14.1 [Reserved Specifiers](#reserved-specifiers)
+    * 14.2 [Alternates](#alternates)
+    * 14.3 [Enums And Arrays](#enums-and-arrays)
+    * 14.4 [Compilation](#compilation)
+* 15 [Building](#building)
+    * 15.1 [Getting The Code](#getting-the-code)
+    * 15.2 [Building On Windows](#building-on-windows)
+    * 15.3 [Building On Linux](#building-on-linux)
+    * 15.4 [Building With Docker](#building-with-docker)
+* 16 [License](#license)
+    * 16.1 [Version: MPL 1.1](#version-mpl-11)
+    * 16.2 [Contributor(s):](#contributors)
+    * 16.3 [Special Thanks to:](#special-thanks-to)
+* 17 [Changelog](#changelog)
+    * 17.1 [sscanf 2.8.2 - 18/04/2015](#sscanf-282---18042015)
+    * 17.2 [sscanf 2.8.3 - 02/10/2018](#sscanf-283---02102018)
+    * 17.3 [sscanf 2.9.0 - 04/11/2019](#sscanf-290---04112019)
+    * 17.4 [sscanf 2.10.0 - 27/06/2020](#sscanf-2100---27062020)
+    * 17.5 [sscanf 2.10.1 - 27/06/2020](#sscanf-2101---27062020)
+    * 17.6 [sscanf 2.10.2 - 28/06/2020](#sscanf-2102---28062020)
+    * 17.7 [sscanf 2.10.3 - 28/04/2021](#sscanf-2103---28042021)
+    * 17.8 [sscanf 2.10.4 - 17/01/2022](#sscanf-2104---17012022)
+    * 17.9 [sscanf 2.11.1 - 25/01/2022](#sscanf-2111---25012022)
+    * 17.9 [sscanf 2.11.2 - 04/02/2022](#sscanf-2112---04022022)
+    * 17.10 [sscanf 2.11.3 - 05/02/2022](#sscanf-2113---05022022)
+    * 17.10 [sscanf 2.11.4 - 02/03/2022](#sscanf-2114---02032022)
+    * 17.11 [sscanf 2.11.5 - 31/03/2022](#sscanf-2115---31032022)
+    * 17.12 [sscanf 2.12.1 - 05/05/2022](#sscanf-2121---05052022)
+    * 17.13 [sscanf 2.12.2 - 11/05/2022](#sscanf-2122---11052022)
+    * 17.14 [sscanf 2.13.1 - 25/06/2022](#sscanf-2131---25062022)
+    * 17.15 [sscanf 2.13.2 - 07/09/2022](#sscanf-2132---07092022)
+    * 17.16 [sscanf 2.13.3 - 04/12/2022](#sscanf-2133---04122022)
+    * 17.17 [sscanf 2.13.4 - 20/12/2022](#sscanf-2134---20122022)
+    * 17.18 [sscanf 2.13.5 - 28/12/2022](#sscanf-2135---28122022)
+    * 17.19 [sscanf 2.13.6 - 28/12/2022](#sscanf-2136---28122022)
+    * 17.20 [sscanf 2.13.7 - 02/01/2023](#sscanf-2137---02012023)
+    * 17.21 [sscanf 2.13.8 - 05/01/2023](#sscanf-2138---05012023)
+    * 17.21 [sscanf 2.14.1 - 08/09/2023](#sscanf-2141---08092023)
 
 ## Downloads
 
@@ -1217,7 +1220,273 @@ Will probably find `Y_Less` as the closest matching name.  A similarity of `1.0`
 new Float:similarity = Float:SSCANF_Option(MATCH_NAME_SIMILARITY);
 ```
 
-## All specifiers
+## `extract`
+
+I've written some (extendable) macros so you can do:
+
+```pawn
+extract params -> new a, string:b[32], Float:c; else
+{
+    return SendClientMessage(playerid, COLOUR_RED, "FAIL!");
+}
+```
+
+This will compile as:
+
+```pawn
+new a, string:b[32], Float:c;
+if (unformat(params, "is[32]f", a, b, c))
+{
+    return SendClientMessage(playerid, COLOUR_RED, "FAIL!");
+}
+```
+
+Note that `unformat` is the same as `sscanf`, also note that the `SendClientMessage` part is optional:
+
+```pawn
+extract params -> new a, string:b[32], Float:c;
+```
+
+Will simply compile as:
+
+```pawn
+new a, string:b[32], Float:c;
+unformat(params, "is[32]f", a, b, c);
+```
+
+Basically it just simplifies sscanf a little bit (IMHO).  I like new operators and syntax, hence this, examples:
+
+```pawn
+// An int and a float.
+extract params -> new a, Float:b;
+// An int and an OPTIONAL float.
+extract params -> new a, Float:b = 7.0;
+// An int and a string.
+extract params -> new a, string:s[32];
+// An int and a playerid.
+extract params -> new a, player:b;
+```
+
+As I say, the syntax is extendable, so to add hex numbers you would do:
+
+```pawn
+#define hex_EXTRO:%0##%1,%2|||%3=%9|||%4,%5) EXTRY:%0##%1H"("#%9")"#,%2,%3|||%4|||%5)
+#define hex_EXTRN:%0##%1,%2|||%3|||%4,%5) EXTRY:%0##%1h,%2,%3|||%4|||%5)
+#define hex_EXTRW:%0##%1,%2|||%3[%7]|||%4,%5) EXTRY:%0##%1a<h>[*],%2,(%7),%3|||%4|||%5)
+```
+
+That will add the tag `hex` to the system.  Yes, the lines look complicated (because they are), but the ONLY things you need to change are the name before the underscore and the letter near the middle (`H`, `h` and `a<h>` in the examples above for `optional`, `required` and `required array` (no optional arrays yet besides strings)).
+
+New examples (with `hex` added):
+
+```pawn
+// A hex number and a player.
+extract params -> new hex:a, player:b;
+// 32 numbers then 32 players.
+extract params -> new a[32], player:b[32];
+// 11 floats, an optional string, then an optional hex number.
+extract params -> new Float:f[11], string:s[12] = "optional", hex:end = 0xFF;
+```
+
+The code is actually surprisingly simple (I developed another new technique to simplify my `tag` macros and it paid off big style here).  By default `Float`, `string`, `player` and `_` (i.e. no tag) are supported, and their individual letter definitions take up the majority of the code as demonstrated with the `hex` addition above.  Note that `string:` is now used extensively in my code to differentiate from tagless arrays in cases like this, it is removed automatically but `player:` and `hex:` are not so you may wish to add:
+
+```pawn
+#define player:
+#define hex:
+```
+
+To avoid tag mismatch warnings (to remove them AFTER the compiler has used them to determine the correct specifier).
+
+The very first example had an `else`, this will turn:
+
+```pawn
+unformat(params, "ii", a, b);
+```
+
+In to:
+
+```pawn
+if (unformat(params, "ii", a, b))
+```
+
+You MUST put the `else` on the same line as `extract` for it to be detected, but then you can use normal single or multi-line statements.  This is to cover common command use cases, you can even leave things on the same line:
+
+```pawn
+else return SendClientMessage(playerid, 0xFF0000AA, "Usage: /cmd <whatever>");
+```
+
+There is now the ability to split by things other than space (i.e. adds `P<?>` to the syntax - updated from using `p` to `P`):
+
+```pawn
+extract params<|> -> new a, string:b[32], Float:c;
+```
+
+Will simply compile as:
+
+```pawn
+new a, string:b[32], Float:c;
+unformat(params, "P<|>is[32]f", a, b, c);
+```
+
+Note that for technical reasons you can use `<->` (because it looks like the arrow after the `extract` keyword).  You also can't use `<;>`, `<,>`, or `<)>` because of a bug with `#`, but you can use any other character (most notably `<|>`, as is popular with SQL scripts).  I'm thinking of adding enums and existing variables (currently you HAVE to declare new variables), but not right now.
+
+## Similarity
+
+A lot of the code uses a concept of "similarity" when comparing two strings.  This is less accurate, but thus more forgiving, than an exact string comparison.  For example if a player types `nrg` they probably mean the `NRG-500` bike, and if they type `mac10` they probably mean the `Mac 10` gun.  Using standard comparisons these inputs would never match, and using the common "Levenshtein Distance" (as old versions of the code did) can produce some strange results.  For example typing `NRG` as a vehicle input will return `TUG` using Levenshtein, because converting `NRG` to `TUG` only requires three replacements, whereas converting `NRG` to `NRG-500` requires four additions, thus is technically further away despite being more similar to a person.
+
+Thus the new version of sscanf uses a "similarity" metric instead of a "distance" metric to work out which strings are probably the same.  This is used by the `k<vehicle>` and `k<weapon>` pre-defined custom specifiers, and for the `MATCH_NAME_SIMILARITY` option used with `u`, `r`, and `q` (i.e. for names).  The algorithm is roughly based on one of "Bigram Similarity":
+
+* Split the two input strings up in to letter pairs, ignoring punctuation and spaces.  For example `"Shotty"` becomes `"sh", "ho", "ot", "tt", "ty"` and `"Combat Shotgun"` becomes `"co", "om", "mb", "ba", "at", "ts", "sh", "ho", "ot", "tg", "gu", "un"`.
+
+* For each pair of letters from the first word, count how many of them appear in the second word.  For example `"Combat Shotgun"` contains `"sh", "ho", "ot"` from `"Shotty"`, 3/5 (60%) of the available letter pairs.
+
+* Repeat in the reverse, so `"Shotty"` contains `"sh", "ho", "ot"` from `"Combat Shotgun"`, 3/12 (25%) of the available letter pairs (the fact that the two result lists are the same here is pure fluke and irrelevant).
+
+* Invert the fractions to get the percentage of pairs not in the other word, multiply the two numbers, and subtract from `1.0` to give the final result.  So for the example above:
+
+```
+similarity = 1 - ((1 - 60%) * (1 - 25%))
+similarity = 1 - (0.4 * 0.75)
+similarity = 1 - 0.3
+similarity = 0.7
+```
+
+A similarity is always between `0.0` (totally different) and `1.0` (absolutely identical), and many functions will return the string from a list with the highest similarity.  So `k<vehicle>` will find the vehicle with the best similarity to the given input.  However, this doesn't always make sense.  If the input is `"dkaoiingsjk"`, that is obviously not any sane vehicle, but it still has a similarity rating to every vehicle name; the ratings will be very low, but one must be the highest (it is the `"Sandking"`, with a similarity rating of `0.228571`).  Just calling the similarity functions blindly will thus always return a result, even if that result is gibberish, thus the functions also optionally accept a *threshold*, a similarity value that the result must be better than.  So for the above example passing a threshold of `0.5` would result in no valid vehicle being returned.
+
+## Error Returns
+
+### Additional Codes
+
+Error codes under 1000 relate to printed messages, and are documented along-side their messages in [Section 13](#errorswarnings).  Error codes above 1000 are regular failures:
+
+* *1001* - A colour was given, but it doesn't match an allowed format:
+
+```pawn
+sscanf(input, "?<SSCANF_COLOUR_FORMS=12>m", "#112233", colour);
+```
+
+* *1002* - `SSCANF_Join` was called with an invalid player ID:
+
+```pawn
+SSCANF_Join(134234);
+```
+
+* *1003* - The search string was not found in the input:
+
+```pawn
+sscanf("some input", "'hello'");
+```
+
+* *1004* - Arguably the most basic failure - not enough input:
+
+```pawn
+sscanf("6", "ii", a, b);
+```
+
+* *1005* - `SSCANF_Leave` was called with an invalid player ID:
+
+```pawn
+SSCANF_Leave(134234);
+```
+
+* *1006* - The matrix was not allocated correctly in `SSCANF_Levenshtein`.
+
+* *1007* - The text compared with `SSCANF_TextSimilarity` is too short:
+
+```pawn
+SSCANF_TextSimilarity("a", "b");
+```
+
+* *1008* - `SSCANF_IsConnected` was called with an invalid player ID:
+
+```pawn
+SSCANF_IsConnected(134234);
+```
+
+* *1009* - Excess data seen, with a specifier ending `!`.
+
+```pawn
+sscanf("4 5 6", "ii!", a, b);
+```
+
+* *1010* - No matching alternate found:
+
+```pawn
+sscanf("0x11 0x22", "ii|bb", variant, a, b, c, d);
+```
+
+* *1011* - An int was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "i", output);
+```
+
+* *1012* - A number was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "n", output);
+```
+
+* *1013* - A hex was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "h", output);
+```
+
+* *1014* - A colour was wanted, but the input didn't match:
+
+```pawn
+sscanf("hello", "m", output);
+```
+
+* *1015* - An octal was wanted, but the input didn't match:
+
+```pawn
+sscanf("0xFF", "o", output);
+```
+
+* *1016* - A float was wanted, but the input didn't match:
+
+```pawn
+sscanf("NAN", "f", output);
+```
+
+* *1017* - A character was wanted, but the input didn't match:
+
+```pawn
+sscanf("long", "c", output);
+```
+
+* *1018* - A binary was wanted, but the input didn't match:
+
+```pawn
+sscanf("44", "b", output);
+```
+
+* *1019* - An extended (IEEE 754) float was wanted, but the input didn't match:
+
+```pawn
+sscanf("IsANumber", "g", output);
+```
+
+### Error Categories
+
+There are almost 100 different unique error codes, but many of them can often be dealt with in the same way.  For example - "***1011* - An int was wanted, but the input didn't match**" and "***1012* - A number was wanted, but the input didn't match**" can probably usually use the same result processing (especially since they can never be returned by the same specifier).  Hence the errors are grouped together in to a few large groups for ease of processing.  These categories are:
+
+* `SSCANF_ERROR_NONE` - Not an error.
+* `SSCANF_ERROR_NATIVE` - A generic problem with calling a native, such as invalid parameters or out of memory.
+* `SSCANF_ERROR_SPECIFIER` - The specifier itself is wrong in some way.  This is always a coding error.
+* `SSCANF_ERROR_INVALID` - The parsed input was present, but invalid.  For example `hello` for an integer.
+* `SSCANF_ERROR_MISSING` - Required input data was missing.
+* `SSCANF_ERROR_EXCESS` - There was too much input data (with `!`).
+* `SSCANF_ERROR_COLOUR` - A colour was parsed, but was not one of the accepted formats.
+* `SSCANF_ERROR_OVERFLOW` - The infamous "string buffer overflow" warning.  Enable warnings as errors to get this in code.
+* `SSCANF_ERROR_NOT_FOUND` - The search string (`''`) wasn't found.
+* `SSCANF_ERROR_NO_ALTS` - None of the alternatives (`|`) matched.
+
+You may notice that the last few "groups" are very small compared to the others, but they cover issues that are both unique and easy to rectify in code.
+
+## All Specifiers
 
 For quick reference, here is a list of ALL the specifiers and their use:
 
@@ -1369,139 +1638,6 @@ Gets the error code set by the most recent call to any other sscanf function.  C
 ### `SSCANF_ClearLastError();`
 
 Resets the error code from any previous *sscanf* function call.  Note that calling any other function also resets this value, but with more side-effects.
-
-## `extract`
-
-I've written some (extendable) macros so you can do:
-
-```pawn
-extract params -> new a, string:b[32], Float:c; else
-{
-    return SendClientMessage(playerid, COLOUR_RED, "FAIL!");
-}
-```
-
-This will compile as:
-
-```pawn
-new a, string:b[32], Float:c;
-if (unformat(params, "is[32]f", a, b, c))
-{
-    return SendClientMessage(playerid, COLOUR_RED, "FAIL!");
-}
-```
-
-Note that `unformat` is the same as `sscanf`, also note that the `SendClientMessage` part is optional:
-
-```pawn
-extract params -> new a, string:b[32], Float:c;
-```
-
-Will simply compile as:
-
-```pawn
-new a, string:b[32], Float:c;
-unformat(params, "is[32]f", a, b, c);
-```
-
-Basically it just simplifies sscanf a little bit (IMHO).  I like new operators and syntax, hence this, examples:
-
-```pawn
-// An int and a float.
-extract params -> new a, Float:b;
-// An int and an OPTIONAL float.
-extract params -> new a, Float:b = 7.0;
-// An int and a string.
-extract params -> new a, string:s[32];
-// An int and a playerid.
-extract params -> new a, player:b;
-```
-
-As I say, the syntax is extendable, so to add hex numbers you would do:
-
-```pawn
-#define hex_EXTRO:%0##%1,%2|||%3=%9|||%4,%5) EXTRY:%0##%1H"("#%9")"#,%2,%3|||%4|||%5)
-#define hex_EXTRN:%0##%1,%2|||%3|||%4,%5) EXTRY:%0##%1h,%2,%3|||%4|||%5)
-#define hex_EXTRW:%0##%1,%2|||%3[%7]|||%4,%5) EXTRY:%0##%1a<h>[*],%2,(%7),%3|||%4|||%5)
-```
-
-That will add the tag `hex` to the system.  Yes, the lines look complicated (because they are), but the ONLY things you need to change are the name before the underscore and the letter near the middle (`H`, `h` and `a<h>` in the examples above for `optional`, `required` and `required array` (no optional arrays yet besides strings)).
-
-New examples (with `hex` added):
-
-```pawn
-// A hex number and a player.
-extract params -> new hex:a, player:b;
-// 32 numbers then 32 players.
-extract params -> new a[32], player:b[32];
-// 11 floats, an optional string, then an optional hex number.
-extract params -> new Float:f[11], string:s[12] = "optional", hex:end = 0xFF;
-```
-
-The code is actually surprisingly simple (I developed another new technique to simplify my `tag` macros and it paid off big style here).  By default `Float`, `string`, `player` and `_` (i.e. no tag) are supported, and their individual letter definitions take up the majority of the code as demonstrated with the `hex` addition above.  Note that `string:` is now used extensively in my code to differentiate from tagless arrays in cases like this, it is removed automatically but `player:` and `hex:` are not so you may wish to add:
-
-```pawn
-#define player:
-#define hex:
-```
-
-To avoid tag mismatch warnings (to remove them AFTER the compiler has used them to determine the correct specifier).
-
-The very first example had an `else`, this will turn:
-
-```pawn
-unformat(params, "ii", a, b);
-```
-
-In to:
-
-```pawn
-if (unformat(params, "ii", a, b))
-```
-
-You MUST put the `else` on the same line as `extract` for it to be detected, but then you can use normal single or multi-line statements.  This is to cover common command use cases, you can even leave things on the same line:
-
-```pawn
-else return SendClientMessage(playerid, 0xFF0000AA, "Usage: /cmd <whatever>");
-```
-
-There is now the ability to split by things other than space (i.e. adds `P<?>` to the syntax - updated from using `p` to `P`):
-
-```pawn
-extract params<|> -> new a, string:b[32], Float:c;
-```
-
-Will simply compile as:
-
-```pawn
-new a, string:b[32], Float:c;
-unformat(params, "P<|>is[32]f", a, b, c);
-```
-
-Note that for technical reasons you can use `<->` (because it looks like the arrow after the `extract` keyword).  You also can't use `<;>`, `<,>`, or `<)>` because of a bug with `#`, but you can use any other character (most notably `<|>`, as is popular with SQL scripts).  I'm thinking of adding enums and existing variables (currently you HAVE to declare new variables), but not right now.
-
-## Similarity
-
-A lot of the code uses a concept of "similarity" when comparing two strings.  This is less accurate, but thus more forgiving, than an exact string comparison.  For example if a player types `nrg` they probably mean the `NRG-500` bike, and if they type `mac10` they probably mean the `Mac 10` gun.  Using standard comparisons these inputs would never match, and using the common "Levenshtein Distance" (as old versions of the code did) can produce some strange results.  For example typing `NRG` as a vehicle input will return `TUG` using Levenshtein, because converting `NRG` to `TUG` only requires three replacements, whereas converting `NRG` to `NRG-500` requires four additions, thus is technically further away despite being more similar to a person.
-
-Thus the new version of sscanf uses a "similarity" metric instead of a "distance" metric to work out which strings are probably the same.  This is used by the `k<vehicle>` and `k<weapon>` pre-defined custom specifiers, and for the `MATCH_NAME_SIMILARITY` option used with `u`, `r`, and `q` (i.e. for names).  The algorithm is roughly based on one of "Bigram Similarity":
-
-* Split the two input strings up in to letter pairs, ignoring punctuation and spaces.  For example `"Shotty"` becomes `"sh", "ho", "ot", "tt", "ty"` and `"Combat Shotgun"` becomes `"co", "om", "mb", "ba", "at", "ts", "sh", "ho", "ot", "tg", "gu", "un"`.
-
-* For each pair of letters from the first word, count how many of them appear in the second word.  For example `"Combat Shotgun"` contains `"sh", "ho", "ot"` from `"Shotty"`, 3/5 (60%) of the available letter pairs.
-
-* Repeat in the reverse, so `"Shotty"` contains `"sh", "ho", "ot"` from `"Combat Shotgun"`, 3/12 (25%) of the available letter pairs (the fact that the two result lists are the same here is pure fluke and irrelevant).
-
-* Invert the fractions to get the percentage of pairs not in the other word, multiply the two numbers, and subtract from `1.0` to give the final result.  So for the example above:
-
-```
-similarity = 1 - ((1 - 60%) * (1 - 25%))
-similarity = 1 - (0.4 * 0.75)
-similarity = 1 - 0.3
-similarity = 0.7
-```
-
-A similarity is always between `0.0` (totally different) and `1.0` (absolutely identical), and many functions will return the string from a list with the highest similarity.  So `k<vehicle>` will find the vehicle with the best similarity to the given input.  However, this doesn't always make sense.  If the input is `"dkaoiingsjk"`, that is obviously not any sane vehicle, but it still has a similarity rating to every vehicle name; the ratings will be very low, but one must be the highest (it is the `"Sandking"`, with a similarity rating of `0.228571`).  Just calling the similarity functions blindly will thus always return a result, even if that result is gibberish, thus the functions also optionally accept a *threshold*, a similarity value that the result must be better than.  So for the above example passing a threshold of `0.5` would result in no valid vehicle being returned.
 
 ## Errors/Warnings
 
@@ -2327,138 +2463,11 @@ Nested enums compile to the same as a single flat enum.  It may make less sense 
 
 You edited something in the sscanf2 include - undo it or redownload it.
 
-## Error Returns
+### sscanf error: SSCANF_GetErrorCategory has incorrect parameters.
 
-### Additional Codes
+*Error Code: 69*
 
-Error codes under 1000 relate to printed messages, and are documented along-side their messages in [Section 12](#errorswarnings).  Error codes above 1000 are regular failures:
-
-* *1001* - A colour was given, but it doesn't match an allowed format:
-
-```pawn
-sscanf(input, "?<SSCANF_COLOUR_FORMS=12>m", "#112233", colour);
-```
-
-* *1002* - `SSCANF_Join` was called with an invalid player ID:
-
-```pawn
-SSCANF_Join(134234);
-```
-
-* *1003* - The search string was not found in the input:
-
-```pawn
-sscanf("some input", "'hello'");
-```
-
-* *1004* - Arguably the most basic failure - not enough input:
-
-```pawn
-sscanf("6", "ii", a, b);
-```
-
-* *1005* - `SSCANF_Leave` was called with an invalid player ID:
-
-```pawn
-SSCANF_Leave(134234);
-```
-
-* *1006* - The matrix was not allocated correctly in `SSCANF_Levenshtein`.
-
-* *1007* - The text compared with `SSCANF_TextSimilarity` is too short:
-
-```pawn
-SSCANF_TextSimilarity("a", "b");
-```
-
-* *1008* - `SSCANF_IsConnected` was called with an invalid player ID:
-
-```pawn
-SSCANF_IsConnected(134234);
-```
-
-* *1009* - Excess data seen, with a specifier ending `!`.
-
-```pawn
-sscanf("4 5 6", "ii!", a, b);
-```
-
-* *1010* - No matching alternate found:
-
-```pawn
-sscanf("0x11 0x22", "ii|bb", variant, a, b, c, d);
-```
-
-* *1011* - An int was wanted, but the input didn't match:
-
-```pawn
-sscanf("hello", "i", output);
-```
-
-* *1012* - A number was wanted, but the input didn't match:
-
-```pawn
-sscanf("hello", "n", output);
-```
-
-* *1013* - A hex was wanted, but the input didn't match:
-
-```pawn
-sscanf("hello", "h", output);
-```
-
-* *1014* - A colour was wanted, but the input didn't match:
-
-```pawn
-sscanf("hello", "m", output);
-```
-
-* *1015* - An octal was wanted, but the input didn't match:
-
-```pawn
-sscanf("0xFF", "o", output);
-```
-
-* *1016* - A float was wanted, but the input didn't match:
-
-```pawn
-sscanf("NAN", "f", output);
-```
-
-* *1017* - A character was wanted, but the input didn't match:
-
-```pawn
-sscanf("long", "c", output);
-```
-
-* *1018* - A binary was wanted, but the input didn't match:
-
-```pawn
-sscanf("44", "b", output);
-```
-
-* *1019* - An extended (IEEE 754) float was wanted, but the input didn't match:
-
-```pawn
-sscanf("IsANumber", "g", output);
-```
-
-### Error Categories
-
-There are almost 100 different unique error codes, but many of them can often be dealt with in the same way.  For example - "***1011* - An int was wanted, but the input didn't match**" and "***1012* - A number was wanted, but the input didn't match**" can probably usually use the same result processing (especially since they can never be returned by the same specifier).  Hence the errors are grouped together in to a few large groups for ease of processing.  These categories are:
-
-* `SSCANF_ERROR_NONE` - Not an error.
-* `SSCANF_ERROR_NATIVE` - A generic problem with calling a native, such as invalid parameters or out of memory.
-* `SSCANF_ERROR_SPECIFIER` - The specifier itself is wrong in some way.  This is always a coding error.
-* `SSCANF_ERROR_INVALID` - The parsed input was present, but invalid.  For example `hello` for an integer.
-* `SSCANF_ERROR_MISSING` - Required input data was missing.
-* `SSCANF_ERROR_EXCESS` - There was too much input data (with `!`).
-* `SSCANF_ERROR_COLOUR` - A colour was parsed, but was not one of the accepted formats.
-* `SSCANF_ERROR_OVERFLOW` - The infamous "string buffer overflow" warning.  Enable warnings as errors to get this in code.
-* `SSCANF_ERROR_NOT_FOUND` - The search string (`''`) wasn't found.
-* `SSCANF_ERROR_NO_ALTS` - None of the alternatives (`|`) matched.
-
-You may notice that the last few "groups" are very small compared to the others, but they cover issues that are both unique and easy to rectify in code.
+You edited something in the sscanf2 include - undo it or redownload it.
 
 ## Future Plans
 
