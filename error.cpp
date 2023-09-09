@@ -162,6 +162,9 @@ int
 	case 65:
 	case 66:
 	case 67:
+	case 70:
+	case 71:
+	case 72:
 		return 131072;
 	case 1011:
 	case 1012:

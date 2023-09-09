@@ -486,6 +486,9 @@ int
 			case '?':
 				SscanfError(27, "Options are not supported in enums.");
 				return SSCANF_FAIL_RETURN;
+			case '!':
+				SscanfError(71, "End of text is not supported in enums.");
+				return SSCANF_FAIL_RETURN;
 			case '%':
 				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				continue;
@@ -574,6 +577,10 @@ int
 						break;
 					case '?':
 						SscanfWarning(51, "A minus option makes no sense.");
+						len = 0;
+						break;
+					case '!':
+						SscanfWarning(72, "A minus end of text makes no sense.");
 						len = 0;
 						break;
 					case '%':

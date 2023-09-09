@@ -423,6 +423,9 @@ int
 	case '?':
 		SscanfError(28, "Options are not supported in arrays.");
 		return SSCANF_FAIL_RETURN;
+	case '!':
+		SscanfError(70, "End of text is not supported in arrays.");
+		return SSCANF_FAIL_RETURN;
 	case 'k':
 		if (defaults)
 		{

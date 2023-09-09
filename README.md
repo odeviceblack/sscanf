@@ -174,6 +174,9 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
     * 13.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
     * 13.73 [sscanf error: SSCANF_GetErrorCategory has incorrect parameters.](#sscanf-error-sscanf_geterrorcategory-has-incorrect-parameters)
+    * 13.74 [sscanf error: End of text is not supported in arrays.](#sscanf-error-end-of-text-is-not-supported-in-arrays)
+    * 13.75 [sscanf error: End of text is not supported in enums.](#sscanf-error-end-of-text-is-not-supported-in-enums)
+    * 13.76 [sscanf warning: A minus end of text makes no sense.](#sscanf-warning-a-minus-end-of-text-makes-no-sense)
 * 14 [Future Plans](#future-plans)
     * 14.1 [Reserved Specifiers](#reserved-specifiers)
     * 14.2 [Alternates](#alternates)
@@ -2660,6 +2663,42 @@ You edited something in the sscanf2 include - undo it or redownload it.
 
 You edited something in the sscanf2 include - undo it or redownload it.
 
+### sscanf error: End of text is not supported in arrays.
+
+*Error Code: 70*
+
+You can't use `!` as the type of an array:
+
+```
+a<!>[10]
+```
+
+### sscanf error: End of text is not supported in enums.
+
+*Error Code: 71*
+
+You can't use `!` as a type in an enum:
+
+```
+e<ii!>
+```
+
+Just put it after:
+
+```
+e<ii>!
+```
+
+### sscanf warning: A minus end of text makes no sense.
+
+*Error Code: 72*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, `p` isn't a specifier for reading in data, so there's no type to skip:
+
+```
+e<i-p<,>>
+```
+
 ## Future Plans
 
 ### Reserved Specifiers
@@ -2984,7 +3023,9 @@ the Initial Developer.  All Rights Reserved.
 * `SSCANF_GetErrorCategory` to get the category of an error.
 * Added `WARNINGS_AS_ERRORS` option to treat warnings as errors.
 * Added `ERROR_CODE_IN_RET` option to return error codes along-side error indexes.
+* Added `ERROR_CATEGORY_ONLY` option to return error categories instead of error codes.
 * Stop defining `__PawnBuild` and use `__pawn_build` instead.
 * Add `sscanf_error` to define all error codes.
 * Add `SSCANF_ERROR` macro to combine specifier indexes and error codes for `ERROR_CODE_IN_RET`.
+* Add `!` specifier to check for strict end of input.
 

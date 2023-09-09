@@ -1137,6 +1137,17 @@ static cell
 					else return SSCANF_FAIL_RETURN;
 					continue;
 				}
+			case '!':
+				if (args.HasMore())
+				{
+					SscanfWarning(47, "Format specifier does not match parameter count.");
+				}
+				if (!doSave)
+				{
+					// Started a quiet section but never explicitly ended it.
+					SscanfWarning(48, "Unclosed quiet section.");
+				}
+				return SSCANF_TRUE_RETURN;
 			case '%':
 				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				continue;
@@ -1371,6 +1382,14 @@ static cell
 			case '?':
 				GetMultiType(&format);
 				continue;
+			case '!':
+				SscanfWarning(47, "Format specifier does not match parameter count.");
+				if (!doSave)
+				{
+					// Started a quiet section but never explicitly ended it.
+					SscanfWarning(48, "Unclosed quiet section.");
+				}
+				return SSCANF_TRUE_RETURN;
 			case '%':
 				SscanfWarning(25, "sscanf specifiers do not require '%' before them.");
 				break;
@@ -1488,13 +1507,29 @@ static cell
 						{
 							SscanfWarning(21, "Not in a quiet section.");
 						}
-						else if (*format != '{')
+						else if (*format == '!')
+						{
+							// Check we are at the end of the input.
+							SkipWhitespace(&string);
+							if (*string)
+							{
+								// Still non-whitespace text, but we don't want any more.
+								SetErrorCode(1009);
+								return SSCANF_FAIL_RETURN;
+							}
+							break;
+						}
+						else if (*format == '{')
+						{
+							doSave = true;
+						}
+						else
 						{
 							// Fix the bad display bug.
 							SscanfWarning(47, "Format specifier does not match parameter count.");
+							// Only display it once.
+							break;
 						}
-						// Only display it once.
-						break;
 					}
 					else
 					{
