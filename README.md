@@ -69,7 +69,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 7.13 [ERROR_CATEGORY_ONLY:](#error_category_only)
 * 8 [`extract`](#extract)
 * 9 [Similarity](#similarity)
-* 10 [Error Returns](#error-retuns)
+* 10 [Error Returns](#error-returns)
     * 10.1 [Additional Codes](#additional-codes)
     * 10.2 [Error Categories](#error-categories)
 * 11 [All Specifiers](#all-specifiers)
