@@ -1,4 +1,4 @@
-# sscanf 2.13.8
+# sscanf 2.14.1
 
 ## Introduction
 
@@ -2790,6 +2790,7 @@ the Initial Developer.  All Rights Reserved.
 * Re-introduced the return value of `sscanf` giving the index of the failed specifier.
 * `SSCANF_GetLastError` to get the error code in failure cases.
 * `SSCANF_ClearLastError` to reset the error code from previous failures.
+* `SSCANF_GetErrorCategory` to get the category of an error.
 * Added `WARNINGS_AS_ERRORS` option to treat warnings as errors.
 * Added `ERROR_CODE_IN_RET` option to return error codes along-side error indexes.
 * Stop defining `__PawnBuild` and use `__pawn_build` instead.

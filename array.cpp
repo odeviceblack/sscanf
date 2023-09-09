@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.13.8
+ *  sscanf 2.14.1
  *
  *  Version: MPL 1.1
  *
