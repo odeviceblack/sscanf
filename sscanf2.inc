@@ -303,7 +303,7 @@ static stock sscanf_error:_@SSCANF_ERROR() { return SSCANF_ERRORS__; }
  */
 forward SSCANF_ERROR(specifier, sscanf_error:error);
 
-#define SSCANF_ERROR(%0,%1) (((_:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%1)))<<16)|(((_:(SSCANF_ERROR_%1))>>>16)<<16)|(%0))
+#define SSCANF_ERROR(%0,%1) (((_:@ss_S:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((%1)))<<16)|(((_:(%1))>>>16)<<16)|(%0))
 
 // Allows for all these variations:
 //
@@ -314,17 +314,17 @@ forward SSCANF_ERROR(specifier, sscanf_error:error);
 //
 // However, the tags aren't checked, because there are two allowed, and that's
 // hard to do in a macro.
-#define @ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%00%1)))<<16)|(((_:(%9)) ((%00%1)))<<16)|(((_:(%00%1))
-#define @ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%01%1)))<<16)|(((_:(%9)) ((%01%1)))<<16)|(((_:(%01%1))
-#define @ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%02%1)))<<16)|(((_:(%9)) ((%02%1)))<<16)|(((_:(%02%1))
-#define @ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%03%1)))<<16)|(((_:(%9)) ((%03%1)))<<16)|(((_:(%03%1))
-#define @ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%04%1)))<<16)|(((_:(%9)) ((%04%1)))<<16)|(((_:(%04%1))
-#define @ss_5:@ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%05%1)))<<16)|(((_:(%9)) ((%05%1)))<<16)|(((_:(%05%1))
-#define @ss_6:@ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%06%1)))<<16)|(((_:(%9)) ((%06%1)))<<16)|(((_:(%06%1))
-#define @ss_7:@ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%07%1)))<<16)|(((_:(%9)) ((%07%1)))<<16)|(((_:(%07%1))
-#define @ss_8:@ss_9:@ss_S:((SSCANF_ERROR_%08%1)))<<16)|(((_:(%9)) ((%08%1)))<<16)|(((_:(%08%1))
-#define @ss_9:@ss_S:((SSCANF_ERROR_%09%1)))<<16)|(((_:(%9)) ((%09%1)))<<16)|(((_:(%09%1))
-#define @ss_S:((SSCANF_ERROR_%0SSCANF_ERROR_%1)))<<16)|(((_:(%9)) ((SSCANF_ERROR_%1)))<<16)|(((_:(SSCANF_ERROR_%1))
+#define @ss_S:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((%0\32%1))) @ss_S:@ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((%0%1)))
+#define @ss_0:@ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((NONE)))<<16)|(((_:(%9)) ((SSCANF_ERROR_NONE)))<<16)|(((_:(SSCANF_ERROR_NONE))
+#define @ss_1:@ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((NATIVE)))<<16)|(((_:(%9)) ((SSCANF_ERROR_NATIVE)))<<16)|(((_:(SSCANF_ERROR_NATIVE))
+#define @ss_2:@ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((SPECIFIER)))<<16)|(((_:(%9)) ((SSCANF_ERROR_SPECIFIER)))<<16)|(((_:(SSCANF_ERROR_SPECIFIER))
+#define @ss_3:@ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((INVALID)))<<16)|(((_:(%9)) ((SSCANF_ERROR_INVALID)))<<16)|(((_:(SSCANF_ERROR_INVALID))
+#define @ss_4:@ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((MISSING)))<<16)|(((_:(%9)) ((SSCANF_ERROR_MISSING)))<<16)|(((_:(SSCANF_ERROR_MISSING))
+#define @ss_5:@ss_6:@ss_7:@ss_8:@ss_9:((EXCESS)))<<16)|(((_:(%9)) ((SSCANF_ERROR_EXCESS)))<<16)|(((_:(SSCANF_ERROR_EXCESS))
+#define @ss_6:@ss_7:@ss_8:@ss_9:((COLOUR)))<<16)|(((_:(%9)) ((SSCANF_ERROR_COLOUR)))<<16)|(((_:(SSCANF_ERROR_COLOUR))
+#define @ss_7:@ss_8:@ss_9:((OVERFLOW)))<<16)|(((_:(%9)) ((SSCANF_ERROR_OVERFLOW)))<<16)|(((_:(SSCANF_ERROR_OVERFLOW))
+#define @ss_8:@ss_9:((NOT_FOUND)))<<16)|(((_:(%9)) ((SSCANF_ERROR_NOT_FOUND)))<<16)|(((_:(SSCANF_ERROR_NOT_FOUND))
+#define @ss_9:((NO_ALTS)))<<16)|(((_:(%9)) ((SSCANF_ERROR_NO_ALTS)))<<16)|(((_:(SSCANF_ERROR_NO_ALTS))
 
 // Consume spaces.
 #define SSCANF_ERROR_%0\32 SSCANF_ERROR_

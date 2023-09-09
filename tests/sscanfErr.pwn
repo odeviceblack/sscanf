@@ -43,5 +43,43 @@ main()
 	ASSERT(sscanf("not-a-number", "?<ERROR_CATEGORY_ONLY=1>i", int) == 2, "15a");
 	ASSERT(sscanf("not-a-number", "?<ERROR_CATEGORY_ONLY=1>?i", int) == 2, "15b");
 	ASSERT(sscanf("not-a-number", "?<WARNINGS_AS_ERRORS=1>?<ERROR_CATEGORY_ONLY=1>?<ERROR_CODE_IN_RET=1>i", int) == 4 | (3 << 16), "18");
+	
+	ASSERT(sscanf("not-a-number", "i", int) == 1, "9");
+	ASSERT(sscanf("not-a-number", "?<WARNINGS_AS_ERRORS=1>i", int) == 2, "10");
+	ASSERT(sscanf("not-a-number", "?<WARNINGS_AS_ERRORS=1>?<ERROR_CODE_IN_RET=1>i", int) == SSCANF_ERROR(3, 1011), "11");
+	ASSERT(sscanf("not-a-number", "?<ERROR_CODE_IN_RET=1>i", int) == SSCANF_ERROR(2, 1011), "12");
+	ASSERT(sscanf("not-a-number", "?<WARNINGS_AS_ERRORS=1>?<ERROR_CATEGORY_ONLY=1>i", int) == 3, "13");
+	ASSERT(sscanf("not-a-number", "?<ERROR_CATEGORY_ONLY=1>?<ERROR_CODE_IN_RET=1>i", int) == SSCANF_ERROR(3, 3), "14");
+	ASSERT(sscanf("not-a-number", "?<ERROR_CATEGORY_ONLY=1>i", int) == 2, "15a");
+	ASSERT(sscanf("not-a-number", "?<ERROR_CATEGORY_ONLY=1>?i", int) == 2, "15b");
+	ASSERT(sscanf("not-a-number", "?<WARNINGS_AS_ERRORS=1>?<ERROR_CATEGORY_ONLY=1>?<ERROR_CODE_IN_RET=1>i", int) == SSCANF_ERROR(4, SSCANF_ERROR_INVALID), "18");
+	
+	switch (int)
+	{
+	case SSCANF_ERROR_NONE: {}
+	case SSCANF_ERROR_NATIVE: {}
+	case SSCANF_ERROR_SPECIFIER: {}
+	case SSCANF_ERROR_INVALID: {}
+	case (16 | _:SSCANF_ERROR_MISSING): {}
+	case SSCANF_ERROR_EXCESS: {}
+	case SSCANF_ERROR_COLOUR: {}
+	case SSCANF_ERROR_OVERFLOW: {}
+	case SSCANF_ERROR_NOT_FOUND: {}
+	case SSCANF_ERROR_NO_ALTS: {}
+	case SSCANF_ERROR(5, 6): {}
+	case SSCANF_ERROR(7, 1001): {}
+	case SSCANF_ERROR(8, SSCANF_ERROR_OVERFLOW): {}
+	case SSCANF_ERROR(6, INVALID): {}
+	case SSCANF_ERROR(1, NONE): {}
+	case SSCANF_ERROR(1, NATIVE): {}
+	case SSCANF_ERROR(1, SPECIFIER): {}
+	case SSCANF_ERROR(1, INVALID): {}
+	case SSCANF_ERROR(1, MISSING): {}
+	case SSCANF_ERROR(1, EXCESS): {}
+	case SSCANF_ERROR(1, COLOUR): {}
+	case SSCANF_ERROR(1, OVERFLOW): {}
+	case SSCANF_ERROR(1, NOT_FOUND): {}
+	case SSCANF_ERROR(1, NO_ALTS): {}
+	}
 }
 

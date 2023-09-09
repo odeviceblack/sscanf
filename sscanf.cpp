@@ -1608,7 +1608,7 @@ static cell AMX_NATIVE_CALL
 			// Add the code.
 			if ((gOptions & ERROR_CATEGORY_ONLY))
 			{
-				ret |= GetErrorCategory(GetErrorCode()) << 16;
+				ret |= GetErrorCategory(GetErrorCode());
 			}
 			else
 			{
@@ -1709,7 +1709,7 @@ static cell AMX_NATIVE_CALL
 			// Add the code.
 			if ((gOptions & ERROR_CATEGORY_ONLY))
 			{
-				ret |= GetErrorCategory(GetErrorCode()) << 16;
+				ret |= GetErrorCategory(GetErrorCode());
 			}
 			else
 			{
@@ -1768,7 +1768,7 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 			// Add the code.
 			if ((gOptions & ERROR_CATEGORY_ONLY))
 			{
-				ret |= GetErrorCategory(GetErrorCode()) << 16;
+				ret |= GetErrorCategory(GetErrorCode());
 			}
 			else
 			{
