@@ -2036,6 +2036,23 @@ stock SSCANF_Debug()
 	printf(" | Include%s           %d.%d%d.%d%d   |", v1 > v2 ? (" (newer):") : (":        "), v1 >>> 16, v1 >>> 12 & 0xF, v1 >>> 8 & 0xF, v1 >>> 4 & 0xF, v1 & 0xF);
 	printf(" | Plugin%s            %d.%d%d.%d%d   |", v2 > v1 ? (" (newer):") : (":        "), v2 >>> 16, v2 >>> 12 & 0xF, v2 >>> 8 & 0xF, v2 >>> 4 & 0xF, v2 & 0xF);
 	printf(gap);
+	printf(" | __pawn_build:           %10d   |", __pawn_build);
+	#if __pawn_build == 0
+		printf(" | SSCANF_NO_NICE_FEATURES              |");
+	#endif
+	#if SSCANF_NPC
+		printf(" | SSCANF_NPC                           |");
+	#endif
+	#if defined SSCANF_NO_PLAYERS
+		printf(" | SSCANF_NO_PLAYERS                    |");
+	#endif
+	#if defined SSCANF_NO_K_WEAPON
+		printf(" | SSCANF_NO_K_WEAPON                   |");
+	#endif
+	#if defined SSCANF_NO_K_VEHICLE
+		printf(" | SSCANF_NO_K_VEHICLE                  |");
+	#endif
+	printf(gap);
 	printf(line);
 	printf(gap);
 	printf(" | Options:                             |");
@@ -2072,6 +2089,14 @@ stock SSCANF_Debug()
 	printf(line);
 	printf(gap);
 	SSCANF_EnumerateErrors();
+	printf(gap);
+	printf(line);
+	printf(gap);
+	printf(" | Last Error:                          |");
+	printf(gap);
+	printf(" |     Code:               %10d   |", SSCANF_GetLastError());
+	printf(" |     Index:              %10d   |", SSCANF_GetErrorSpecifier());
+	printf(" |     Category:           %10d   |", SSCANF_GetErrorCategory(SSCANF_GetLastError()));
 	printf(gap);
 	printf(line);
 }
