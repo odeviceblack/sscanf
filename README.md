@@ -177,6 +177,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.74 [sscanf error: End of text is not supported in arrays.](#sscanf-error-end-of-text-is-not-supported-in-arrays)
     * 13.75 [sscanf error: End of text is not supported in enums.](#sscanf-error-end-of-text-is-not-supported-in-enums)
     * 13.76 [sscanf warning: A minus end of text makes no sense.](#sscanf-warning-a-minus-end-of-text-makes-no-sense)
+    * 13.77 [sscanf error: No alternate destination.](#sscanf-error-no-alternate-destination)
 * 14 [Future Plans](#future-plans)
     * 14.1 [Reserved Specifiers](#reserved-specifiers)
     * 14.2 [Alternates](#alternates)
@@ -2694,6 +2695,16 @@ e<ii>!
 ### sscanf warning: A minus end of text makes no sense.
 
 *Error Code: 72*
+
+`-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, `p` isn't a specifier for reading in data, so there's no type to skip:
+
+```
+e<i-p<,>>
+```
+
+### sscanf error: No alternate destination.
+
+*Error Code: 73*
 
 `-` in an `enum` declaration skips the next element in the `enum` so that you can parse partial data.  However, `p` isn't a specifier for reading in data, so there's no type to skip:
 

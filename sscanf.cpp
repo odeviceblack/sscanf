@@ -1559,6 +1559,288 @@ static cell
 	return SSCANF_TRUE_RETURN;
 }
 
+#define E_SEARCH_STATE_ESCAPE  (1) // \escape
+#define E_SEARCH_STATE_QUIET   (2) // {quiet}
+#define E_SEARCH_STATE_SKIP    (4) // -skip
+#define E_SEARCH_STATE_SUBTYPE (8) // <subtype>
+#define E_SEARCH_STATE_LENGTH  (16) // [length]
+#define E_SEARCH_STATE_DEFAULT (32) // (default)
+#define E_SEARCH_STATE_STRING  (64) // 'string'
+
+static cell
+	SpecifierLookahead(char ** format)
+{
+	// A very simple skip for specifiers.  Barely does any checks, just finds the
+	// end of the current segment, checks if there is an alternate, and counts how
+	// many specifiers write data in this section.
+	char *
+		searcher = *format;
+	int
+		state = 0,
+		arg = 0;
+	char
+		specifier = '\0';
+	while (*searcher)
+	{
+		if (state & E_SEARCH_STATE_ESCAPE)
+		{
+			state &= ~E_SEARCH_STATE_ESCAPE;
+		}
+		else if (*searcher == '\\')
+		{
+			state |= E_SEARCH_STATE_ESCAPE;
+		}
+		else if (state & E_SEARCH_STATE_STRING)
+		{
+			if (*searcher == '\'')
+			{
+				state &= ~E_SEARCH_STATE_STRING;
+			}
+		}
+		else if (state & E_SEARCH_STATE_DEFAULT)
+		{
+			if (*searcher == ')')
+			{
+				state &= ~E_SEARCH_STATE_DEFAULT;
+			}
+		}
+		else if (state & E_SEARCH_STATE_LENGTH)
+		{
+			if (*searcher == ']')
+			{
+				state &= ~E_SEARCH_STATE_LENGTH;
+			}
+		}
+		else if (state & E_SEARCH_STATE_SUBTYPE)
+		{
+			if (*searcher == '>')
+			{
+				state &= ~E_SEARCH_STATE_SUBTYPE;
+			}
+		}
+		else switch (*searcher)
+		{
+		case '<':
+			state |= E_SEARCH_STATE_SUBTYPE;
+			break;
+		case '-':
+			// Really doesn't need to do anything.  We aren't writing anyway.
+			//state |= E_SEARCH_STATE_SKIP;
+			break;
+		case '(':
+			if (specifier != 'a' && specifier != 's' && specifier != 'e' && *(searcher + 1) == '*' && *(searcher + 2) == ')')
+			{
+				arg = arg + 1;
+				searcher = searcher + 2;
+			}
+			else
+			{
+				state |= E_SEARCH_STATE_DEFAULT;
+			}
+			break;
+		case '\'':
+			state |= E_SEARCH_STATE_STRING;
+			break;
+		case '[':
+			if (*(searcher + 1) == '*' && *(searcher + 2) == ']')
+			{
+				// These are used even in quiet mode.
+				arg = arg + 1;
+				searcher = searcher + 2;
+			}
+			else
+			{
+				state |= E_SEARCH_STATE_LENGTH;
+			}
+			break;
+		case '{':
+			state |= E_SEARCH_STATE_QUIET;
+			break;
+		case '}':
+			state &= ~E_SEARCH_STATE_QUIET;
+			break;
+		case '|':
+			// Do something more.
+			*format = searcher;
+			return arg;
+		case 'w':
+			// Wide specifier.
+			do
+			{
+				++searcher;
+				specifier = *searcher;
+			}
+			while (specifier == 'w');
+			if (specifier == '\0')
+			{
+				// Invalid.
+				*format = searcher;
+				return arg;
+			}
+			break;
+		case '%':
+		case ' ':
+		case '\t':
+			// Skip.
+			break;
+		default:
+			// A normal specifier.
+			specifier = *searcher;
+			if (!(state & E_SEARCH_STATE_QUIET))
+			{
+				arg = arg + 1;
+			}
+			break;
+		}
+		++searcher;
+	}
+	*format = searcher;
+	return arg;
+}
+
+static cell
+	CallSscanf(AMX* amx, char* string, char* format, cell const* params, const int paramCount)
+{
+	// Check the lookahead to see if there are any alternates.
+	char*
+		end = format;
+	int
+		partArgs = SpecifierLookahead(&end);
+	if (*end == '|')
+	{
+		// Do alternates.
+		if (paramCount == 0)
+		{
+			SscanfError(73, "No alternate destination.");
+			if ((gOptions & ERROR_CODE_IN_RET))
+			{
+				// Add the code.
+				if ((gOptions & ERROR_CATEGORY_ONLY))
+				{
+					return 1 | GetErrorCategory(73);
+				}
+				else
+				{
+					return 1 | (73 << 16);
+				}
+			}
+			return 1;
+		}
+		cell
+			ret = 0,
+			* cptr;
+		bool
+			more = true;
+		int
+			offset = 1,
+			alternate = 1;
+		// Write the (lack of) alternate to the first slot.
+		amx_GetAddr(amx, params[0], &cptr);
+		*cptr = 0;
+		for ( ; ; )
+		{
+			int
+				defaultAlpha = gAlpha,
+				defaultForms = gForms;
+			E_SSCANF_OPTIONS
+				defaultOpts = gOptions;
+			int
+				count = paramCount - offset;
+			if (count < 0)
+			{
+				count = 0;
+			}
+			else if (partArgs < count)
+			{
+				count = partArgs;
+			}
+			ret = Sscanf(amx, string, format, params + offset, count);
+			if (ret || (gOptions & WARNINGS_AS_ERRORS))
+			{
+				ret = GetErrorSpecifier();
+				// Error.
+				if ((gOptions & ERROR_CODE_IN_RET))
+				{
+					// Add the code.
+					if ((gOptions & ERROR_CATEGORY_ONLY))
+					{
+						ret |= GetErrorCategory(GetErrorCode());
+					}
+					else
+					{
+						ret |= GetErrorCode() << 16;
+					}
+				}
+			}
+			RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+			if (ret == 0)
+			{
+				// Passed.
+				*cptr = alternate;
+				return 0;
+			}
+			if (more)
+			{
+				format = end + 1;
+				end = format;
+				offset += partArgs;
+				++alternate;
+				partArgs = SpecifierLookahead(&end);
+				more = *end == '|';
+				// Temporary end.
+				*end = '\0';
+			}
+			else
+			{
+				// Didn't find an alternate.
+				ret = 1;
+				if ((gOptions & ERROR_CODE_IN_RET))
+				{
+					// Add the code.
+					if ((gOptions & ERROR_CATEGORY_ONLY))
+					{
+						ret |= GetErrorCategory(1010);
+					}
+					else
+					{
+						ret |= 1010 << 16;
+					}
+				}
+				return ret;
+			}
+		}
+	}
+	else
+	{
+		int
+			defaultAlpha = gAlpha,
+			defaultForms = gForms;
+		E_SSCANF_OPTIONS
+			defaultOpts = gOptions;
+		cell
+			ret = Sscanf(amx, string, format, params, paramCount);
+		if (ret || (gOptions & WARNINGS_AS_ERRORS))
+		{
+			ret = GetErrorSpecifier();
+			// Error.
+			if ((gOptions & ERROR_CODE_IN_RET))
+			{
+				// Add the code.
+				if ((gOptions & ERROR_CATEGORY_ONLY))
+				{
+					ret |= GetErrorCategory(GetErrorCode());
+				}
+				else
+				{
+					ret |= GetErrorCode() << 16;
+				}
+			}
+		}
+		RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+		return ret;
+	}
+}
+
 static cell AMX_NATIVE_CALL
 	n_old_sscanf(AMX * amx, cell const * params)
 {
@@ -1627,31 +1909,8 @@ static cell AMX_NATIVE_CALL
 	char *
 		string;
 	STR_PARAM(amx, params[1], string);
-	int
-		defaultAlpha = gAlpha,
-		defaultForms = gForms;
-	E_SSCANF_OPTIONS
-		defaultOpts = gOptions;
 	cell
-		ret = Sscanf(amx, string, gFormat, params + 3, paramCount - 3);
-	if (ret || (gOptions & WARNINGS_AS_ERRORS))
-	{
-		ret = GetErrorSpecifier();
-		// Error.
-		if ((gOptions & ERROR_CODE_IN_RET))
-		{
-			// Add the code.
-			if ((gOptions & ERROR_CATEGORY_ONLY))
-			{
-				ret |= GetErrorCategory(GetErrorCode());
-			}
-			else
-			{
-				ret |= GetErrorCode() << 16;
-			}
-		}
-	}
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+		ret = CallSscanf(amx, string, gFormat, params + 3, paramCount - 3);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
@@ -1728,31 +1987,8 @@ static cell AMX_NATIVE_CALL
 	char *
 		string;
 	STR_PARAM(amx, params[3], string);
-	int
-		defaultAlpha = gAlpha,
-		defaultForms = gForms;
-	E_SSCANF_OPTIONS
-		defaultOpts = gOptions;
 	cell
-		ret = Sscanf(amx, string, gFormat, params + 5, paramCount - 5);
-	if (ret || (gOptions & WARNINGS_AS_ERRORS))
-	{
-		ret = GetErrorSpecifier();
-		// Error.
-		if ((gOptions & ERROR_CODE_IN_RET))
-		{
-			// Add the code.
-			if ((gOptions & ERROR_CATEGORY_ONLY))
-			{
-				ret |= GetErrorCategory(GetErrorCode());
-			}
-			else
-			{
-				ret |= GetErrorCode() << 16;
-			}
-		}
-	}
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+		ret = CallSscanf(amx, string, gFormat, params + 5, paramCount - 5);
 	// Restore and free the error data, if it wasn't constant.
 	if (gCallFile && gCallResolve)
 	{
@@ -1787,31 +2023,8 @@ PAWN_NATIVE_EXPORT cell PAWN_NATIVE_API
 	gFormat = format;
 	gCallFile = file;
 	gCallLine = line;
-	int
-		defaultAlpha = gAlpha,
-		defaultForms = gForms;
-	E_SSCANF_OPTIONS
-		defaultOpts = gOptions;
 	cell
-		ret = Sscanf(amx, string, gFormat, params, paramCount);
-	if (ret || (gOptions & WARNINGS_AS_ERRORS))
-	{
-		ret = GetErrorSpecifier();
-		// Error.
-		if ((gOptions & ERROR_CODE_IN_RET))
-		{
-			// Add the code.
-			if ((gOptions & ERROR_CATEGORY_ONLY))
-			{
-				ret |= GetErrorCategory(GetErrorCode());
-			}
-			else
-			{
-				ret |= GetErrorCode() << 16;
-			}
-		}
-	}
-	RestoreOpts(defaultOpts, defaultAlpha, defaultForms);
+		ret = CallSscanf(amx, string, gFormat, params + 5, paramCount - 5);
 	// Restore and free the error data, if it wasn't constant.
 	gCallResolve = pp;
 	gCallLine = pl;
