@@ -36,6 +36,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 5.1 [`/sendcash` Command](#sendcash-command)
     * 5.2 [INI Parser](#ini-parser)
     * 5.3 [Error Detection](#error-detection)
+    * 5.3 [A Basic Shop](#a-basic-shop)
 * 6 [Specifiers](#specifiers)
     * 6.1 [Strings](#strings)
     * 6.2 [Packed Strings](#packed-strings)
@@ -73,111 +74,112 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
 * 10 [Error Returns](#error-returns)
     * 10.1 [Additional Codes](#additional-codes)
     * 10.2 [Error Categories](#error-categories)
-* 11 [All Specifiers](#all-specifiers)
-* 12 [Full API](#full-api)
-    * 12.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
-    * 12.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
-    * 12.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
-    * 12.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
-    * 12.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
-    * 12.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
-    * 12.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
-    * 12.8 [`SSCANF_Version();`](#sscanf_version)
-    * 12.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
-    * 12.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
-    * 12.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
-    * 12.12 [`Float:SSCANF_TextSimilarity(const string1[], const string2[]);`](#floatsscanf_textsimilarityconst-string1-const-string2)
-    * 12.13 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
-    * 12.14 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
-    * 12.15 [`SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`](#sscanf_getsimilarstringconst-input-const-candidates-floatthreshold--0111111-count--sizeof-candidates)
-    * 12.16 [`SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getsimilarvalueconst-input-const-candidates-const-results-fail--cellmin-floatthreshold--0111111-count--sizeof-candidates-check--sizeof-results)
-    * 12.17 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
-    * 12.18 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
-    * 12.19 [`SSCANF_VERSION`](#sscanf_version-1)
-    * 12.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
-    * 12.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
-    * 12.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
-    * 12.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
-    * 12.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
-    * 12.24 [`sscanf_error:SSCANF_GetErrorCategory(error);`](#sscanf_errorsscanf_geterrorcategoryerror)
-* 13 [Errors/Warnings](#errorswarnings)
-    * 13.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
-    * 13.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
-    * 13.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
-    * 13.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
-    * 13.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
-    * 13.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
-    * 13.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
-    * 13.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
-    * 13.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
-    * 13.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
-    * 13.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
-    * 13.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
-    * 13.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
-    * 13.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
-    * 13.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
-    * 13.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
-    * 13.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
-    * 13.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
-    * 13.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
-    * 13.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
-    * 13.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
-    * 13.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
-    * 13.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
-    * 13.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
-    * 13.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
-    * 13.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
-    * 13.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
-    * 13.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
-    * 13.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
-    * 13.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
-    * 13.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
-    * 13.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
-    * 13.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
-    * 13.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
-    * 13.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
-    * 13.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
-    * 13.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
-    * 13.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
-    * 13.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
-    * 13.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
-    * 13.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
-    * 13.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
-    * 13.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
-    * 13.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
-    * 13.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setname-return)
-    * 13.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
-    * 13.47 [sscanf error: Unable to allocate memory.](#sscanf-error-unable-to-allocate-memory)
-    * 13.48 [sscanf warning: User arrays are not supported in arrays.](#sscanf-warning-user-arrays-are-not-supported-in-arrays)
-    * 13.49 [sscanf warning: Invalid values in array defaults.](#sscanf-warning-invalid-values-in-array-defaults)
-    * 13.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
-    * 13.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
-    * 13.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
-    * 13.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include--plugin-mismatch-please-recompile-your-script-for-the-latest-features)
-    * 13.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
-    * 13.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
-    * 13.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
-    * 13.57 [sscanf warning: A minus quiet section makes no sense.](#sscanf-warning-a-minus-quiet-section-makes-no-sense)
-    * 13.58 [sscanf warning: User arrays are not supported in enums.](#sscanf-warning-user-arrays-are-not-supported-in-enums)
-    * 13.59 [sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-u-name-len-is-incompatible-with-old_default_name)
-    * 13.60 [sscanf error: 'U(num)[len]' length under 2.](#sscanf-error-u-num-len-length-under-2)
-    * 13.61 [sscanf error: 'u[len]' length under 2.](#sscanf-error-u-len-length-under-2)
-    * 13.62 [sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-q-name-len-is-incompatible-with-old_default_name)
-    * 13.63 [sscanf error: 'Q(num)[len]' length under 2.](#sscanf-error-q-num-len-length-under-2)
-    * 13.64 [sscanf error: 'q[len]' length under 2.](#sscanf-error-q-len-length-under-2)
-    * 13.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
-    * 13.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
-    * 13.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
-    * 13.68 [sscanf error: (*) is not supported in strings/arrays yet.](#sscanf-error-is-not-supported-in-strings-arrays-yet)
-    * 13.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
-    * 13.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
-    * 13.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
-    * 13.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
-    * 13.73 [sscanf error: SSCANF_GetErrorCategory has incorrect parameters.](#sscanf-error-sscanf_geterrorcategory-has-incorrect-parameters)
-    * 13.74 [sscanf error: End of text is not supported in arrays.](#sscanf-error-end-of-text-is-not-supported-in-arrays)
-    * 13.75 [sscanf error: End of text is not supported in enums.](#sscanf-error-end-of-text-is-not-supported-in-enums)
-    * 13.76 [sscanf warning: A minus end of text makes no sense.](#sscanf-warning-a-minus-end-of-text-makes-no-sense)
-    * 13.77 [sscanf error: No alternate destination.](#sscanf-error-no-alternate-destination)
+* 11 [Alternates](#alternates)
+* 12 [All Specifiers](#all-specifiers)
+* 13 [Full API](#full-api)
+    * 13.1 [`sscanf(const data[], const format[], {Float, _}:...);`](#sscanfconst-data-const-format-float-_)
+    * 13.2 [`unformat(const data[], const format[], {Float, _}:...);`](#unformatconst-data-const-format-float-_)
+    * 13.3 [`SSCANF_Option(const name[], value);`](#sscanf_optionconst-name-value)
+    * 13.4 [`SSCANF_Option(const name[]);`](#sscanf_optionconst-name)
+    * 13.5 [`SSCANF_SetOption(const name[], value);`](#sscanf_setoptionconst-name-value)
+    * 13.6 [`SSCANF_GetOption(const name[], value);`](#sscanf_getoptionconst-name-value)
+    * 13.7 [`SSCANF_Version(version[], size = sizeof (version));`](#sscanf_versionversion-size--sizeof-version)
+    * 13.8 [`SSCANF_Version();`](#sscanf_version)
+    * 13.9 [`SSCANF_VersionString(version[], size = sizeof (version));`](#sscanf_versionstringversion-size--sizeof-version)
+    * 13.10 [`SSCANF_VersionBCD();`](#sscanf_versionbcd)
+    * 13.11 [`SSCANF_Levenshtein(const string1[], const string2[]);`](#sscanf_levenshteinconst-string1-const-string2)
+    * 13.12 [`Float:SSCANF_TextSimilarity(const string1[], const string2[]);`](#floatsscanf_textsimilarityconst-string1-const-string2)
+    * 13.13 [`SSCANF_GetClosestString(const input[], const candidates[][], threshold = cellmax, count = sizeof (candidates));`](#sscanf_getcloseststringconst-input-const-candidates-threshold--cellmax-count--sizeof-candidates)
+    * 13.14 [`SSCANF_GetClosestValue(const input[], const candidates[][], const results[], fail = cellmin, threshold = cellmax, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getclosestvalueconst-input-const-candidates-const-results-fail--cellmin-threshold--cellmax-count--sizeof-candidates-check--sizeof-results)
+    * 13.15 [`SSCANF_GetSimilarString(const input[], const candidates[][], Float:threshold = 0.111111, count = sizeof (candidates));`](#sscanf_getsimilarstringconst-input-const-candidates-floatthreshold--0111111-count--sizeof-candidates)
+    * 13.16 [`SSCANF_GetSimilarValue(const input[], const candidates[][], const results[], fail = cellmin, Float:threshold = 0.111111, count = sizeof (candidates), check = sizeof (results));`](#sscanf_getsimilarvalueconst-input-const-candidates-const-results-fail--cellmin-floatthreshold--0111111-count--sizeof-candidates-check--sizeof-results)
+    * 13.17 [`SSCANF_VERSION_STRING`](#sscanf_version_string)
+    * 13.18 [`SSCANF_VERSION_BCD`](#sscanf_version_bcd)
+    * 13.19 [`SSCANF_VERSION`](#sscanf_version-1)
+    * 13.20 [`SSCANF_NO_K_VEHICLE`](#sscanf_no_k_vehicle)
+    * 13.21 [`SSCANF_NO_K_WEAPON`](#sscanf_no_k_weapon)
+    * 13.22 [`SSCANF_NO_NICE_FEATURES`](#sscanf_no_nice_features)
+    * 13.23 [`SSCANF_GetLastError();`](#sscanf_getlasterror)
+    * 13.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
+    * 13.25 [`sscanf_error:SSCANF_GetErrorCategory(error);`](#sscanf_errorsscanf_geterrorcategoryerror)
+* 14 [Errors/Warnings](#errorswarnings)
+    * 14.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
+    * 14.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
+    * 14.3 [sscanf warning: String buffer overflow.](#sscanf-warning-string-buffer-overflow)
+    * 14.4 [sscanf warning: Optional types invalid in array specifiers, consider using 'A'.](#sscanf-warning-optional-types-invalid-in-array-specifiers-consider-using-a)
+    * 14.5 [sscanf warning: Optional types invalid in enum specifiers, consider using 'E'.](#sscanf-warning-optional-types-invalid-in-enum-specifiers-consider-using-e)
+    * 14.6 [sscanf error: Multi-dimensional arrays are not supported.](#sscanf-error-multi-dimensional-arrays-are-not-supported)
+    * 14.7 [sscanf error: Search strings are not supported in arrays.](#sscanf-error-search-strings-are-not-supported-in-arrays)
+    * 14.8 [sscanf error: Delimiters are not supported in arrays.](#sscanf-error-delimiters-are-not-supported-in-arrays)
+    * 14.9 [sscanf error: Quiet sections are not supported in arrays.](#sscanf-error-quiet-sections-are-not-supported-in-arrays)
+    * 14.10 [sscanf error: Unknown format specifier '?'.](#sscanf-error-unknown-format-specifier-)
+    * 14.11 [sscanf warning: Empty default values.](#sscanf-warning-empty-default-values)
+    * 14.12 [sscanf warning: Unclosed default value.](#sscanf-warning-unclosed-default-value)
+    * 14.13 [sscanf warning: No default value found.](#sscanf-warning-no-default-value-found)
+    * 14.14 [sscanf warning: Unenclosed specifier parameter.](#sscanf-warning-unenclosed-specifier-parameter)
+    * 14.15 [sscanf warning: No specified parameter found.](#sscanf-warning-no-specified-parameter-found)
+    * 14.16 [sscanf warning: Missing string length end.](#sscanf-warning-missing-string-length-end)
+    * 14.17 [sscanf warning: Missing length end.](#sscanf-warning-missing-length-end)
+    * 14.18 [sscanf error: Invalid data length.](#sscanf-error-invalid-data-length)
+    * 14.19 [sscanf error: Invalid character in data length.](#sscanf-error-invalid-character-in-data-length)
+    * 14.20 [sscanf error: String/array must include a length, please add a destination size.](#sscanf-error-stringarray-must-include-a-length-please-add-a-destination-size)
+    * 14.21 [sscanf warning: Can't have nestled quiet sections.](#sscanf-warning-cant-have-nestled-quiet-sections)
+    * 14.22 [sscanf warning: Not in a quiet section.](#sscanf-warning-not-in-a-quiet-section)
+    * 14.23 [sscanf warning: Can't remove quiet in enum.](#sscanf-warning-cant-remove-quiet-in-enum)
+    * 14.24 [sscanf error: Arrays are not supported in enums.](#sscanf-error-arrays-are-not-supported-in-enums)
+    * 14.25 [sscanf warning: Unclosed string literal.](#sscanf-warning-unclosed-string-literal)
+    * 14.26 [sscanf warning: sscanf specifiers do not require '%' before them.](#sscanf-warning-sscanf-specifiers-do-not-require--before-them)
+    * 14.27 [sscanf error: Insufficient default values.](#sscanf-error-insufficient-default-values)
+    * 14.28 [sscanf error: Options are not supported in enums.](#sscanf-error-options-are-not-supported-in-enums)
+    * 14.29 [sscanf error: Options are not supported in arrays.](#sscanf-error-options-are-not-supported-in-arrays)
+    * 14.30 [sscanf error: No option value.](#sscanf-error-no-option-value)
+    * 14.31 [sscanf error: Unknown option name.](#sscanf-error-unknown-option-name)
+    * 14.32 [sscanf warning: Could not find function SSCANF:?.](#sscanf-warning-could-not-find-function-sscanf)
+    * 14.33 [sscanf error: SSCANF_Init has incorrect parameters.](#sscanf-error-sscanf_init-has-incorrect-parameters)
+    * 14.34 [sscanf error: SSCANF_Join has incorrect parameters.](#sscanf-error-sscanf_join-has-incorrect-parameters)
+    * 14.35 [sscanf error: SSCANF_Leave has incorrect parameters.](#sscanf-error-sscanf_leave-has-incorrect-parameters)
+    * 14.36 [sscanf error: SSCANF_IsConnected has incorrect parameters.](#sscanf-error-sscanf_isconnected-has-incorrect-parameters)
+    * 14.37 [sscanf error: SSCANF_Version has incorrect parameters.](#sscanf-error-sscanf_version-has-incorrect-parameters)
+    * 14.38 [sscanf error: SSCANF_Option has incorrect parameters.](#sscanf-error-sscanf_option-has-incorrect-parameters)
+    * 14.39 [sscanf error: SetPlayerName has incorrect parameters.](#sscanf-error-setplayername-has-incorrect-parameters)
+    * 14.40 [sscanf error: Missing required parameters.](#sscanf-error-missing-required-parameters)
+    * 14.41 [`fatal error 111: user error: sscanf already defined, or used before inclusion.`](#fatal-error-111-user-error-sscanf-already-defined-or-used-before-inclusion)
+    * 14.42 [`error 004: function "sscanf" is not implemented`](#error-004-function-sscanf-is-not-implemented)
+    * 14.43 [`error 004: function "sscanf" is not implemented - include <sscanf2> first.`](#error-004-function-sscanf-is-not-implemented---include-sscanf2-first)
+    * 14.44 [sscanf error: Pawn component not loaded.](#sscanf-error-pawn-component-not-loaded)
+    * 14.45 [sscanf warning: Unknown `player->setName()` return.](#sscanf-warning-unknown-player-setname-return)
+    * 14.46 [sscanf error: This script was built with the component version of the include.](#sscanf-error-this-script-was-built-with-the-component-version-of-the-include)
+    * 14.47 [sscanf error: Unable to allocate memory.](#sscanf-error-unable-to-allocate-memory)
+    * 14.48 [sscanf warning: User arrays are not supported in arrays.](#sscanf-warning-user-arrays-are-not-supported-in-arrays)
+    * 14.49 [sscanf warning: Invalid values in array defaults.](#sscanf-warning-invalid-values-in-array-defaults)
+    * 14.50 [sscanf warning: Excess array defaults found.](#sscanf-warning-excess-array-defaults-found)
+    * 14.51 [sscanf warning: Format specifier does not match parameter count.](#sscanf-warning-format-specifier-does-not-match-parameter-count)
+    * 14.52 [sscanf warning: Unclosed quiet section.](#sscanf-warning-unclosed-quiet-section)
+    * 14.53 [sscanf warning: Include / plugin mismatch, please recompile your script for the latest features.](#sscanf-warning-include--plugin-mismatch-please-recompile-your-script-for-the-latest-features)
+    * 14.54 [sscanf warning: A minus minus makes no sense.](#sscanf-warning-a-minus-minus-makes-no-sense)
+    * 14.55 [sscanf warning: A minus option makes no sense.](#sscanf-warning-a-minus-option-makes-no-sense)
+    * 14.56 [sscanf warning: A minus delimiter makes no sense.](#sscanf-warning-a-minus-delimiter-makes-no-sense)
+    * 14.57 [sscanf warning: A minus quiet section makes no sense.](#sscanf-warning-a-minus-quiet-section-makes-no-sense)
+    * 14.58 [sscanf warning: User arrays are not supported in enums.](#sscanf-warning-user-arrays-are-not-supported-in-enums)
+    * 14.59 [sscanf error: 'U(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-u-name-len-is-incompatible-with-old_default_name)
+    * 14.60 [sscanf error: 'U(num)[len]' length under 2.](#sscanf-error-u-num-len-length-under-2)
+    * 14.61 [sscanf error: 'u[len]' length under 2.](#sscanf-error-u-len-length-under-2)
+    * 14.62 [sscanf error: 'Q(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-q-name-len-is-incompatible-with-old_default_name)
+    * 14.63 [sscanf error: 'Q(num)[len]' length under 2.](#sscanf-error-q-num-len-length-under-2)
+    * 14.64 [sscanf error: 'q[len]' length under 2.](#sscanf-error-q-len-length-under-2)
+    * 14.65 [sscanf error: 'R(name)[len]' is incompatible with OLD_DEFAULT_NAME.](#sscanf-error-r-name-len-is-incompatible-with-old_default_name)
+    * 14.66 [sscanf error: 'R(num)[len]' length under 2.](#sscanf-error-r-num-len-length-under-2)
+    * 14.67 [sscanf error: 'r[len]' length under 2.](#sscanf-error-r-len-length-under-2)
+    * 14.68 [sscanf error: (*) is not supported in strings/arrays yet.](#sscanf-error-is-not-supported-in-strings-arrays-yet)
+    * 14.69 [sscanf error: Unclosed specifier parameters.](#sscanf-error-unclosed-specifier-parameters)
+    * 14.70 [sscanf error: No specified parameters found.](#sscanf-error-no-specified-parameters-found)
+    * 14.71 [sscanf error: Enums are not supported in enums.](#sscanf-error-enums-are-not-supported-in-enums)
+    * 14.72 [sscanf error: SSCANF_TextSimilarity has incorrect parameters.](#sscanf-error-sscanf_textsimilarity-has-incorrect-parameters)
+    * 14.73 [sscanf error: SSCANF_GetErrorCategory has incorrect parameters.](#sscanf-error-sscanf_geterrorcategory-has-incorrect-parameters)
+    * 14.74 [sscanf error: End of text is not supported in arrays.](#sscanf-error-end-of-text-is-not-supported-in-arrays)
+    * 14.75 [sscanf error: End of text is not supported in enums.](#sscanf-error-end-of-text-is-not-supported-in-enums)
+    * 14.76 [sscanf warning: A minus end of text makes no sense.](#sscanf-warning-a-minus-end-of-text-makes-no-sense)
+    * 14.77 [sscanf error: No alternate destination.](#sscanf-error-no-alternate-destination)
 * 14 [Future Plans](#future-plans)
     * 14.1 [Reserved Specifiers](#reserved-specifiers)
     * 14.2 [Alternates](#alternates)
@@ -1548,7 +1550,7 @@ It should be noted that `sscanf` and `SSCANF_GetLastError` will return the last 
 
 ### Additional Codes
 
-Error codes under 1000 relate to printed messages, and are documented along-side their messages in [Section 13](#errorswarnings).  Error codes above 1000 are regular failures:
+Error codes under 1000 relate to printed messages, and are documented along-side their messages in [Section 14](#errorswarnings).  Error codes above 1000 are regular failures:
 
 * *1001* - A colour was given, but it doesn't match an allowed format:
 
@@ -1677,6 +1679,85 @@ There are almost 100 different unique error codes, but many of them can often be
 
 You may notice that the last few "groups" are very small compared to the others, but they cover issues that are both unique and easy to rectify in code.
 
+## Alternates
+
+Alternates allow you to create two different specifier strings and find the best (or first) match.  Using this you could for example detect whether something is a boolean, a decimal, or a hexadecimal.  The `|` specifier splits the different options, and will report the branch taken (or `0` if it can't find one) in the first return parameter.  Each other specifier must then appear in the parameter list separately:
+
+```pawn
+new alt, b, i, h;
+if (sscanf("45", "b|i|h", alt, b, i, h)) == 0)
+{
+  switch (alt)
+	{
+		case 1: printf("Typed a binary number.");
+		case 2: printf("Typed a decimal number.");
+		case 3: printf("Typed a hexadecimal number.");
+	}
+}
+```
+
+`45` is not a boolean number, therefore the first branch fails.  `45` is a decimal number, therefore the second branch succeedes, the variable `i` is set to `45`, and the variable `alt` is set to `2` because the second branch was successful.  `b` and `h` may be un-initialised after this call.  You could re-use the same variable for all three numeric outputs:
+
+```pawn
+new alt, num;
+if (sscanf("45", "b|i|h", alt, num, num, num)) == 0)
+{
+  switch (alt)
+	{
+		case 1: printf("Typed a binary number.");
+		case 2: printf("Typed a decimal number.");
+		case 3: printf("Typed a hexadecimal number.");
+	}
+}
+```
+
+The order here is important  - `45` is a valid integer, but it is also a valid hexadecimal number; `111` is valid for all three.  Thus we go most specific to least specific.  In the other order every single call will return *hexadecimal*:
+
+```pawn
+new alt, num;
+if (sscanf("45", "h|i|b", alt, num, num, num)) == 0)
+{
+  switch (alt)
+	{
+		case 1: printf("Typed a hexadecimal number.");
+		case 2: printf("Will never happen.");
+		case 3: printf("Will never happen.");
+	}
+}
+```
+
+The order also matters a lot if you have default values:
+
+```pawn
+sscanf("42", "iS[*](hello)|i", alt, num, sizeof (str), str, num);
+```
+
+That will return `alt == 1` and set `str` to `"hello"`, despite the fact that there is only one numeric input and the second branch is a better match.  Alternates do not look for the *best* match, they look for the *first* match.
+
+One very good use for alternates is string matching.  See [A Basic Shop](#a-basic-shop) for an example of using `''` in multiple alternates.
+
+Temporary settings will NOT persist betwen alternate branches:
+
+```pawn
+SSCANF_SetOption(SSCANF_COLOUR_FORMS, 2);
+sscanf("#567890", "?<SSCANF_COLOUR_FORMS=16>m|m", alt, colour1, colour2);
+// `alt` is `2`.
+// `colour1` is undefined.
+// `colour2` is `0x56789000`
+```
+
+The first branch will fail because the input is not in colour form `16` (`{RRGGBB}`), but after the `|` the local options are reset to the global options and the colour *is* in form `2` (`#RRGGBB`).  Weirdly this means that errors relating to the alternate itself (such as `SSCANF_ERROR(1, 1010)`) will always use the global settings, because no local settings can ever apply to `|`.
+
+Note that if you combine alternates and error returns you probably want to disable `ERROR_CODE_IN_RET` and just use `SSCANF_GetLastError`, and you absolutely want to disable `WARNINGS_AS_ERRORS`.  Enabling warnings as errors can make alternates that would normally pass, fail:
+
+```pawn
+sscanf("5 a-long-string", "is[8]|ii", alt, int, string, a, b);
+```
+
+That code will pass and set `alt` to `1` when `WARNINGS_AS_ERRORS` is disabled, but will fail with code `1010` when `WARNINGS_AS_ERRORS` is enabled because the first alternative will give a string buffer overflow warning, then turn that in to an error.  An alternate with an error can't possibly be correct.  However, `SSCANF_GetLastError` will still report the overflow while allowing the alternate to be found.
+
+The errors will also be the last found error, probably in the final alternate section.  The specifier index is relative to the start of the format string, plus `1` for the alternates.  In the specifier `ii|x` the `x` has index `4` - `+1` for the eternal error base, `+1` for the alternate specifier (regardless of the number of `|`s) and `+2` for `ii`.  In `bb|ii|x` the `x` has index `6`, because despite there being two `|`s, alternates are just one thing.  They are also always specifier index `1` (despite the fact that they don't appear at the start of the string); so if `sscanf` returns `1`, you know it means "no alternate match found".
+
 ## All Specifiers
 
 For quick reference, here is a list of ALL the specifiers and their use:
@@ -1731,7 +1812,7 @@ For quick reference, here is a list of ALL the specifiers and their use:
 |  `%`                                     |  Deprecated optional specifier prefix  |
 |  `?`                                     |  Local options specifier               |
 |  `!`                                     |  Strict end of input check             |
-|  `|`                                     |  Alterates (not yet implemented)       |
+|  `|`                                     |  Alterates                             |
 
 ## Full API
 
@@ -3041,4 +3122,8 @@ the Initial Developer.  All Rights Reserved.
 * Add `sscanf_error` to define all error codes.
 * Add `SSCANF_ERROR` macro to combine specifier indexes and error codes for `ERROR_CODE_IN_RET`.
 * Add `!` specifier to check for strict end of input.
+
+### sscanf 2.14.2 - 10/09/2023
+
+* Added alternates via `|`.
 
