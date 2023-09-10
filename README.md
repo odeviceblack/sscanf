@@ -1,4 +1,4 @@
-# sscanf 2.14.1
+# sscanf 2.15.1
 
 ## Introduction
 
@@ -219,6 +219,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 17.20 [sscanf 2.13.7 - 02/01/2023](#sscanf-2137---02012023)
     * 17.21 [sscanf 2.13.8 - 05/01/2023](#sscanf-2138---05012023)
     * 17.21 [sscanf 2.14.1 - 08/09/2023](#sscanf-2141---08092023)
+    * 17.22 [sscanf 2.15.1 - 10/09/2023](#sscanf-2151---10092023)
 
 ## Downloads
 
@@ -3237,7 +3238,7 @@ the Initial Developer.  All Rights Reserved.
 * Add `SSCANF_ERROR` macro to combine specifier indexes and error codes for `ERROR_CODE_IN_RET`.
 * Add `!` specifier to check for strict end of input.
 
-### sscanf 2.14.2 - 10/09/2023
+### sscanf 2.15.1 - 10/09/2023
 
 * Added alternates via `|`.
 
