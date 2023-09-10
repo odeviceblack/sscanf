@@ -36,7 +36,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 5.1 [`/sendcash` Command](#sendcash-command)
     * 5.2 [INI Parser](#ini-parser)
     * 5.3 [Error Detection](#error-detection)
-    * 5.3 [A Basic Shop](#a-basic-shop)
+    * 5.4 [A Basic Shop](#a-basic-shop)
 * 6 [Specifiers](#specifiers)
     * 6.1 [Strings](#strings)
     * 6.2 [Packed Strings](#packed-strings)
@@ -459,6 +459,120 @@ We can write a command and use error returns to know exactly what happened when 
 	return 1;
 }
 ```
+
+### A Basic Shop
+
+This example will use alternates to make a `/buy` command in a simple manner:
+
+```pawn
+@cmd() buy(playerid, params[], help)
+{
+	new
+		alt,
+		weapon,
+		ammo,
+		vehicle,
+		colour1,
+		colour2;
+	if (help || sscanf(params, "'weapon'ii|'armour'|'health'|'vehicle'k<vehicle>I(-1)I(-1)", alt, weapon, ammo, vehicle, colour1, colour2))
+	{
+		SendClientMessage(playerid, COLOUR_ERROR, "Usage:");
+		SendClientMessage(playerid, COLOUR_ERROR, " ");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy weapon <id> <ammo>");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy armour");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy health");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy vehicle <type> <colour1> <colour2>");
+		SendClientMessage(playerid, COLOUR_ERROR, " ");
+		return 1;
+	}
+	else switch (alt)
+	{
+		case 1:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought weapon %d with %d ammo", weapon, ammo);
+		}
+		case 2:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought armour");
+		}
+		case 3:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought health");
+		}
+		case 4:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought vehicle %d with colours %d, %d", vehicle, colour1, colour2);
+		}
+	}
+	return 1;
+}
+```
+
+These command variants all now work:
+
+```
+/weapon 4 5
+/armour
+/buy health
+/buy vehicle 500 9 10
+```
+
+This also works thanks to using `k<vehicle>` instead of `i` for the vehicle model ID:
+
+```
+/buy vehicle Infernus 5 6
+```
+
+As does this, using default random colours:
+
+```
+/buy vehicle PCJ-600
+```
+
+This one doesn't work, and displays the help message instead:
+
+```
+/buy food
+```
+
+Note that the actual task of giving the player the items is left as an exercise for the reader.
+
+We can do one better for the vehicle colours.  Currently they are optional so you can provide naught, one or two colours.  But what if we want the player to provide both or neither.  Using `I` won't work for that because it makes both optional.  Instead we can use alternatives with two or no integer parameters:
+
+```pawn
+@cmd() buy(playerid, params[], help)
+{
+	new
+		alt,
+		weapon,
+		ammo,
+		vehicle,
+		colour1,
+		colour2;
+	if (help || sscanf(params, "'weapon'ii|'armour'|'health'|'vehicle'k<vehicle>ii|'vehicle'k<vehicle>", alt, weapon, ammo, vehicle, colour1, colour2, vehicle))
+	{
+		// ...
+		return 1;
+	}
+	else switch (alt)
+	{
+		// ...
+		case 4:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought vehicle %d with colours %d, %d", vehicle, colour1, colour2);
+		}
+		case 5:
+		{
+			colour1 = -1;
+			colour2 = -1;
+			SendClientMessage(playerid, COLOUR_OK, "You bought vehicle %d with random colours", vehicle);
+		}
+	}
+	return 1;
+}
+```
+
+The alternative with two integer parameters must come first as the one with no integers could also match that and simply ignore the data (unless you use `!` for strict text ending, i.e. `'vehicle'k<vehicle>!`).  The `vehicle` parameter is also used twice in the `sscanf` call so that we only need a single variable for both alternatives.
 
 ## Specifiers
 
