@@ -1930,6 +1930,152 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	}
 #endif
 
+static stock SSCANF_PrintOption(const option[])
+{
+	new
+		spaces[] = "                                ";
+	printf(" |     %s:%.*s%s   |", option, 26 - strlen(option), spaces, SSCANF_GetOption__(option) ? (" on") : ("off"));
+}
+
+static stock SSCANF_EnumerateErrors()
+{
+	new
+		tmp[24],
+		upper1 = 1,
+		upper2 = 1001,
+		gap[] = " |                                      |",
+		sscanf_error:category = SSCANF_ERROR_NONE;
+	while (SSCANF_GetErrorCategory(upper1) != UNKNOWN_SSCANF_ERROR)
+	{
+		++upper1;
+	}
+	--upper1;
+	while (SSCANF_GetErrorCategory(upper2) != UNKNOWN_SSCANF_ERROR)
+	{
+		++upper2;
+	}
+	--upper2;
+	format(tmp, sizeof (tmp), "1 - %d, 1001 - %d", upper1, upper2);
+	printf(" | Known Errors: %-20s   |", tmp);
+	printf(gap);
+	printf(" | Categories:                          |");
+	printf(gap);
+	for (new bool:larger = true; larger; category += sscanf_error:0x10000)
+	{
+		new
+			c,
+			count = 0;
+		larger = false;
+		for (new i = 1; i <= upper1; ++i)
+		{
+			c = SSCANF_GetErrorCategory(i);
+			if (c == category)
+			{
+				++count;
+			}
+			else if (c > category)
+			{
+				larger = true;
+			}
+		}
+		for (new i = 1001; i <= upper2; ++i)
+		{
+			c = SSCANF_GetErrorCategory(i);
+			if (c == category)
+			{
+				++count;
+			}
+			else if (c > category)
+			{
+				larger = true;
+			}
+		}
+		switch (sscanf_error:category)
+		{
+		case SSCANF_ERROR_NONE:
+			printf(" |     NONE      (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_NATIVE:
+			printf(" |     NATIVE    (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_SPECIFIER:
+			printf(" |     SPECIFIER (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_INVALID:
+			printf(" |     INVALID   (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_MISSING:
+			printf(" |     MISSING   (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_EXCESS:
+			printf(" |     EXCESS    (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_COLOUR:
+			printf(" |     COLOUR    (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_OVERFLOW:
+			printf(" |     OVERFLOW  (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_NOT_FOUND:
+			printf(" |     NOT_FOUND (0x%06x):%9d   |", category, count);
+		case SSCANF_ERROR_NO_ALTS:
+			printf(" |     NO_ALTS   (0x%06x):%9d   |", category, count);
+		default:
+			printf(" |     ???       (0x%06x):%9d   |", category, count);
+		}
+	}
+}
+
+stock SSCANF_Debug()
+{
+	new
+		line[] = " ----------------------------------------",
+		gap[] = " |                                      |",
+		on[] = " on",
+		off[] = "off",
+		forms = SSCANF_GetOption__(SSCANF_COLOUR_FORMS) & 127,
+		Float:similarity = Float:SSCANF_GetOption__(MATCH_NAME_SIMILARITY),
+		v1 = SSCANF_VERSION_BCD,
+		v2 = SSCANF_VersionBCD();
+	printf(line);
+	printf(gap);
+	printf(" |                sscanf                |");
+	printf(gap);
+	printf(" | Include%s           %d.%d%d.%d%d   |", v1 > v2 ? (" (newer):") : (":        "), v1 >>> 16, v1 >>> 12 & 0xF, v1 >>> 8 & 0xF, v1 >>> 4 & 0xF, v1 & 0xF);
+	printf(" | Plugin%s            %d.%d%d.%d%d   |", v2 > v1 ? (" (newer):") : (":        "), v2 >>> 16, v2 >>> 12 & 0xF, v2 >>> 8 & 0xF, v2 >>> 4 & 0xF, v2 & 0xF);
+	printf(gap);
+	printf(line);
+	printf(gap);
+	printf(" | Options:                             |");
+	printf(gap);
+    SSCANF_PrintOption(OLD_DEFAULT_NAME);
+    SSCANF_PrintOption(MATCH_NAME_PARTIAL);
+    SSCANF_PrintOption(CELLMIN_ON_MATCHES);
+    SSCANF_PrintOption(SSCANF_QUIET);
+    SSCANF_PrintOption(OLD_DEFAULT_KUSTOM);
+	printf(" |     SSCANF_ALPHA:             0x%02x   |", SSCANF_GetOption__(SSCANF_ALPHA));
+	printf(" |     SSCANF_COLOUR_FORMS:      0x%02x   |", forms);
+	printf(" |         #RGB       (0x01):     %s   |", forms & 0x01 ? on : off);
+	printf(" |         #RRGGBB    (0x02):     %s   |", forms & 0x02 ? on : off);
+	printf(" |         0xRRGGBB   (0x04):     %s   |", forms & 0x04 ? on : off);
+	printf(" |         RRGGBB     (0x08):     %s   |", forms & 0x08 ? on : off);
+	printf(" |         {RRGGBB}   (0x10):     %s   |", forms & 0x10 ? on : off);
+	printf(" |         0xRRGGBBAA (0x20):     %s   |", forms & 0x20 ? on : off);
+	printf(" |         RRGGBBAA   (0x40):     %s   |", forms & 0x40 ? on : off);
+    //SSCANF_PrintOption(SSCANF_COLOUR_FORMS);
+    SSCANF_PrintOption(SSCANF_ARGB);
+    SSCANF_PrintOption(MATCH_NAME_FIRST);
+	if (similarity < 0.0)
+	{
+		printf(" |     MATCH_NAME_SIMILARITY:     off   |");
+	}
+	else
+	{
+		printf(" |     MATCH_NAME_SIMILARITY:   %.3f   |", similarity);
+	}
+    SSCANF_PrintOption(ERROR_CODE_IN_RET);
+    SSCANF_PrintOption(WARNINGS_AS_ERRORS);
+    SSCANF_PrintOption(ERROR_CATEGORY_ONLY);
+	printf(gap);
+	printf(line);
+	printf(gap);
+	SSCANF_EnumerateErrors();
+	printf(gap);
+	printf(line);
+}
+
 // Fix the compiler crash when both the PAWN and Plugin versions of sscanf are
 // found by renaming the old version at declaration.  (fixes.inc compatible
 // naming scheme: "BAD_Function()").
