@@ -54,13 +54,13 @@ int
 }
 
 void
-	SetErrorCode(int error)
+	SetErrorCode(int error, int specifier)
 {
 	if (error == 0)
 	{
 		g_iErrorCode = 0;
 		g_iErrorSpecifier = 0;
-		g_iCurrentSpecifier = 0;
+		g_iCurrentSpecifier = specifier;
 	}
 	else
 	{

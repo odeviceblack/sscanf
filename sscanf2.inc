@@ -412,6 +412,18 @@ native SSCANF_GetLastError();
 /**
  * <library>sscanf</library>
  * <remarks>
+ * Gets the index of the specifier that generated the last error.  When the
+ * error was in an alternate this will return the final underlying specifier
+ * that had an error, while <c>sscanf</c> itself will just return an index of
+ * <c>1</c> for "no matching alternative".  This is the only place where the
+ * two may be different.
+ * </remarks>
+ */
+native SSCANF_GetErrorSpecifier();
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
  * Resets the error code from any previous <b>sscanf</b> function call.  Note
  * that calling any other function also resets this value, but with more
  * side-effects.

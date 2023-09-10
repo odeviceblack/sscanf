@@ -1568,7 +1568,7 @@ static cell
 #define E_SEARCH_STATE_STRING  (64) // 'string'
 
 static cell
-	SpecifierLookahead(char ** format)
+	SpecifierLookahead(char ** format, int * specifiers)
 {
 	// A very simple skip for specifiers.  Barely does any checks, just finds the
 	// end of the current segment, checks if there is an alternate, and counts how
@@ -1639,6 +1639,7 @@ static cell
 			}
 			break;
 		case '\'':
+			++(*specifiers);
 			state |= E_SEARCH_STATE_STRING;
 			break;
 		case '[':
@@ -1654,6 +1655,7 @@ static cell
 			}
 			break;
 		case '{':
+			++(*specifiers);
 			state |= E_SEARCH_STATE_QUIET;
 			break;
 		case '}':
@@ -1665,6 +1667,7 @@ static cell
 			return arg;
 		case 'w':
 			// Wide specifier.
+			++(*specifiers);
 			do
 			{
 				++searcher;
@@ -1684,6 +1687,7 @@ static cell
 			// Skip.
 			break;
 		default:
+			++(*specifiers);
 			// A normal specifier.
 			specifier = *searcher;
 			if (!(state & E_SEARCH_STATE_QUIET))
@@ -1705,7 +1709,8 @@ static cell
 	char*
 		end = format;
 	int
-		partArgs = SpecifierLookahead(&end);
+		specifiers = 0,
+		partArgs = SpecifierLookahead(&end, &specifiers);
 	if (*end == '|')
 	{
 		// Do alternates.
@@ -1732,6 +1737,7 @@ static cell
 		bool
 			more = true;
 		int
+			error = 1,
 			offset = 1,
 			alternate = 1;
 		// Write the (lack of) alternate to the first slot.
@@ -1754,6 +1760,7 @@ static cell
 			{
 				count = partArgs;
 			}
+			SetErrorCode(0, error);
 			ret = Sscanf(amx, string, format, params + offset, count);
 			if (ret || (gOptions & WARNINGS_AS_ERRORS))
 			{
@@ -1785,7 +1792,9 @@ static cell
 				end = format;
 				offset += partArgs;
 				++alternate;
-				partArgs = SpecifierLookahead(&end);
+				error += specifiers;
+				specifiers = 0;
+				partArgs = SpecifierLookahead(&end, &specifiers);
 				more = *end == '|';
 				// Temporary end.
 				*end = '\0';
@@ -2412,6 +2421,18 @@ static cell AMX_NATIVE_CALL
 }
 
 static cell AMX_NATIVE_CALL
+	n_SSCANF_GetLastError(AMX * amx, cell const * params)
+{
+	return GetErrorCode();
+}
+
+static cell AMX_NATIVE_CALL
+	n_SSCANF_GetErrorSpecifier(AMX * amx, cell const * params)
+{
+	return GetErrorSpecifier();
+}
+
+static cell AMX_NATIVE_CALL
 	n_SSCANF_GetErrorCategory(AMX * amx, cell const * params)
 {
 	SetErrorCode(0);
@@ -2444,6 +2465,8 @@ AMX_NATIVE_INFO
 			{"SSCANF_Version", n_SSCANF_Version},
 			{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
 			{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
+			{"SSCANF_GetLastError", n_SSCANF_GetLastError},
+			{"SSCANF_GetErrorSpecifier", n_SSCANF_GetErrorSpecifier},
 			{"SSCANF_GetErrorCategory", n_SSCANF_GetErrorCategory},
 			{0, 0}
 		};
@@ -2892,6 +2915,8 @@ AMX_NATIVE_INFO
 	{"SSCANF_Version", n_SSCANF_Version},
 	{"SSCANF_Levenshtein", n_SSCANF_Levenshtein},
 	{"SSCANF_TextSimilarity", n_SSCANF_TextSimilarity},
+	{"SSCANF_GetLastError", n_SSCANF_GetLastError},
+	{"SSCANF_GetErrorSpecifier", n_SSCANF_GetErrorSpecifier},
 	{"SSCANF_GetErrorCategory", n_SSCANF_GetErrorCategory},
 	{0, 0}
 };

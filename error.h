@@ -46,7 +46,7 @@ extern int
 	GetErrorCode();
 
 extern void
-	SetErrorCode(int error);
+	SetErrorCode(int error, int specifier = 0);
 
 extern int
 	GetErrorSpecifier();

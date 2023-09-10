@@ -105,5 +105,61 @@ main()
 	case SSCANF_ERROR(1, NOT_FOUND): {}
 	case SSCANF_ERROR(1, NO_ALTS): {}
 	}
+	
+	Shop(0, "weapon 4 5");
+	Shop(0, "armour");
+	Shop(0, "health");
+	Shop(0, "vehicle Infernus 5 6");
+	Shop(0, "vehicle 500 9 10");
+	Shop(0, "food");
+	
+	ASSERT(sscanf("hello", "i|f", alt, int, int) == 1, "call");
+	ASSERT(SSCANF_GetLastError() == 1016, "error");
+	ASSERT(SSCANF_GetErrorSpecifier() == 3, "index");
+}
+
+#define COLOUR_ERROR (0xFF0000AA)
+#define COLOUR_OK (0x00FF00AA)
+
+Shop(playerid, const params[])
+{
+	new
+		alt,
+		weapon,
+		ammo,
+		vehicle,
+		colour1,
+		colour2;
+	if (sscanf(params, "'weapon'ii|'armour'|'health'|'vehicle'k<vehicle>ii", alt, weapon, ammo, vehicle, colour1, colour2))
+	{
+		SendClientMessage(playerid, COLOUR_ERROR, "Usage:");
+		SendClientMessage(playerid, COLOUR_ERROR, " ");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy weapon <id> <ammo>");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy armour");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy health");
+		SendClientMessage(playerid, COLOUR_ERROR, "	 /buy vehicle <type> <colour1> <colour2>");
+		SendClientMessage(playerid, COLOUR_ERROR, " ");
+		return 1;
+	}
+	else switch (alt)
+	{
+		case 1:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought weapon %d with %d ammo", weapon, ammo);
+		}
+		case 2:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought armour");
+		}
+		case 3:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought health");
+		}
+		case 4:
+		{
+			SendClientMessage(playerid, COLOUR_OK, "You bought vehicle %d with colours %d, %d", vehicle, colour1, colour2);
+		}
+	}
+	return 1;
 }
 
