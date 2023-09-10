@@ -103,6 +103,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 13.24 [`SSCANF_ClearLastError();`](#sscanf_clearlasterror)
     * 13.25 [`sscanf_error:SSCANF_GetErrorCategory(error);`](#sscanf_errorsscanf_geterrorcategoryerror)
     * 13.26 [`SSCANF_GetErrorSpecifier();`](#sscanf_geterrorspecifier)
+    * 13.27 [`SSCANF_Debug`();`](#sscanf_debug)
 * 14 [Errors/Warnings](#errorswarnings)
     * 14.1 [MSVRC100.dll not found](#msvrc100dll-not-found)
     * 14.2 [sscanf error: System not initialised](#sscanf-error-system-not-initialised)
@@ -2037,6 +2038,10 @@ There are almost 100 different unique error codes, but many of them can often be
 
 Gets the index of the specifier that generated the last error.  When the error was in an alternate this will return the final underlying specifier that had an error, while `sscanf` itself will just return an index of `1` for "no matching alternative".  This is the only place where the two may be different.
 
+### `SSCANF_Debug();`
+
+Print a lot of useful debugging information.
+
 ## Errors/Warnings
 
 ### MSVRC100.dll not found
@@ -3247,4 +3252,5 @@ the Initial Developer.  All Rights Reserved.
 
 * Added alternates via `|`.
 * `SSCANF_GetErrorSpecifier` to get the error position in failure cases.
+* `SSCANF_Debug` to dump a load of useful debugging information.
 

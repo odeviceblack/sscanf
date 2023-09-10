@@ -1588,6 +1588,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * weapon by Levenshtein distance to the input.
  * </remarks>
  */
+
 #if defined SSCANF_NO_K_WEAPON
 	/* */ native SSCANF_no_k_weapon();
 	#define SSCANF_no_k_weapon()
@@ -1676,6 +1677,7 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
  * vehicle by Levenshtein distance to the input.
  * </remarks>
  */
+
 #if defined SSCANF_NO_K_VEHICLE
 	/* */ native SSCANF_no_k_vehicle();
 	#define SSCANF_no_k_vehicle()
@@ -1930,12 +1932,27 @@ stock SSCANF_GetClosestValue(const input[], const candidates[][], const results[
 	}
 #endif
 
+/**
+ * <library>sscanf</library>
+ * <param name="option">The global setting to retrieve.</param>
+ * <remarks>
+ * Internal function to help print debug information.
+ * </remarks>
+ */
+
 static stock SSCANF_PrintOption(const option[])
 {
 	new
 		spaces[] = "                                ";
 	printf(" |     %s:%.*s%s   |", option, 26 - strlen(option), spaces, SSCANF_GetOption__(option) ? (" on") : ("off"));
 }
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * Internal function to help print debug information.
+ * </remarks>
+ */
 
 static stock SSCANF_EnumerateErrors()
 {
@@ -2017,6 +2034,13 @@ static stock SSCANF_EnumerateErrors()
 		}
 	}
 }
+
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * Print a lot of useful debugging information.
+ * </remarks>
+ */
 
 stock SSCANF_Debug()
 {
