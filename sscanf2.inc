@@ -2038,7 +2038,7 @@ static stock SSCANF_EnumerateErrors()
 /**
  * <library>sscanf</library>
  * <remarks>
- * Print a lot of useful debugging information.
+ * Print a lot of useful debugging information to the console.
  * </remarks>
  */
 
@@ -2104,7 +2104,7 @@ stock SSCANF_Debug()
 	}
 	else
 	{
-		printf(" |     MATCH_NAME_SIMILARITY:   %.3f   |", similarity);
+		printf(" |     MATCH_NAME_SIMILARITY:  %6.3f   |", similarity);
 	}
     SSCANF_PrintOption(ERROR_CODE_IN_RET);
     SSCANF_PrintOption(WARNINGS_AS_ERRORS);

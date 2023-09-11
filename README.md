@@ -184,7 +184,7 @@ This will fail because `"hello"` is not a whole number (or indeed any type of nu
     * 14.77 [sscanf error: No alternate destination.](#sscanf-error-no-alternate-destination)
 * 14 [Future Plans](#future-plans)
     * 14.1 [Reserved Specifiers](#reserved-specifiers)
-    * 14.2 [Alternates](#alternates)
+    * 14.2 [Validity Ranges](#validity-ranges)
     * 14.3 [Enums And Arrays](#enums-and-arrays)
     * 14.4 [Compilation](#compilation)
 * 15 [Building](#building)
@@ -2938,46 +2938,17 @@ jtvwy
 * `y` is for "YID" - the YSI user ID.  Don't use YSI?  Tough.
 * `v` I figure is for something to do with varargs, similar to `a` but for extra parameters.
 * `j` no idea yet.
-* `w` is the most important one to reserve - it is for extended specifiers.  Since there are so few left it is important to establish future compatibility.  Thus `w` is a prefix that indicates that the following specifier has an alternate meaning.  So `i` is "integer" but `wi` is something else entirely (don't know what yet).  This scheme does recurse endlessly so `wwi` and `wwwwwi` are also different.  In this way we will never run out and can start adding support for more obscure items like iterators and jagged arrays (the original idea for `j`).  There's also a suggestion for this as `words` - `w<5>` for five words, but I think that makes sense as an extension to `s`.
+* `w` is the most important one to reserve - it is for ***w**ide* specifiers.  Since there are so few left it is important to establish future compatibility.  Thus `w` is a prefix that indicates that the following specifier has an alternate meaning.  So `i` is "integer" but `wi` is something else entirely (don't know what yet).  This scheme does recurse endlessly so `wwi` and `wwwwwi` are also different.  In this way we will never run out and can start adding support for more obscure items like iterators and jagged arrays (the original idea for `j`).  There's also a suggestion for this as `words` - `w<5>` for five words, but I think that makes sense as an extension to `s`.
 
-### Alternates
+### Validity Ranges
 
-Alternates are a feature added in sscanf 3 but not yet back-ported.  The symbol is `|` and if one fails to match another one is tried.  The selected branch is returned in the very first destination parameter, the remaining specifiers are all in order:
+Add a feature to simple specifiers (mainly numbers like `i`, `f`, `c`, etc) to specify what the valid values are.  So you could write an IP parser as:
 
-```pawn
-if (sscanf(input, "'clothes'i|'weapon'ii", alternate, clothes, weapon, ammo) == 0)
-{
-	switch (alternate)
-	{
-	case 0:
-	{
-		// Clothes.
-		printf("Clothes = %d", clothes);
-	}
-	case 1:
-	{
-		// Weapohn.
-		printf("Weapon = %d, %d", weapon, ammo);
-	}
-	}
-}
+```
+p<.>i<0-256>i<0-256>i<0-256>i<0-256>
 ```
 
-Variables can be reused and won't be clobbered:
-
-```pawn
-sscanf(input, "?<SSCANF_COLOUR_FORMS=2>m|x", alternate, colour, colour);
-if (alternate == 0)
-{
-	printf("You entered colour #%06x", colour);
-}
-else
-{
-	printf("You entered colour %06x", colour);
-}
-```
-
-Note that the branches must be mutually exclusive in some way.  If they overlap you may never get a later one.  Also variables from branches not taken may be clobbered in any way, so don't rely on their values at all.
+Obvioulys there is upper-bound is exclusive.  Multiple valid ranges, and open-ended ranges, can be given with `x<0-10,20,22,50-90,1000->
 
 ### Enums And Arrays
 
